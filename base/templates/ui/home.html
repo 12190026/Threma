@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+
+    {% load static %}
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Home - Threma</title>
+
+    
+    <link rel='stylesheet' type="text/css" media="screen" href="{% static 'bootstrap/css/bootstrap02.min.css' %}">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,700&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Alfa+Slab+One&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto&amp;display=swap">
+    
+    
+    <link rel='stylesheet' type="text/css" media="screen" href="{% static 'fonts/fontawesome-all.min.css' %}">
+    <link rel='stylesheet' type="text/css" media="screen" href="{% static 'fonts/ionicons.min.css' %}">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/css/pikaday.min.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-dark navbar-expand-lg fixed-top bg-white portfolio-navbar gradient" style="height: 90.396px;">
+        <div class="container"><a class="navbar-brand logo" href="#">
+                <div class="sidebar-brand-icon rotate-n-15"></div>
+            </a><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navbarNav"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarNav" style="text-align: left;">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" href="index.html" style="margin-top: 21px;">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="projects-grid-cards.html" style="margin-top: 21px;">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="cv.html" style="margin-top: 21px;">Activities</a></li>
+                    <li class="nav-item" style="text-align: justify;"><a class="nav-link" href="hire-me.html" style="margin-top: 21px;">Contact Us</a></li>
+                    <li class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#" style="width: 143.531px;"><span class="d-none d-lg-inline me-2 text-gray-600 small" style="font-size: 16px;">Valerie Luna</span><img class="border rounded-circle img-profile" src="assets/img/avatars/avatar1.jpeg" width="75" height="66"></a>
+                        <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in"><a class="dropdown-item" href="#"><i class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Profile</a><a class="dropdown-item" href="#"><i class="fas fa-cogs fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Settings</a><a class="dropdown-item" href="#"><i class="fas fa-list fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Activity log</a>
+                            <div class="dropdown-divider"></div><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Logout</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <main class="page lanidng-page">
+        <section class="portfolio-block block-intro" style="background: url(&quot;{% static 'img/011.jpg' %}&quot;) top / cover no-repeat;height: 780px;">
+            <div class="container">
+                <div class="about-me">
+                    <p style="color: rgb(255,255,255);text-align: left;font-family: 'Alfa Slab One', serif;font-size: 39px;"><br>Always <br>open your <br>mind first<br>than opening <br>your mouth<br> <br>~Dungse Garap Rinpoche<br><br></p>
+                </div>
+            </div>
+        </section>
+        <section class="portfolio-block photography">
+            <div class="container">
+                <div class="row g-0">
+                    <div class="col-md-6 col-lg-4 item zoom-on-hover">
+                        <a href="#">
+                          <img class="img-fluid image" src="{% static 'img/nature/111111.jpg' %}">
+                        </a>
+                      </div>
+                      
+                    <div class="col-md-6 col-lg-4 item zoom-on-hover"><a href="#"><img class="img-fluid image" src="{% static 'img/nature/123.jpg' %}"></a></div>
+                    <div class="col-md-6 col-lg-4 item zoom-on-hover"><a href="#"><img class="img-fluid image" src="{% static 'img/tech/339444205_744640010362910_4713254438820632069_n.jpg' %}"></a></div>
+                </div>
+            </div>
+        </section>
+        <section class="portfolio-block call-to-action border-bottom" style="background: url(&quot;{% static 'img/t.jpg' %}&quot;)  bottom / auto no-repeat;height: 327.594px;margin-top: 46px;">
+            <div class="container">
+                <div class="d-flex justify-content-center align-items-center content">
+                    <h3 style="color: rgb(255,255,255);text-align: center;font-weight: bold;font-size: 49px;"><br>Give, <br>even if you only have little<br><br></h3>
+                </div>
+            </div>
+        </section>
+        <section class="portfolio-block skills" style="background-image: url('{% static 'static/img/Dharmawheel1.png' %}'); background-color: rgba(255, 255, 255, 0.88); background-blend-mode: overlay; background-size: cover; background-position: center; height: 889.823px;">
+
+            <div class="container">
+                <div class="heading">
+                    <h2 style="font-family: Roboto, sans-serif;font-weight: bold;color: #F08618;">Explore&nbsp; About Us</h2>
+                </div>
+                <div class="row" style="height: 417.958px;">
+                    <div class="col-md-4 col-lg-6 col-xl-5">
+                        <div class="card special-skill-item border-0">
+                            <div class="card-body">
+                                <p class="card-text" style="text-align: left;color: rgb(0,0,0);font-size: 20px;"><br>Kyabje Dungse Garab Rinpochhe, one of the original lineage holders of the Dudjom New Treasure lineage, formed a Krodhikali practitioner group for lay people in Thimphu, Bhutan to preserve Buddhism, especially the Dudjom New Treasure lineage. The group grew rapidly, and there are now over 20,000 Krodhikali practitioners in Bhutan, organized into 42 Dudjom Dharma Houses registered under Druk Throema Tshogpa.<br><br></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6 offset-xl-1 item zoom-on-hover"><a href="#"><img class="img-fluid image" src="{% static 'img/tech/339444205_744640010362910_4713254438820632069_n.jpg' %}"></a></div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <section class="bg-light" id="team">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="team-member"><img class="rounded-circle mx-auto" src="{% static 'img/team/1.jpg' %}">
+                        <h4>Kay Garland</h4>
+                        <p class="text-muted">Chariperson</p>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="team-member"><img class="rounded-circle mx-auto" src="{% static 'img/team/2.jpg' %}">
+                        <h4>Larry Parker</h4>
+                        <p class="text-muted">Manager</p>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="team-member"><img class="rounded-circle mx-auto" src="{% static 'img/team/3.jpg' %}">
+                        <h4>Diana Pertersen</h4>
+                        <p class="text-muted">Treasurer</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer class="page-footer">
+        <div class="container">
+            <div class="links"><a href="#">About me</a><a href="#">Contact me</a></div>
+            <div class="social-icons"><a href="#"><i class="icon ion-social-facebook"></i></a><a href="#"><i class="icon ion-social-instagram-outline"></i></a><a href="#"><i class="icon ion-social-twitter"></i></a></div>
+        </div>
+    </footer>
+    <script src="{% static 'bootstrap/js/bootstrap02.min.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/pikaday.min.js"></script>
+    <script src="{% static 'js/theme02.js' %}"></script>    
+</body>
+
+</html>
