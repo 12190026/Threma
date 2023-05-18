@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 
@@ -80,10 +80,15 @@ WSGI_APPLICATION = 'trama.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'Threma',
+        'USER': 'postgres',
+        'PASSWORD': 'somdxd508',
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
+
 
 AUTH_USER_MODEL = 'base.ExecutiveMember'
 
@@ -117,6 +122,9 @@ AUTHENTICATION_BACKENDS = (
     'base.backends.CustomBackend',
     )
 
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 
 
@@ -141,6 +149,10 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR /  'static'
 ]
+
+# Media files configuration
+# MEDIA_URL = '/media/'
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 # Default primary key field type

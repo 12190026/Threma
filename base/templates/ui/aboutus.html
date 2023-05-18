@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+
+{% load static %}
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>About Us</title>
+
+    
+    <link rel='stylesheet' type="text/css" media="screen" href="{% static 'bootstrap/css/bootstrap03.min.css' %}">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,400i,700,700i,600,600i&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans&amp;display=swap">
+
+    
+    <link rel='stylesheet' type="text/css" media="screen" href="{% static 'bootstrap/css/bootstrap02.min.css' %}">
+    
+    <link rel='stylesheet' type="text/css" media="screen" href="{% static 'fonts/fontawesome-all.min.css' %}">
+    
+    <link rel='stylesheet' type="text/css" media="screen" href="{% static 'fonts/simple-line-icons.min.css' %}">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.1/baguetteBox.min.css">
+
+    
+
+    <link rel='stylesheet' type="text/css" media="screen" href="{% static 'css/vanilla-zoom.min.css' %}">
+
+    
+</head>
+
+<body>
+   
+    {% include 'nav.html'  %}
+    <main class="page landing-page">
+        <section class="clean-block clean-hero" style="color: var(--bs-border-color-translucent);background: url(&quot;{% static 'img/tech/03.jpg' %}&quot;) top / cover no-repeat;border-color: rgba(255,255,255,0.85);height: 886px;">
+            <div class="text">
+                <h2 style="font-size: 78px;font-weight: bold;margin-top: 196px;">About Us</h2>
+            </div>
+        </section>
+        <section class="border-0 clean-block clean-info dark" style="background: rgb(255,255,255);">
+            <div class="container">
+                <div class="block-heading">
+                    <h2 class="text-info">Info</h2>
+                    <p style="text-align: left;color: rgb(0,0,0);font-size: 16px;width: 501px;"><br>Krodhikali Practitioner groups for lay people in Bhutan and in other parts of the world were founded by His Holiness Kyabje Dungse Garab Rinpochhe, one of the original lineage holders of the Dudjom New Treasure lineage. Years ago, when Kyabje Dungse Garab Rinpochhe was leading the Krodhikali Feast Offering (Tshog) with the monks, nuns, and yogis at Thimphu Memorial Chhoeten, Rinpochhe noticed the wives of the yogis taking part in the offering with full devotion. <br><br>At that moment, Rinpoche started to think about forming a group for lay people in order to preserve Buddhism in Bhutan, especially the Dudjom New Treasure lineage under the Nyingma (Vajrayana) tradition.<br><br></p>
+                </div>
+            </div>
+        </section>
+        <section class="clean-block clean-info dark" style="height: 212.781px;background: rgb(255,255,255);">
+            <div id="accordion" class="accordion" style="border-color: rgb(255,255,255);border-top-color: rgb(33,;border-right-color: 37,;border-bottom-color: 41);border-left-color: 37,;">
+                <div id="accordion-item1" class="accordion-item">
+                    <div id="accordion-corpo1" class="collapse accordion-corpo" aria-labelledby="accordion-cab1" data-bs-parent="#accordion">
+                        <p class="text-start accordion-p">Paragraph</p>
+                    </div>
+                </div>
+                <div class="text-center accordion-item" id="accordion-item2">
+                    <div class="text-center accordion-cab" id="accordion-cab2" aria-controls="accordion-corpo2" data-bs-target="#accordion-corpo2" data-bs-toggle="collapse">
+                        <h6 class="text-center accordion-titulo" style="color: #EF9712;"><br>Dudjom Lineage<br><br></h6>
+                    </div>
+                    <div class="text-center accordion-cab" id="accordion-cab-1" aria-controls="accordion-corpo2" data-bs-target="#accordion-corpo2" data-bs-toggle="collapse">
+                        <h6 class="text-center border-0 accordion-titulo" style="color: #EF9712;"><br>Galikhar Tshokchhung<br><br></h6>
+                    </div>
+                    <div class="text-center collapse accordion-corpo" id="accordion-corpo2" aria-labelledby="accordion-cab2" data-bs-parent="#accordion">
+                        <p class="text-center accordion-p">Paragraph</p>
+                    </div>
+                </div>
+                <div class="text-center accordion-item" id="accordion-item3">
+                    <div class="text-center accordion-cab" id="accordion-cab3" aria-controls="accordion-corpo3" data-bs-target="#accordion-corpo3" data-bs-toggle="collapse">
+                        <h6 class="text-center accordion-titulo" style="color: #EF9712;"><br>Centers<br><br></h6>
+                    </div>
+                    <div class="text-center collapse accordion-corpo" id="accordion-corpo3" aria-labelledby="accordion-cab3" data-bs-parent="#accordion">
+                        <p class="text-center accordion-p">Paragraph</p>
+                    </div>
+                </div>
+                <div id="accordion-item4" class="accordion-item">
+                    <div id="accordion-corpo4" class="collapse accordion-corpo" aria-labelledby="accordion-cab4" data-bs-parent="#accordion">
+                        <p class="text-start accordion-p">Paragraph</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="clean-block about-us" style="height: 771px;">
+            <div class="container">
+                <div class="block-heading">
+                    <h2 class="text-info">Executive Committee</h2>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-sm-6 col-lg-4">
+                        <div class="card text-center clean-card"><img class="card-img-top w-100 d-block" src="{% static 'img/avatars/avatar1.jpeg' %}">
+                            <div class="card-body info">
+                                <h4 class="card-title">Manager</h4>
+                                <p class="card-text">Sonam Wangchuk</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-4">
+                        <div class="card text-center clean-card"><img class="card-img-top w-100 d-block" src="{% static 'img/avatars/avatar2.jpeg' %}">
+                            <div class="card-body info">
+                                <h4 class="card-title">Chairperson</h4>
+                                <p class="card-text">Ugyen Wangdi</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-4">
+                        <div class="card text-center clean-card"><img class="card-img-top w-100 d-block" src="{% static 'img/avatars/avatar3.jpeg' %}">
+                            <div class="card-body info">
+                                <h4 class="card-title">Treasurer</h4>
+                                <p class="card-text">Tshering Choden</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="clean-block slider dark">
+            <div class="container">
+                <div class="block-heading">
+                    <h2 class="text-info">Gallery</h2>
+                </div>
+                <div class="carousel slide" data-bs-ride="carousel" id="carousel-1">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active"><img class="w-100 d-block" src="{% static 'img/scenery/aaa.jpg' %}" alt="Slide Image"></div>
+                        <div class="carousel-item"><img class="w-100 d-block" src="{% static 'img/scenery/aa.jpg' %}" alt="Slide Image"></div>
+                        <div class="carousel-item"><img class="w-100 d-block" src="{% static 'img/scenery/h.jpg' %}" alt="Slide Image"></div>
+                        <div class="carousel-item"><img class="w-100 d-block" src="{% static 'img/scenery/k.jpg' %}" alt="Slide Image"></div>
+                        <div class="carousel-item"><img class="w-100 d-block" src="{% static 'img/scenery/s.jpg' %}" alt="Slide Image"></div>
+                    </div>
+                    <div><a class="carousel-control-prev" href="#carousel-1" role="button" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span><span class="visually-hidden">Previous</span></a><a class="carousel-control-next" href="#carousel-1" role="button" data-bs-slide="next"><span class="carousel-control-next-icon"></span><span class="visually-hidden">Next</span></a></div>
+                    <ol class="carousel-indicators">
+                        <li data-bs-target="#carousel-1" data-bs-slide-to="0" class="active"></li>
+                        <li data-bs-target="#carousel-1" data-bs-slide-to="1"></li>
+                        <li data-bs-target="#carousel-1" data-bs-slide-to="2"></li>
+                        <li data-bs-target="#carousel-1" data-bs-slide-to="3"></li>
+                        <li data-bs-target="#carousel-1" data-bs-slide-to="4"></li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer class="page-footer dark">
+        <div class="footer-copyright">
+            <p>© 2023 Copyright Threma</p>
+        </div>
+    </footer>
+    
+    <script src="{% static 'bootstrap/js/bootstrap03.min.js' %}"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.1/baguetteBox.min.js"></script>
+    <script src="{% static 'js/vanilla-zoom.js' %}"></script>   
+    <script src="{% static 'js/theme03.js' %}"></script>   
+</body>
+
+</html>

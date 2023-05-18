@@ -1,304 +1,295 @@
-<!DOCTYPE html>
-<html>
+{% extends 'main.html' %}
 
-{% load static %}
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Executives</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
-   
-    <link rel='stylesheet' type="text/css" media="screen" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
-   
-    
-    <link rel='stylesheet' type="text/css" media="screen" href="{% static 'fonts/fontawesome-all.min.css' %}">
-    
-    <link rel='stylesheet' type="text/css" media="screen" href="{% static 'css/untitled.css' %}">
-</head>
-
-<body id="page-top">
-  
-    <div id="wrapper">
+{% block content %}
        
-        {% block content %}
-        {% include 'navbar.html'  %}
-       
-        <div class="d-flex flex-column" id="content-wrapper">
-            <div id="content">
-                <nav class="navbar navbar-light navbar-expand bg-white shadow mb-4 topbar static-top" style="background: var(--bs-danger);">
-                    <div class="container-fluid"><button class="btn btn-link d-md-none rounded-circle me-3" id="sidebarToggleTop" type="button"><i class="fas fa-bars"></i></button>
-                        <ul class="navbar-nav flex-nowrap ms-auto">
-                            <li class="nav-item dropdown d-sm-none no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"></a>
-                                <div class="dropdown-menu dropdown-menu-end p-3 animated--grow-in" aria-labelledby="searchDropdown">
-                                    <form class="me-auto navbar-search w-100">
-                                        <div class="input-group"><input class="bg-light form-control border-0 small" type="text" placeholder="Search for ...">
-                                            <div class="input-group-append"><button class="btn btn-primary py-0" type="button"><i class="fas fa-search"></i></button></div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </li>
-                            <li class="nav-item dropdown no-arrow">
-                                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><span class="d-none d-lg-inline me-2 text-gray-600 small">Valerie Luna</span><img class="border rounded-circle img-profile" src="assets/img/avatars/avatar1.jpeg"></a>
-                                    <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in"><a class="dropdown-item" href="#"><i class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Profile</a><a class="dropdown-item" href="#"><i class="fas fa-cogs fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Settings</a><a class="dropdown-item" href="#"><i class="fas fa-list fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Activity log</a>
-                                        <div class="dropdown-divider"></div><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Logout</a>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </nav>
+        
                 <div class="container-fluid">
                     <h3 class="text-dark mb-4">Team</h3>
                     
-                    <div class="card shadow">
-                        <div class="card-header py-3 d-flex justify-content-between">
-                            <p class="text-primary m-0 fw-bold">Employee Info</p>
+                        <div class="card shadow">
+                            <div class="card-header py-3 d-flex justify-content-between">
+                                <p class="text-primary m-0 fw-bold">Employee Info</p>
+                                                       <!-- Add a data-toggle attribute with "modal" value to the button -->
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addMemberModal">Add Members</button>
 
-                            
+                                <!-- Define the modal with the id "addMemberModal" -->
+                                <div class="modal fade" id="addMemberModal" tabindex="-1" role="dialog" aria-labelledby="addMemberModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="addMemberModalLabel">Add Members</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <!-- Use Bootstrap's grid system to align the form fields properly -->
+                                                <div class="container">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            
+                                                            <form method="post" action="{% url 'add_member' %}">
 
-                            <!-- Add a data-toggle attribute with "modal" value to the button -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addMemberModal">Add Members</button>
+                                                                    {% csrf_token %}
+                                                                    <label for="cid">CID:</label><br>
+                                                                    <input type="text" id="cid" name="cid" minlength="11" required><br>
+                                                                  
+                                                                    <label for="name">Name:</label><br>
+                                                                    <input type="text" id="name" name="name" required><br>
+                                                                  
+                                                                    <label for="email">Email:</label><br>
+                                                                    <input type="email" id="email" name="email" required><br>
+                                                                  
+                                                                    <label for="role">Role:</label><br>
+                                                                    <select id="role" name="role" required>
+                                                                      <option value="" disabled selected>Select your role</option>
+                                                                      <option value="MANAGER">Manager</option>
+                                                                      <option value="CHAIRPERSON">Chairperson</option>
+                                                                      <option value="TREASURER">Treasurer</option>
+                                                                      <option value="ADMIN">Admin</option>
+                                                                    </select><br>
+                                                                  
+                                                                    <label for="responsibility">Responsibility:</label><br>
+                                                                    <input type="text" id="responsibility" name="responsibility" required><br>
+                                                                  
+                                                                    <label for="present_address">Present Address:</label><br>
+                                                                    <input type="text" id="present_address" name="present_address" required><br>
+                                                                  
+                                                                    <label for="contact_no">Contact No:</label><br>
+                                                                    <input type="text" id="contact_no" name="contact_no" minlength="8" required><br>
+                                                                  
+                                                                    <label for="card_no">Card No:</label><br>
+                                                                    <input type="text" id="card_no" name="card_no" required><br>
+                                                                  
+                                                                    <label for="village">Village:</label><br>
+                                                                    <input type="text" id="village" name="village" required><br>
+                                                                  
+                                                                    <label for="geog">Geog:</label><br>
+                                                                    <input type="text" id="geog" name="geog" required><br>
+                                                                  
+                                                                    <label for="dzongkhag">Dzongkhag:</label><br>
+                                                                    <input type="text" id="dzongkhag" name="dzongkhag" required><br>
+                                                                  
+                                                                    <label for="password">Password:</label><br>
+                                                                    <input type="password" id="password" name="password" required><br>
+                                                                  
+                                                                    <label for="confirm_password">Confirm Password:</label><br>
+                                                                    <input type="password" id="confirm_password" name="confirm_password" required><br>
+                                                                  
+                                                                    <!-- <input type="submit" value="Submit">
+                                                                  </form> -->
+                                                                  
+                                                                <!-- <div class="form-row">
+                                                                    <div class="form-group col-sm-12">
+                                                                        <label for="{{ form.responsibility.id_for_label }}">Responsibility</label>
+                                                                        <div class="input-group">
+                                                                            {{ form.responsibility }}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-row">
+                                                                    <div class="form-group col-sm-12">
+                                                                        <label for="{{ form.present_address.id_for_label }}">Present Address</label>
+                                                                        <div class="input-group">
+                                                                            {{ form.present_address }}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-row">
+                                                                    <div class="form-group col-sm-12">
+                                                                        <label for="{{ form.cid.id_for_label }}">CID</label>
+                                                                        <div class="input-group">
+                                                                            {{ form.cid }}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-row">
+                                                                    <div class="form-group col-sm-12">
+                                                                        <label for="{{ form.contact_no.id_for_label }}">Contact No</label>
+                                                                        <div class="input-group">
+                                                                            {{ form.contact_no }}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-row">
+                                                                    <div class="form-group col-sm-12">
+                                                                        <label for="{{ form.card_no.id_for_label }}">Card No</label>
+                                                                        <div class="input-group">
+                                                                            {{ form.card_no }}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-row">
+                                                                    <div class="form-group col-sm-12">
+                                                                        <label for="{{ form.village.id_for_label }}">Village</label>
+                                                                        <div class="input-group">
+                                                                            {{ form.village }}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-row">
+                                                                    <div class="form-group col-sm-12">
+                                                                        <label for="{{ form.geog.id_for_label }}">Geog</label>
+                                                                        <div class="input-group">
+                                                                            {{ form.geog }}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-row">
+                                                                    <div class="form-group col-sm-12">
+                                                                        <label for="{{ form.dzongkhag.id_for_label }}">Dzongkhag</label>
+                                                                        <div class="input-group">
+                                                                            {{ form.dzongkhag }}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            
+                                                                <div class="form-row">
+                                                                    <div class="form-group col-sm-12">
+                                                                        <label for="{{ form.password.id_for_label }}">Password</label>
+                                                                        <div class="input-group">
+                                                                            {{ form.password }}
+                                                                        </div>
+                                                                    </div>
+                                                                </div> 
+                                                                <div class="form-row">
+                                                                    <div class="form-group col-sm-12">
+                                                                        <label for="{{ form.role.id_for_label }}">Roles</label>
+                                                                        <div class="input-group">
+                                                                            {{ form.role }}
+                                                                        </div>
+                                                                    </div>
+                                                                </div> -->
+                                                                <!-- Add a submit button with class "btn btn-primary" -->
+                                                                <button type="submit" class="btn btn-primary">Confirm</button>
+                                                                {% if messages %}
+                                                                    <div class="alert alert-danger" role="alert">
+                                                                        {% for message in messages %}
+                                                                            {{ message }}
+                                                                        {% endfor %}
+                                                                    </div>
+                                                                {% endif %}
+                                                            </form>
 
-<!-- Define the modal with the id "addMemberModal" -->
-<div class="modal fade" id="addMemberModal" tabindex="-1" role="dialog" aria-labelledby="addMemberModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addMemberModalLabel">Add Members</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <!-- Use Bootstrap's grid system to align the form fields properly -->
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-12">
-                            
-                            <form method="post" action="{% url 'add_member' %}">
-                                {% csrf_token %}
-                                <div class="form-row">
-                                    <div class="form-group col-sm-12">
-                                        <label for="{{ form.name.id_for_label }}">Name</label>
-                                        <div class="input-group">
-                                            {{ form.name }}
+                                                            <!-- {% if messages %}
+                                                                <script>
+                                                                $(document).ready(function() {
+                                                                    {% for message in messages %}
+                                                                        toastr.{{ message.tags }}('{{ message }}');
+                                                                    {% endfor %}
+                                                                });
+                                                                </script>
+                                                            {% endif %} -->
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>                                                                                     
                                         </div>
                                     </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group col-sm-12">
-                                        <label for="{{ form.email.id_for_label }}">Email</label>
-                                        <div class="input-group">
-                                            {{ form.email }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- <div class="form-row">
-                                    <div class="form-group col-sm-12">
-                                        <label for="{{ form.profilepic.id_for_label }}">Profile Picture</label>
-                                        <div class="input-group">
-                                            {{ form.profilepic }}
-                                        </div>
-                                    </div>
-                                </div> -->
-                                <div class="form-row">
-                                    <div class="form-group col-sm-12">
-                                        <label for="{{ form.responsibility.id_for_label }}">Responsibility</label>
-                                        <div class="input-group">
-                                            {{ form.responsibility }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group col-sm-12">
-                                        <label for="{{ form.present_address.id_for_label }}">Present Address</label>
-                                        <div class="input-group">
-                                            {{ form.present_address }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group col-sm-12">
-                                        <label for="{{ form.cid.id_for_label }}">CID</label>
-                                        <div class="input-group">
-                                            {{ form.cid }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group col-sm-12">
-                                        <label for="{{ form.contact_no.id_for_label }}">Contact No</label>
-                                        <div class="input-group">
-                                            {{ form.contact_no }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group col-sm-12">
-                                        <label for="{{ form.card_no.id_for_label }}">Card No</label>
-                                        <div class="input-group">
-                                            {{ form.card_no }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group col-sm-12">
-                                        <label for="{{ form.village.id_for_label }}">Village</label>
-                                        <div class="input-group">
-                                            {{ form.village }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group col-sm-12">
-                                        <label for="{{ form.geog.id_for_label }}">Geog</label>
-                                        <div class="input-group">
-                                            {{ form.geog }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group col-sm-12">
-                                        <label for="{{ form.dzongkhag.id_for_label }}">Dzongkhag</label>
-                                        <div class="input-group">
-                                            {{ form.dzongkhag }}
-                                        </div>
-                                    </div>
-                                </div>
-                               
-                                <div class="form-row">
-                                    <div class="form-group col-sm-12">
-                                        <label for="{{ form.password.id_for_label }}">Password</label>
-                                        <div class="input-group">
-                                            {{ form.password }}
-                                        </div>
-                                    </div>
-                                </div> 
-                                <div class="form-row">
-                                    <div class="form-group col-sm-12">
-                                        <label for="{{ form.role.id_for_label }}">Roles</label>
-                                        <div class="input-group">
-                                            {{ form.role }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Add a submit button with class "btn btn-primary" -->
-                                <button type="submit" class="btn btn-primary">Confirm</button>
-                            </form>
+                                </div>   
 
-                            {% if messages %}
-                                <script>
-                                $(document).ready(function() {
-                                    {% for message in messages %}
-                                        toastr.{{ message.tags }}('{{ message }}');
-                                    {% endfor %}
-                                });
-                                </script>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-            </div>
-           
-            
-            
-            
-        </div>
-    </div>
-</div>
-
-                                       
-
-
-
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6 text-nowrap">
-                                    <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
-                                        <label class="form-label">Show&nbsp;
-                                            <select class="d-inline-block form-select form-select-sm" onchange="changePageSize(this.value)">
-                                                <option value="10" {% if page_size == 10 %}selected{% endif %}>10</option>
-                                                <option value="25" {% if page_size == 25 %}selected{% endif %}>25</option>
-                                                <option value="50" {% if page_size == 50 %}selected{% endif %}>50</option>
-                                                <option value="100" {% if page_size == 100 %}selected{% endif %}>100</option>
-                                            </select>
-                                        &nbsp;</label>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 text-nowrap">
+                                        <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
+                                            <label class="form-label">Show&nbsp;
+                                                <select class="d-inline-block form-select form-select-sm" onchange="changePageSize(this.value)">
+                                                    <option value="10" {% if page_size == 10 %}selected{% endif %}>10</option>
+                                                    <option value="25" {% if page_size == 25 %}selected{% endif %}>25</option>
+                                                    <option value="50" {% if page_size == 50 %}selected{% endif %}>50</option>
+                                                    <option value="100" {% if page_size == 100 %}selected{% endif %}>100</option>
+                                                </select>
+                                            &nbsp;</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">   
+                                        <div class="text-md-end dataTables_filter" id="dataTable_filter">
+                                            <label class="form-label">
+                                                <input type="text" id="searchInput" class="form-control form-control-sm" aria-controls="dataTable" placeholder="Search" onkeyup="searchTable()">
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="text-md-end dataTables_filter" id="dataTable_filter">
-                                        <label class="form-label">
-                                            <input type="search" class="form-control form-control-sm" aria-controls="dataTable" placeholder="Search" onkeyup="searchTable(this.value)">
-                                        </label>
-                                    </div>
+                                <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
+                                    <table class="table my-0" id="dataTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Email</th>
+                                                <th>Responsibility</th>
+                                                <th>Present Address</th>
+                                                <th>CID</th>
+                                                <th>Contact No</th>
+                                                <th>Card No</th>
+                                                <th>Village</th>
+                                                <th>Geog</th>
+                                                <th>Dzongkhag</th>
+                                                <th>Role</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Loop through the data retrieved from the database and populate the table rows -->
+                                            {% for member in ExecutiveMember %}
+                                            <tr>
+                                                <td>{{ member.name }}</td>
+                                                <td>{{ member.email }}</td>
+                                                <td>{{ member.responsibility }}</td>
+                                                <td>{{ member.present_address }}</td>
+                                                <td>{{ member.cid }}</td>
+                                                <td>{{ member.contact_no }}</td>
+                                                <td>{{ member.card_no }}</td>
+                                                <td>{{ member.village }}</td>
+                                                <td>{{ member.geog }}</td>
+                                                <td>{{ member.dzongkhag }}</td>
+                                                <td>{{ member.role }}</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
-                            <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
-                                <table class="table my-0" id="dataTable">
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Email</th>
-                                            <th>Responsibility</th>
-                                            <th>Present Address</th>
-                                            <th>CID</th>
-                                            <th>Contact No</th>
-                                            <th>Card No</th>
-                                            <th>Village</th>
-                                            <th>Geog</th>
-                                            <th>Dzongkhag</th>
-                                            <th>Role</th>
-                                            <th>Password</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <!-- Loop through the data retrieved from the database and populate the table rows -->
-                                        {% for member in ExecutiveMember %}
-                                        <tr>
-                                            <td>{{ member.name }}</td>
-                                            <td>{{ member.email }}</td>
-                                            <td>{{ member.responsibility }}</td>
-                                            <td>{{ member.present_address }}</td>
-                                            <td>{{ member.cid }}</td>
-                                            <td>{{ member.contact_no }}</td>
-                                            <td>{{ member.card_no }}</td>
-                                            <td>{{ member.village }}</td>
-                                            <td>{{ member.geog }}</td>
-                                            <td>{{ member.dzongkhag }}</td>
-                                            <td>{{ member.roles }}</td>
-                                            <td>{{ member.password }}</td>
-                                            <td><img src="{{ member.profilepic.url }}" class="rounded-circle me-2" width="30" height="30"></td>
-                                        </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
                         
                     </div>
                 </div>
-            </div>
-            <footer class="bg-white sticky-footer">
-                <div class="container my-auto">
-                    <div class="text-center my-auto copyright"><span>Copyright © Brand 2023</span></div>
-                </div>
-            </footer>
-        </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
-        {% endblock %}
-    </div>
+        
+        
 
+                     <!-- Include the necessary JavaScript files for Bootstrap -->
+                     <script>
+                        function searchTable() {
+                            // Retrieve the search input value
+                            var input = document.getElementById("searchInput").value.toLowerCase();
+                            // Get all table rows
+                            var rows = document.getElementsByTagName("tr");
+                    
+                            // Loop through the rows and hide those that don't match the search input
+                            for (var i = 0; i < rows.length; i++) {
+                                var cid = rows[i].getElementsByTagName("td")[4];
+                                var name = rows[i].getElementsByTagName("td")[0]; // Assuming name is the first column (index 0)
+                    
+                                if (cid && name) {
+                                    var cidValue = cid.textContent || cid.innerText;
+                                    var nameValue = name.textContent || name.innerText;
+                    
+                                    if (cidValue.toLowerCase().indexOf(input) > -1 || nameValue.toLowerCase().indexOf(input) > -1) {
+                                        rows[i].style.display = ""; // Show the row
+                                    } else {
+                                        rows[i].style.display = "none"; // Hide the row
+                                    }
+                                }
+                            }
+                        }
+                    </script>
+                    
 
-    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
-    <script src="{% static 'js/bs-init.js' %}"></script>
-    <script src="{% static 'js/theme.js' %}"></script>
-        <!-- Include the necessary JavaScript files for Bootstrap -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-    
-</body>
 
-</html>
+           
+        {% endblock %}
+
+       
+   

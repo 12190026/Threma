@@ -52,12 +52,16 @@
                                         </div>
                                         <div class="mb-3">
                                             <select class="form-control form-control-user{% if form.role.errors %} is-invalid{% endif %}" 
-                                                    id="exampleDropdown" name="role">
+                                                id="exampleDropdown" name="role">
                                                 <option value="" disabled selected>Select Role</option>
-                                                <option value="manager">Manager</option>
-                                                <option value="chairperson">Chairperson</option>
-                                                <option value="finance">Treasurer</option>
+                                                {% for role in roles %}
+                                                    {% if role != 'ADMIN' %}
+                                                        <option value="{{ role }}">{{ role }}</option>
+                                                    {% endif %}
+                                                {% endfor %}
                                             </select>
+                                        
+                                        
                                             {% if form.role.errors %}
                                                 <div class="invalid-feedback">{{ form.role.errors }}</div>
                                             {% endif %}
@@ -68,7 +72,15 @@
                                         <button class="btn btn-primary d-block btn-user w-100" type="submit">Login</button>
                                         <hr>
                                     </form>
+                                    {% if messages %}
+                                        <div class="alert alert-danger" role="alert">
+                                            {% for message in messages %}
+                                                {{ message }}
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
                                 </div>
+                              
                             
                             
                                     <div class="text-center"><a class="small" href="forgot-password.html">Forgot Password?</a></div>
