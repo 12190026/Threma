@@ -10,7 +10,9 @@
                             <div class="card-header py-3 d-flex justify-content-between">
                                 <p class="text-primary m-0 fw-bold">Employee Info</p>
                                                        <!-- Add a data-toggle attribute with "modal" value to the button -->
-                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addMemberModal">Add Members</button>
+                                                       {% if user.role == "ADMIN" %}
+                                                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addMemberModal">Add Members</button>
+                                                       {% endif %}
 
                                 <!-- Define the modal with the id "addMemberModal" -->
                                 <div class="modal fade" id="addMemberModal" tabindex="-1" role="dialog" aria-labelledby="addMemberModalLabel" aria-hidden="true">
@@ -76,90 +78,7 @@
                                                                     <label for="confirm_password">Confirm Password:</label><br>
                                                                     <input type="password" id="confirm_password" name="confirm_password" required><br>
                                                                   
-                                                                    <!-- <input type="submit" value="Submit">
-                                                                  </form> -->
-                                                                  
-                                                                <!-- <div class="form-row">
-                                                                    <div class="form-group col-sm-12">
-                                                                        <label for="{{ form.responsibility.id_for_label }}">Responsibility</label>
-                                                                        <div class="input-group">
-                                                                            {{ form.responsibility }}
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-row">
-                                                                    <div class="form-group col-sm-12">
-                                                                        <label for="{{ form.present_address.id_for_label }}">Present Address</label>
-                                                                        <div class="input-group">
-                                                                            {{ form.present_address }}
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-row">
-                                                                    <div class="form-group col-sm-12">
-                                                                        <label for="{{ form.cid.id_for_label }}">CID</label>
-                                                                        <div class="input-group">
-                                                                            {{ form.cid }}
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-row">
-                                                                    <div class="form-group col-sm-12">
-                                                                        <label for="{{ form.contact_no.id_for_label }}">Contact No</label>
-                                                                        <div class="input-group">
-                                                                            {{ form.contact_no }}
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-row">
-                                                                    <div class="form-group col-sm-12">
-                                                                        <label for="{{ form.card_no.id_for_label }}">Card No</label>
-                                                                        <div class="input-group">
-                                                                            {{ form.card_no }}
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-row">
-                                                                    <div class="form-group col-sm-12">
-                                                                        <label for="{{ form.village.id_for_label }}">Village</label>
-                                                                        <div class="input-group">
-                                                                            {{ form.village }}
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-row">
-                                                                    <div class="form-group col-sm-12">
-                                                                        <label for="{{ form.geog.id_for_label }}">Geog</label>
-                                                                        <div class="input-group">
-                                                                            {{ form.geog }}
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-row">
-                                                                    <div class="form-group col-sm-12">
-                                                                        <label for="{{ form.dzongkhag.id_for_label }}">Dzongkhag</label>
-                                                                        <div class="input-group">
-                                                                            {{ form.dzongkhag }}
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            
-                                                                <div class="form-row">
-                                                                    <div class="form-group col-sm-12">
-                                                                        <label for="{{ form.password.id_for_label }}">Password</label>
-                                                                        <div class="input-group">
-                                                                            {{ form.password }}
-                                                                        </div>
-                                                                    </div>
-                                                                </div> 
-                                                                <div class="form-row">
-                                                                    <div class="form-group col-sm-12">
-                                                                        <label for="{{ form.role.id_for_label }}">Roles</label>
-                                                                        <div class="input-group">
-                                                                            {{ form.role }}
-                                                                        </div>
-                                                                    </div>
-                                                                </div> -->
+                                                        
                                                                 <!-- Add a submit button with class "btn btn-primary" -->
                                                                 <button type="submit" class="btn btn-primary">Confirm</button>
                                                                 {% if messages %}
@@ -226,6 +145,7 @@
                                                 <th>Geog</th>
                                                 <th>Dzongkhag</th>
                                                 <th>Role</th>
+                                                <th>Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -243,19 +163,140 @@
                                                 <td>{{ member.geog }}</td>
                                                 <td>{{ member.dzongkhag }}</td>
                                                 <td>{{ member.role }}</td>
+                                                <td>
+                                                    <div class="d-flex">
+                                                        <button type="button" class="btn btn-primary edit-button" data-member-cid="{{ member.cid }}" data-toggle="modal" data-target="#editMemberModal{{ member.cid }}">Edit</button>
+                                                        <button class="btn btn-primary edit-button delete-button" data-member-cid="{{ member.cid }}" style="color: white; background-color: red;">Delete</button>
+
+                                                    </div>
+                                                </td>
                                             </tr>
                                             {% endfor %}
                                         </tbody>
                                     </table>
                                 </div>
+                            
+                                <!-- Define the modal with the id "editMemberModal" -->
+                                {% for member in ExecutiveMember %}
+                                <div class="modal fade" id="editMemberModal{{ member.cid }}" tabindex="-1" role="dialog" aria-labelledby="editMemberModalLabel{{ member.cid }}" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="editMemberModalLabel{{ member.cid }}">Edit Member</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <!-- Use Bootstrap's grid system to align the form fields properly -->
+                                                <div class="container">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <form method="post" action="{% url 'edit_member' member.cid %}" class="edit-form">
+                                                                {% csrf_token %}
+                                                                <!-- Include the form fields for editing the member details -->
+                                                                <!-- Adjust the field values as per your specific requirements -->
+                                                                <label for="edit_cid">CID:</label><br>
+                                                                <input type="text" id="edit_cid" name="cid" value="{{ member.cid }}" minlength="11" required><br>
+                                                                
+                                                                <label for="edit_name">Name:</label><br>
+                                                                <input type="text" id="edit_name" name="name" value="{{ member.name }}" required><br>
+                                                                
+                                                                <label for="edit_email">Email:</label><br>
+                                                                <input type="email" id="edit_email" name="email" value="{{ member.email }}" required><br>
+                                                                
+                                                                <label for="edit_role">Role:</label><br>
+                                                                <select id="edit_role" name="role" required>
+                                                                    <option value="" disabled selected>Select your role</option>
+                                                                    <option value="MANAGER" {% if member.role == 'MANAGER' %}selected{% endif %}>Manager</option>
+                                                                    <option value="CHAIRPERSON" {% if member.role == 'CHAIRPERSON' %}selected{% endif %}>Chairperson</option>
+                                                                    <option value="TREASURER" {% if member.role == 'TREASURER' %}selected{% endif %}>Treasurer</option>
+                                                                    <option value="ADMIN" {% if member.role == 'ADMIN' %}selected{% endif %}>Admin</option>
+                                                                </select><br>
+                                                            
+                                                                <label for="edit_responsibility">Responsibility:</label><br>
+                                                                <input type="text" id="edit_responsibility" name="responsibility" value="{{ member.responsibility }}" required><br>
+                                                            
+                                                                <label for="edit_present_address">Present Address:</label><br>
+                                                                <input type="text" id="edit_present_address" name="present_address" value="{{ member.present_address }}" required><br>
+                                                            
+                                                                <label for="edit_contact_no">Contact No:</label><br>
+                                                                <input type="text" id="edit_contact_no" name="contact_no" value="{{ member.contact_no }}" minlength="8" required><br>
+                                                            
+                                                                <label for="edit_card_no">Card No:</label><br>
+                                                                <input type="text" id="edit_card_no" name="card_no" value="{{ member.card_no }}" required><br>
+                                                            
+                                                                <label for="edit_village">Village:</label><br>
+                                                                <input type="text" id="edit_village" name="village" value="{{ member.village }}" required><br>
+                                                            
+                                                                <label for="edit_geog">Geog:</label><br>
+                                                                <input type="text" id="edit_geog" name="geog" value="{{ member.geog }}" required><br>
+                                                            
+                                                                <label for="edit_dzongkhag">Dzongkhag:</label><br>
+                                                                <input type="text" id="edit_dzongkhag" name="dzongkhag" value="{{ member.dzongkhag }}" required><br>
+                                                            
+                                                                <!-- Add a submit button with class "btn btn-primary" -->
+                                                                <button type="submit" class="btn btn-primary">Update</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                                
+                                
                             </div>
                         
-                    </div>
-                </div>
-        
+                     </div>
+              
+             </div>
+            
         
 
                      <!-- Include the necessary JavaScript files for Bootstrap -->
+                     <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Attach a click event listener to all edit buttons
+            $('.edit-button').click(function() {
+                // Get the member CID associated with the button
+                var memberCID = $(this).data('member-cid');
+
+                // Show the corresponding modal popup
+                $('#editMemberModal' + memberCID).modal('show');
+            });
+
+            // Attach a submit event listener to all edit forms
+            $('.edit-form').submit(function(e) {
+                e.preventDefault();
+
+                // Get the form data
+                var formData = $(this).serialize();
+
+                // Send an AJAX request to update the member data
+                $.ajax({
+                    type: 'POST',
+                    url: $(this).attr('action'),
+                    data: formData,
+                    success: function(response) {
+                        // Handle the success response (e.g., show a success message)
+                        alert('Member data updated successfully');
+                        // Optionally, you can reload the page or update the specific table row with the updated data
+                        location.reload();
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle the error response (e.g., display an error message)
+                        alert('An error occurred while updating the member data');
+                    }
+                });
+            });
+        });
+    </script> -->
+
+    
                      <script>
                         function searchTable() {
                             // Retrieve the search input value
@@ -281,7 +322,75 @@
                             }
                         }
                     </script>
-                    
+
+<script>
+    const editButtons = document.querySelectorAll('.edit-button');
+
+    editButtons.forEach((button) => {
+        button.addEventListener('click', (event) => {
+            const formId = event.currentTarget.getAttribute('data-member-cid');
+            const editForm = document.getElementById(`editForm${formId}`);
+
+            editForm.addEventListener('submit', (submitEvent) => {
+                submitEvent.preventDefault();
+
+                const formData = new FormData(editForm);
+                fetch(editForm.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest', // Add this header for Django to identify it as an AJAX request
+                        'X-CSRFToken': '{{ csrf_token }}' // Add the CSRF token for security (assuming you have CSRF protection enabled)
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Handle successful response (e.g., display success message, update UI)
+                            console.log(data.message);
+                        } else {
+                            // Handle error response (e.g., display error message)
+                            console.error(data.message);
+                        }
+                    })
+                    .catch(error => {
+                        // Handle errors (e.g., display error message)
+                        console.error(error);
+                    });
+            });
+        });
+    });
+</script>
+
+<script>
+    document.querySelectorAll('.delete-button').forEach(function(button) {
+      button.addEventListener('click', function(event) {
+        var memberCID = event.target.getAttribute('data-member-cid');
+        if (confirm("Are you sure you want to delete this member?")) {
+          // Make an AJAX request to the delete_member URL
+          fetch('/members/' + memberCID + '/delete/', {
+            method: 'POST',
+            headers: {
+              'X-CSRFToken': '{{ csrf_token }}'
+            }
+          })
+          .then(function(response) {
+            if (response.ok) {
+              alert("Member with CID " + memberCID + " deleted successfully.");
+              location.reload(); // Refresh the page
+            } else {
+              alert("Failed to delete member with CID " + memberCID + ".");
+            }
+          })
+          .catch(function(error) {
+            console.error('Error:', error);
+          });
+        }
+      });
+    });
+  </script>
+  
+               
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>

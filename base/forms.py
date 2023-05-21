@@ -1,8 +1,8 @@
 from django import forms
 from django.forms import ModelForm, Form
-from .models import ExecutiveMember, Practitioner, Activity, FinancialStatement
+from .models import ExecutiveMember, Practitioner, Activity, FinancialStatement, TransferForm, Semso
 from django.contrib.auth import authenticate
-
+from django.contrib.auth.forms import PasswordChangeForm
 
 class ExecutiveMemberForm(ModelForm):
     
@@ -48,11 +48,31 @@ class ActivityStatusUpdateForm(ModelForm):
         model = Activity
         fields = ['status']
 
+
+
 class FinancialStatementForm(ModelForm):
 
     class Meta:
         model = FinancialStatement
         fields = '__all__'
+
+class ChangePasswordForm(PasswordChangeForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Customize field labels, placeholders, or attributes if needed
+        self.fields['old_password'].label = 'Old Password'
+        self.fields['new_password1'].label = 'New Password'
+        self.fields['new_password2'].label = 'Confirm Password'
+
+        self.fields['old_password'].widget.attrs['placeholder'] = 'Enter your old password'
+        self.fields['new_password1'].widget.attrs['placeholder'] = 'Enter your new password'
+        self.fields['new_password2'].widget.attrs['placeholder'] = 'Confirm your new password'
+
+    def clean(self):
+        cleaned_data = super().clean()
+        # Add custom validation if needed
+        return cleaned_data
 
 
 class LoginForm(Form):
@@ -92,5 +112,18 @@ class PractitionerForm(ModelForm):
         model = Practitioner
         fields = '__all__'
 
-class CidForm(ModelForm):
-    cid = forms.CharField(label='CID', max_length=11)
+class CidForm(Form):
+    cid = forms.CharField()
+
+class TransferForms(forms.ModelForm):
+    class Meta:
+        model = TransferForm
+        fields = ['cid', 'name', 'email', 'contact_no', 'present_address', 'reason']
+
+class ProfilePictureForm(Form):
+    profile_pic = forms.ImageField()
+
+class SemsoForm(ModelForm):
+    class Meta:
+        model = Semso
+        fields = ['date', 'event', 'contributor', 'amount']

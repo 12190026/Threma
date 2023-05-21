@@ -8,102 +8,138 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>About Us</title>
 
-    
-    <link rel='stylesheet' type="text/css" media="screen" href="{% static 'bootstrap/css/bootstrap03.min.css' %}">
-
+    <link rel="stylesheet" type="text/css" media="screen" href="{% static 'bootstrap/css/bootstrap03.min.css' %}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,400i,700,700i,600,600i&amp;display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans&amp;display=swap">
-
-    
-    <link rel='stylesheet' type="text/css" media="screen" href="{% static 'bootstrap/css/bootstrap02.min.css' %}">
-    
-    <link rel='stylesheet' type="text/css" media="screen" href="{% static 'fonts/fontawesome-all.min.css' %}">
-    
-    <link rel='stylesheet' type="text/css" media="screen" href="{% static 'fonts/simple-line-icons.min.css' %}">
-
+    <link rel="stylesheet" type="text/css" media="screen" href="{% static 'bootstrap/css/bootstrap02.min.css' %}">
+    <link rel="stylesheet" type="text/css" media="screen" href="{% static 'fonts/fontawesome-all.min.css' %}">
+    <link rel="stylesheet" type="text/css" media="screen" href="{% static 'fonts/simple-line-icons.min.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.1/baguetteBox.min.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="{% static 'css/vanilla-zoom.min.css' %}">
+    <style>
+        .clean-block.clean-hero {
+            color: var(--bs-border-color-translucent);
+            background: url("{% static 'img/tech/03.jpg' %}") top / cover no-repeat;
+            border-color: rgba(255, 255, 255, 0.85);
+            height: 886px;
+        }
 
-    
+        .clean-block.clean-hero .text h2 {
+            font-size: 78px;
+            font-weight: bold;
+            margin-top: 196px;
+        }
 
-    <link rel='stylesheet' type="text/css" media="screen" href="{% static 'css/vanilla-zoom.min.css' %}">
-
-    
+        @media (max-width: 767px) {
+            .clean-block.clean-hero {
+                height: auto;
+                padding-top: 50%;
+                background-position: center;
+                background-size: cover;
+            }
+        }
+    </style>
 </head>
 
 <body>
-   
-    {% include 'nav.html'  %}
+    {% include 'nav.html' %}
     <main class="page landing-page">
-        <section class="clean-block clean-hero" style="color: var(--bs-border-color-translucent);background: url(&quot;{% static 'img/tech/03.jpg' %}&quot;) top / cover no-repeat;border-color: rgba(255,255,255,0.85);height: 886px;">
+        <section class="clean-block clean-hero">
             <div class="text">
-                <h2 style="font-size: 78px;font-weight: bold;margin-top: 196px;">About Us</h2>
+                <h2>About Us</h2>
             </div>
         </section>
-        <section class="border-0 clean-block clean-info dark" style="background: rgb(255,255,255);">
+        
+        <section class="border-0 clean-block clean-info dark" style="background: rgb(255, 255, 255);">
             <div class="container">
                 <div class="block-heading">
                     <h2 class="text-info">Info</h2>
-                    <p style="text-align: left;color: rgb(0,0,0);font-size: 16px;width: 501px;"><br>Krodhikali Practitioner groups for lay people in Bhutan and in other parts of the world were founded by His Holiness Kyabje Dungse Garab Rinpochhe, one of the original lineage holders of the Dudjom New Treasure lineage. Years ago, when Kyabje Dungse Garab Rinpochhe was leading the Krodhikali Feast Offering (Tshog) with the monks, nuns, and yogis at Thimphu Memorial Chhoeten, Rinpochhe noticed the wives of the yogis taking part in the offering with full devotion. <br><br>At that moment, Rinpoche started to think about forming a group for lay people in order to preserve Buddhism in Bhutan, especially the Dudjom New Treasure lineage under the Nyingma (Vajrayana) tradition.<br><br></p>
+                    <p style="text-align: left;color: rgb(0, 0, 0);font-size: 16px;width: 501px;"><br>Krodhikali Practitioner groups for lay people in Bhutan and in other parts of the world were founded by His Holiness Kyabje Dungse Garab Rinpochhe, one of the original lineage holders of the Dudjom New Treasure lineage. Years ago, when Kyabje Dungse Garab Rinpochhe was leading the Krodhikali Feast Offering (Tshog) with the monks, nuns, and yogis at Thimphu Memorial Chhoeten, Rinpochhe noticed the wives of the yogis taking part in the offering with full devotion. <br><br>At that moment, Rinpoche started to think about forming a group for lay people in order to preserve Buddhism in Bhutan, especially the Dudjom New Treasure lineage under the Nyingma (Vajrayana) tradition.<br><br></p>
                 </div>
             </div>
         </section>
-        <section class="clean-block clean-info dark" style="height: 212.781px;background: rgb(255,255,255);">
-            <div id="accordion" class="accordion" style="border-color: rgb(255,255,255);border-top-color: rgb(33,;border-right-color: 37,;border-bottom-color: 41);border-left-color: 37,;">
+        
+        <section class="clean-block clean-info dark" style="background: rgb(255, 255, 255);">
+            <div id="accordion" class="accordion" style="border-color: rgb(255, 255, 255); border-top-color: rgb(33, 37, 41); border-right-color: 37,; border-bottom-color: 41; border-left-color: 37;">
                 <div id="accordion-item1" class="accordion-item">
                     <div id="accordion-corpo1" class="collapse accordion-corpo" aria-labelledby="accordion-cab1" data-bs-parent="#accordion">
                         <p class="text-start accordion-p">Paragraph</p>
                     </div>
                 </div>
-                <div class="text-center accordion-item" id="accordion-item2">
-                    <div class="text-center accordion-cab" id="accordion-cab2" aria-controls="accordion-corpo2" data-bs-target="#accordion-corpo2" data-bs-toggle="collapse">
-                        <h6 class="text-center accordion-titulo" style="color: #EF9712;"><br>Dudjom Lineage<br><br></h6>
-                    </div>
-                    <div class="text-center accordion-cab" id="accordion-cab-1" aria-controls="accordion-corpo2" data-bs-target="#accordion-corpo2" data-bs-toggle="collapse">
-                        <h6 class="text-center border-0 accordion-titulo" style="color: #EF9712;"><br>Galikhar Tshokchhung<br><br></h6>
+                <div class="accordion-item" id="accordion-item2">
+                    <div class="accordion-cab" id="accordion-cab2" aria-controls="accordion-corpo2" data-bs-target="#accordion-corpo2" data-bs-toggle="collapse">
+                        <h6 class="text-center accordion-titulo" style="color: #EF9712;"><br>Dudjom Lineage</h6>
+                        <div style="display: flex; align-items: center; justify-content: center;">
+                            <hr style="background-color: #EF9712; height: 4px; width: 80px; border: none; margin-right: 8px;">
+                            <i class="fas fa-bell" style="color: #EF9712; font-size: 20px;"></i>
+                            <hr style="background-color: #EF9712; height: 4px; width: 80px; border: none; margin-left: 8px;">
+                        </div>
                     </div>
                     <div class="text-center collapse accordion-corpo" id="accordion-corpo2" aria-labelledby="accordion-cab2" data-bs-parent="#accordion">
                         <p class="text-center accordion-p">Paragraph</p>
                     </div>
                 </div>
-                <div class="text-center accordion-item" id="accordion-item3">
-                    <div class="text-center accordion-cab" id="accordion-cab3" aria-controls="accordion-corpo3" data-bs-target="#accordion-corpo3" data-bs-toggle="collapse">
-                        <h6 class="text-center accordion-titulo" style="color: #EF9712;"><br>Centers<br><br></h6>
+                <div class="accordion-item" id="accordion-item3">
+                    <div class="accordion-cab" id="accordion-cab3" aria-controls="accordion-corpo3" data-bs-target="#accordion-corpo3" data-bs-toggle="collapse">
+                        <h6 class="text-center accordion-titulo" style="color: #EF9712;"><br>Centers</h6>
+                        <div style="display: flex; align-items: center; justify-content: center;">
+                            <hr style="background-color: #EF9712; height: 4px; width: 80px; border: none; margin-right: 8px;">
+                            <i class="fas fa-bell" style="color: #EF9712; font-size: 20px;"></i>
+                            <hr style="background-color: #EF9712; height: 4px; width: 80px; border: none; margin-left: 8px;">
+                        </div>
                     </div>
-                    <div class="text-center collapse accordion-corpo" id="accordion-corpo3" aria-labelledby="accordion-cab3" data-bs-parent="#accordion">
+                    <div class="collapse accordion-corpo" id="accordion-corpo3" aria-labelledby="accordion-cab3" data-bs-parent="#accordion">
                         <p class="text-center accordion-p">Paragraph</p>
                     </div>
                 </div>
-                <div id="accordion-item4" class="accordion-item">
-                    <div id="accordion-corpo4" class="collapse accordion-corpo" aria-labelledby="accordion-cab4" data-bs-parent="#accordion">
+                <div class="accordion-item" id="accordion-item4">
+                    <div class="accordion-cab" id="accordion-cab4" aria-controls="accordion-corpo4" data-bs-target="#accordion-corpo4" data-bs-toggle="collapse">
+                        <h6 class="text-center accordion-titulo" style="color: #EF9712;"><br>Galikhar Tshokchhung</h6>
+                        <div style="display: flex; align-items: center; justify-content: center;">
+                            <hr style="background-color: #EF9712; height: 4px; width: 80px; border: none; margin-right: 8px;">
+                            <i class="fas fa-bell" style="color: #EF9712; font-size: 20px;"></i>
+                            <hr style="background-color: #EF9712; height: 4px; width: 80px; border: none; margin-left: 8px;">
+                        </div>
+                    </div>
+                    <div class="collapse accordion-corpo" id="accordion-corpo4" aria-labelledby="accordion-cab4" data-bs-parent="#accordion">
                         <p class="text-start accordion-p">Paragraph</p>
                     </div>
                 </div>
             </div>
         </section>
-        <section class="clean-block about-us" style="height: 771px;">
+        
+        
+        
+        
+        
+        
+        <section class="clean-block about-us">
             <div class="container">
                 <div class="block-heading">
                     <h2 class="text-info">Executive Committee</h2>
                 </div>
                 <div class="row justify-content-center">
-                    <div class="col-sm-6 col-lg-4">
-                        <div class="card text-center clean-card"><img class="card-img-top w-100 d-block" src="{% static 'img/avatars/avatar1.jpeg' %}">
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card text-center clean-card">
+                            <img class="card-img-top w-100 d-block" src="{% static 'img/avatars/avatar1.jpeg' %}">
                             <div class="card-body info">
                                 <h4 class="card-title">Manager</h4>
                                 <p class="card-text">Sonam Wangchuk</p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-6 col-lg-4">
-                        <div class="card text-center clean-card"><img class="card-img-top w-100 d-block" src="{% static 'img/avatars/avatar2.jpeg' %}">
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card text-center clean-card">
+                            <img class="card-img-top w-100 d-block" src="{% static 'img/avatars/avatar2.jpeg' %}">
                             <div class="card-body info">
                                 <h4 class="card-title">Chairperson</h4>
                                 <p class="card-text">Ugyen Wangdi</p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-6 col-lg-4">
-                        <div class="card text-center clean-card"><img class="card-img-top w-100 d-block" src="{% static 'img/avatars/avatar3.jpeg' %}">
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card text-center clean-card">
+                            <img class="card-img-top w-100 d-block" src="{% static 'img/avatars/avatar3.jpeg' %}">
                             <div class="card-body info">
                                 <h4 class="card-title">Treasurer</h4>
                                 <p class="card-text">Tshering Choden</p>
@@ -113,6 +149,7 @@
                 </div>
             </div>
         </section>
+        
         <section class="clean-block slider dark">
             <div class="container">
                 <div class="block-heading">

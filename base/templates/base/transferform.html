@@ -1,156 +1,138 @@
 {% extends 'main.html' %}
 
 {% block content %}
-       
-       
-                <div class="container-fluid">
-                    <h3 class="text-dark mb-4">Transfer Form</h3>
-                    
-                    <div class="card shadow">
-                        <div class="card-header py-3 d-flex justify-content-between">
-                            <p class="text-primary m-0 fw-bold">Transfer Form Info</p>
-  
-                                                            <!-- Add a data-toggle attribute with "modal" value to the button -->
-                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addMemberModal">Generate Form</button>
-
-                                <!-- Define the modal with the id "addMemberModal" -->
-                                <div class="modal fade" id="addMemberModal" tabindex="-1" role="dialog" aria-labelledby="addMemberModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="addMemberModalLabel">Generate Form</h5>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <!-- Use Bootstrap's grid system to align the form fields properly -->
-                                                <div class="container">
-                                                    <div class="row">
-                                                        <div class="col-md-12">
-                                                            <form method="post" enctype="multipart/form-data" action="{% url 'display_member_info' %}">
-                                                                {% csrf_token %}
-                                                                {{ form.as_p}}
-                                                                <button type="submit" data-toggle="modal" data-target="#memberInfoModal">Submit</button>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Modal for displaying member information -->
-                                <div class="modal fade" id="memberInfoModal" tabindex="-1" role="dialog" aria-labelledby="memberInfoModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="memberInfoModalLabel">Member Information</h5>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <div class="container">
-                                                    <div class="row">
-                                                        <div class="col-md-12">
-                                                            <p>Name: {{ member.name }}</p>
-                                                            <p>Email: {{ member.email }}</p>
-                                                            <p>Phone: {{ member.phone }}</p>
-                                                            <p>Address: {{ member.address }}</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>   
-                                        </div>
-                                    </div>
-                                </div>
-
-
+    <div class="container-fluid">
+        <h3 class="text-dark mb-4">Transfer Form</h3>
+        <div class="card shadow">
+            <div class="card-header py-3 d-flex justify-content-between">
+                <p class="text-primary m-0 fw-bold">Transfer Form Info</p>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addMemberModal">Generate Form</button>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 text-nowrap">
+                        <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
+                            <label class="form-label">Show&nbsp;
+                                <select class="d-inline-block form-select form-select-sm" onchange="changePageSize(this.value)">
+                                    <option value="10" {% if page_size == 10 %}selected{% endif %}>10</option>
+                                    <option value="25" {% if page_size == 25 %}selected{% endif %}>25</option>
+                                    <option value="50" {% if page_size == 50 %}selected{% endif %}>50</option>
+                                    <option value="100" {% if page_size == 100 %}selected{% endif %}>100</option>
+                                </select>
+                                &nbsp;
+                            </label>
                         </div>
-                     
-                        
-                        
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6 text-nowrap">
-                                    <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
-                                        <label class="form-label">Show&nbsp;
-                                            <select class="d-inline-block form-select form-select-sm" onchange="changePageSize(this.value)">
-                                                <option value="10" {% if page_size == 10 %}selected{% endif %}>10</option>
-                                                <option value="25" {% if page_size == 25 %}selected{% endif %}>25</option>
-                                                <option value="50" {% if page_size == 50 %}selected{% endif %}>50</option>
-                                                <option value="100" {% if page_size == 100 %}selected{% endif %}>100</option>
-                                            </select>
-                                        &nbsp;</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="text-md-end dataTables_filter" id="dataTable_filter">
-                                        <label class="form-label">
-                                            <input type="search" class="form-control form-control-sm" aria-controls="dataTable" placeholder="Search" onkeyup="searchTable(this.value)">
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
-                                <table class="table my-0" id="dataTable">
-                                    <thead>
-                                        <tr>
-                                            <th>Activity Name</th>
-                                            <th>Descritption</th>
-                                            <th>Date</th>
-                                            <th>Time</th>
-                                            <th>Poster</th>
-                                            <th>Status</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <!-- Loop through the data retrieved from the database and populate the table rows -->
-                                        {% for activity in Activity %}
-                                        <tr>
-                                            <td>{{ activity.name }}</td>
-                                            <td>{{ activity.description }}</td>
-                                            <td>{{ activity.date }}</td>
-                                            <td>{{ activity.time }}</td>
-                                            <td>{{ activity.image }}</td>
-                                            <td>{{ activity.status }}</td>
-                                            <td>
-                                                {% if activity.status == 'PENDING' %}
-                                                <form method="post" action="{% url 'update_activity_status' activity.activity_id %}">
-                                                    {% csrf_token %}
-                                                    <button type="submit" class="btn btn-success">Mark as Complete</button>
-                                                </form>
-                                                {% else %}
-                                                    Completed
-                                                {% endif %}
-                                            </td>
-                                        </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="text-md-end dataTables_filter" id="dataTable_filter">
+                            <label class="form-label">
+                                <input type="search" class="form-control form-control-sm" aria-controls="dataTable" placeholder="Search" onkeyup="searchTable(this.value)">
+                            </label>
                         </div>
-                        
                     </div>
                 </div>
-         
+            </div>
+        </div>
+    </div>
 
-                                 <!-- Include the necessary JavaScript files for Bootstrap -->
+   <!-- Generate Form Modal -->
+<div class="modal fade" id="addMemberModal" tabindex="" role="dialog" aria-labelledby="addMemberModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addMemberModalLabel">Generate Form</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="searchForm" method="POST" action="{% url 'display_member_info' %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="cid">CID:</label>
+                        <input type="text" id="cid" name="cid" minlength="11" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Member Information Modal -->
+<div class="modal fade" id="memberInfoModal" tabindex="-1" role="dialog" aria-labelledby="memberInfoModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="memberInfoModalLabel">Member Information</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="transferForm" method="POST" action="{% url 'submit_transfer_form' %}">
+                    {% csrf_token %}
+                    <p><strong>Name:</strong> <span id="memberName"></span></p>
+                    <p><strong>Email:</strong> <span id="memberEmail"></span></p>
+                    <p><strong>Phone:</strong> <span id="memberPhone"></span></p>
+                    <p><strong>Address:</strong> <span id="memberAddress"></span></p>
+                    
+                    <div class="form-group">
+                        <label for="reason">Reason:</label>
+                        <input type="text" id="reason" name="reason" maxlength="200" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+    <!-- Include the necessary JavaScript files for Bootstrap and jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script>
-        // Show memberInfoModal when form is submitted
-        $('#addMemberModal form').submit(function(e) {
-            e.preventDefault(); // Prevent form submission
-            $('#memberInfoModal').modal('show'); // Show memberInfoModal
+        $(document).ready(function() {
+            // Handle search form submission
+            $('#searchForm').submit(function(e) {
+                e.preventDefault(); // Prevent form submission
+                var cid = $('#cid').val(); // Get the CID value from the input
+                // Perform an AJAX request to retrieve member information
+                $.get('{% url "display_member_info" %}', {cid: cid}, function(data) {
+                    if (data.member) {
+                        // Update the member information in the modal
+                        $('#memberName').text('Name: ' + data.member.name);
+                        $('#memberEmail').text('Email: ' + data.member.email);
+                        $('#memberPhone').text('Phone: ' + data.member.contact_no);
+                        $('#memberAddress').text('Address: ' + data.member.present_address);
+                        // Show the member information modal
+                        $('#memberInfoModal').modal('show');
+                    } else {
+                        // Show an error message if member not found
+                        $('#memberName').text('');
+                        $('#memberEmail').text('');
+                        $('#memberPhone').text('');
+                        $('#memberAddress').text('');
+                        alert('Member not found.');
+                    }
+                }).fail(function() {
+                    // Show an error message if the AJAX request fails
+                    $('#memberName').text('');
+                    $('#memberEmail').text('');
+                    $('#memberPhone').text('');
+                    $('#memberAddress').text('');
+                    alert('An error occurred while retrieving member information.');
+                });
+            });
+    
+            // Handle generate form button click
+            $('#generateFormButton').click(function() {
+                // Redirect to the transfer form page
+                window.location.href = "{% url 'submit_transfer_form' %}";
+            });
         });
     </script>
-    
-
-
-        {% endblock %}
+{% endblock %}

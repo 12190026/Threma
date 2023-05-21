@@ -49,6 +49,7 @@ class ExecutiveMember(AbstractBaseUser, PermissionsMixin):
     village = models.CharField(max_length=255)
     geog = models.CharField(max_length=255)
     dzongkhag = models.CharField(max_length=255)
+    profile_pic = models.ImageField(upload_to='profile_pics', default='default_profile_pic.jpg')
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     last_login = models.DateTimeField(null=True, blank=True)
@@ -74,6 +75,15 @@ class ExecutiveMember(AbstractBaseUser, PermissionsMixin):
 
 
 class Practitioner(AbstractBaseUser):
+    STAGE_CHOICES = (
+        ('Chapdro', 'Chapdro'),
+        ('Semkey', 'Semkey'),
+        ('Mendray', 'Mendray'),
+        ('Yoenla Dinpa', 'Yoenla Dinpa'),
+        ('Ku Sum Domdey', 'Ku Sum Domdey'),
+        ('Lami Nyelijor', 'Lami Nyelijor'),
+    )
+
     cid = models.CharField(max_length=11, unique=True, validators=[MinLengthValidator(11)])
     name = models.CharField(max_length=255)
     responsibility = models.CharField(max_length=255)
@@ -83,6 +93,7 @@ class Practitioner(AbstractBaseUser):
     village = models.CharField(max_length=255)
     geog = models.CharField(max_length=255)
     dzongkhag = models.CharField(max_length=255)
+    stage_of_threma = models.CharField(max_length=255, choices=STAGE_CHOICES)
     is_active = models.BooleanField(default=True)
 
     USERNAME_FIELD = 'cid'
@@ -125,3 +136,20 @@ class FinancialStatement(models.Model):
 
     def __str__(self):
         return str(self.year)
+
+class TransferForm(models.Model):
+    cid = models.CharField(max_length=11)
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    contact_no = models.CharField(max_length=20)
+    present_address = models.CharField(max_length=200)  # Specify the maximum length
+    reason = models.CharField(max_length=200)
+
+class Semso(models.Model):
+    date = models.DateField()
+    event = models.CharField(max_length=100)
+    contributor = models.CharField(max_length=100)
+    amount = models.DecimalField(max_digits=8, decimal_places=2)
+
+    def __str__(self):
+        return self.event

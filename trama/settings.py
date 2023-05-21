@@ -122,12 +122,14 @@ AUTHENTICATION_BACKENDS = (
     'base.backends.CustomBackend',
     )
 
+AUTH_PASSWORD_CHANGE_TIMEOUT = 150  # s min 30 seconds
+
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 
-
+LOGOUT_REDIRECT_URL = 'home'  # Replace 'home' with the desired URL name
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -151,8 +153,9 @@ STATICFILES_DIRS = [
 ]
 
 # Media files configuration
-# MEDIA_URL = '/media/'
-# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 
 
 # Default primary key field type

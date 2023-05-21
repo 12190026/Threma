@@ -17,17 +17,17 @@
     }
 </style>
                 <div class="container-fluid">
-                    <h3 class="text-dark mb-4">Activity</h3>
+                    <h3 class="text-dark mb-4">Semso</h3>
                     
                     <div class="card shadow">
                         <div class="card-header py-3 d-flex justify-content-between">
-                            <p class="text-primary m-0 fw-bold">Activity Info</p>
+                            <p class="text-primary m-0 fw-bold">Semso Info</p>
 
                             
 
                             <!-- Add a data-toggle attribute with "modal" value to the button -->
                             {% if user.role == "MANAGER" %}
-                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addMemberModal">Add Activity</button>
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addMemberModal">Add Semso</button>
                             {% endif %}
 
                         <!-- Define the modal with the id "addMemberModal" -->
@@ -35,7 +35,7 @@
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="addMemberModalLabel">Add Activity</h5>
+                                        <h5 class="modal-title" id="addMemberModalLabel">Add Semso</h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
@@ -46,25 +46,23 @@
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     
-                                                    <form method="post" enctype="multipart/form-data" action="{% url 'add_activity' %}">
+                                                    <form method="post" enctype="multipart/form-data" action="{% url 'add_semso' %}">
                                                         {% csrf_token %}
-                                                        <label for="name">Activity Name:</label>
-                                                        <input type="text" id="name" name="name" required style="width: 100%;">
-                                                        <br>
-                                                        <label for="description">Description:</label>
-                                                        <textarea id="description" name="description" required style="width: 100%;"></textarea>
-                                                        <br>
-                                                        <label for="image">Image:</label>
-                                                        <input type="file" id="image" name="image" accept="image/*" required style="width: 100%;">
-                                                        <br>
                                                         <label for="date">Date:</label>
                                                         <input type="date" id="date" name="date" required style="width: 100%;">
                                                         <br>
-                                                        <label for="time">Time:</label>
-                                                        <input type="time" id="time" name="time" required style="width: 100%;">
+                                                        <label for="event">Event:</label>
+                                                        <input type="text" id="event" name="event" required style="width: 100%;">
                                                         <br>
-                                                        <input type="submit" value="Add Activity">
+                                                        <label for="contributor">Contributor:</label>
+                                                        <input type="text" id="contributor" name="contributor" required style="width: 100%;">
+                                                        <br>
+                                                        <label for="amount">Amount:</label>
+                                                        <input type="number" id="amount" name="amount" step="0.01" required style="width: 100%;">
+                                                        <br>
+                                                        <input type="submit" value="Add Semso">
                                                     </form>
+                                                    
                                                     
                                                     
                                     
@@ -113,62 +111,28 @@
                                 <table class="table my-0" id="dataTable">
                                     <thead>
                                         <tr>
-                                            <th>Activity Name</th>
-                                            <th>Descritption</th>
                                             <th>Date</th>
-                                            <th>Time</th>
-                                            <th>Poster</th>
-                                            <th>Status</th>
-                                            <th>Action</th>
+                                            <th>Event</th>
+                                            <th>Contributor</th>
+                                            <th>Amount</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <!-- Loop through the data retrieved from the database and populate the table rows -->
-                                        {% for activity in Activity %}
+                                        {% for semso in Semso %}
                                         <tr>
-                                            <td>{{ activity.name }}</td>
-                                            <td>{{ activity.description }}</td>
-                                            <td>{{ activity.date }}</td>
-                                            <td>{{ activity.time }}</td>
-                                            <td>
-                                                <button class="btn btn-primary" onclick="showPopup('{{ activity.image.url }}')">View Image</button>
-                                            </td>
-                                            <td>{{ activity.status }}</td>
-                                            <td>
-                                                {% if activity.status == 'PENDING' %}
-                                                <form method="post" action="{% url 'update_activity_status' activity.activity_id %}">
-                                                    {% csrf_token %}
-                                                    <button type="submit" class="btn btn-success">Mark as Complete</button>
-                                                </form>
-                                                {% else %}
-                                                    Completed
-                                                {% endif %}
-                                            </td>
+                                            <td>{{ semso.date }}</td>
+                                            <td>{{ semso.event }}</td>
+                                            <td>{{ semso.contributor }}</td>
+                                            <td>{{ semso.amount }}</td>
+                                        
                                         </tr>
                                         {% endfor %}
                                     </tbody>
                                 </table>
                             </div>
                             
-                                                    <!-- Define the modal for viewing the image -->
-                            <div class="modal fade" id="viewImageModal" tabindex="-1" role="dialog" aria-labelledby="viewImageModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="viewImageModalLabel">View Image</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                              
-                                        </div>
-                                        <div class="modal-body">
-                                            <div id="popup-container">
-                                                <img id="popup-image" src="" alt="Popup Image">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                                                        
-                            
+                           
 
 
                            
@@ -188,8 +152,8 @@
                                 
                                         // Loop through the rows and hide those that don't match the search input
                                         for (var i = 0; i < rows.length; i++) {
-                                            var cid = rows[i].getElementsByTagName("td")[2];
-                                            var name = rows[i].getElementsByTagName("td")[0]; // Assuming name is the first column (index 0)
+                                            var cid = rows[i].getElementsByTagName("td")[1];
+                                            var name = rows[i].getElementsByTagName("td")[2]; // Assuming name is the first column (index 0)
                                 
                                             if (cid && name) {
                                                 var cidValue = cid.textContent || cid.innerText;
@@ -212,14 +176,6 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 
-    <script>
-        function showPopup(imageUrl) {
-            var popupImage = document.getElementById("popup-image");
-            popupImage.src = imageUrl;
-            // Show the modal
-            $('#viewImageModal').modal('show');
-        }
-    </script>
 
 
         {% endblock %}
