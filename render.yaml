@@ -1,5 +1,5 @@
 databases:
-  - name: Threma App
+  - name: Threma 
     databaseName: Threma
     user: Threma
 
