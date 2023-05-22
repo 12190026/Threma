@@ -3,6 +3,7 @@ from django.db import models
 from django.core.validators import MinLengthValidator
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin, AbstractUser
 import datetime
+from cloudinary.models import CloudinaryField
 
 YEAR_CHOICES = []
 
@@ -49,7 +50,7 @@ class ExecutiveMember(AbstractBaseUser, PermissionsMixin):
     village = models.CharField(max_length=255)
     geog = models.CharField(max_length=255)
     dzongkhag = models.CharField(max_length=255)
-    profile_pic = models.ImageField(upload_to='profile_pics', default='default_profile_pic.jpg')
+    profile_pic = CloudinaryField('profile_pics')
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     last_login = models.DateTimeField(null=True, blank=True)
@@ -122,7 +123,7 @@ class Activity(models.Model):
     activity_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
     description = models.TextField()
-    image = models.ImageField(upload_to='activity_images/')
+    image = CloudinaryField('activity_images/')
     date = models.DateField()
     time = models.TimeField()
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='PENDING')
@@ -132,7 +133,7 @@ class Activity(models.Model):
 
 class FinancialStatement(models.Model):
     year = models.PositiveIntegerField(choices=YEAR_CHOICES)
-    image = models.ImageField(upload_to='financial_statements/')
+    image = CloudinaryField('financial_statements/')
 
     def __str__(self):
         return str(self.year)

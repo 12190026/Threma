@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
 from pathlib import Path
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 import dj_database_url
 
 import environ
@@ -47,6 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'base.apps.BaseConfig',
+    'cloudinary'
 ]
 
 MIDDLEWARE = [
@@ -59,6 +63,12 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+cloudinary.config( 
+  cloud_name = "dwfhplpuj", 
+  api_key = "331758864728447", 
+  api_secret = "hV_MZzF6piEoR5tlQcXOgFKv4Ds" 
+)
 
 ROOT_URLCONF = 'trama.urls'
 
