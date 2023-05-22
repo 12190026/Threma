@@ -62,7 +62,7 @@ urlpatterns = [
   
 
     #Users
-    path('home/', views.home, name='home'),
+    path('', views.home, name='home'),
 
     path('aboutus/', views.aboutus, name='aboutus'),
 

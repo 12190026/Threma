@@ -11,6 +11,13 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
 from pathlib import Path
+import dj_database_url
+
+import environ
+
+env = environ.Env()
+
+environ.Env.read_env()
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -24,9 +31,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-aae$)6-9(g6)0f64f6ogz3!+2h9vfi@6ua8dsh67&3jvv7xwti'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -78,15 +85,11 @@ WSGI_APPLICATION = 'trama.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'Threma',
-        'USER': 'postgres',
-        'PASSWORD': 'somdxd508',
-        'HOST': 'localhost',
-        'PORT': '',
-    }
+    'default': dj_database_url.parse(env('DATABASE_URL')) 
+
 }
 
 
@@ -155,6 +158,7 @@ STATICFILES_DIRS = [
 # Media files configuration
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 
 
 
