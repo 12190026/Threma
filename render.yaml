@@ -1,0 +1,20 @@
+databases:
+  - name: Threma App
+    databaseName: Threma
+    user: Threma
+
+services:
+  - type: web
+    name: Threma App
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn trama.wsgi:application"
+    envVars:
+      - key: postgres://threma_user:072ZdTsGTrAA9jSInCqy0HWTq0dQhyNP@dpg-chlavku4dadfmskhuev0-a.oregon-postgres.render.com/threma
+        fromDatabase:
+          name: Threma
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: WEB_CONCURRENCY
+        value: 4
