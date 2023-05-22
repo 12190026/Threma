@@ -10,6 +10,53 @@
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addMemberModal">Add Financial Statement</button>
                 {% endif %}
             </div>
+            <!-- Define the modal with the id "addMemberModal" -->
+<div class="modal fade" id="addMemberModal" tabindex="-1" role="dialog" aria-labelledby="addMemberModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addMemberModalLabel">Add Financial Statement</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Use Bootstrap's grid system to align the form fields properly -->
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            
+                            <form method="post" enctype="multipart/form-data" action="{% url 'upload_statement' %}">
+                                {% csrf_token %}
+                                <div>
+                                    <label for="year" style="display: inline-block; width: 100px;">Year:</label>
+                                    <input type="text" id="year" name="year" required style="display: inline-block; width: 200px;">
+                                </div>
+                                <br>
+                                <div>
+                                    <label for="image" style="display: inline-block; width: 100px;">Image:</label>
+                                    <input type="file" id="image" name="image" accept="image/*" required style="display: inline-block; width: 200px;">
+                                </div>
+                                
+                                
+                                <button type="submit">Upload</button>
+                            </form>
+                            
+                              
+             
+
+                    
+                        </div>
+                    </div>
+                </div>
+            </div>
+           
+            
+            
+            
+        </div>
+    </div>
+</div>
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6 text-nowrap">
@@ -77,6 +124,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 
     <script>
