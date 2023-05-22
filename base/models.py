@@ -123,7 +123,7 @@ class Activity(models.Model):
     activity_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
     description = models.TextField()
-    image = CloudinaryField('activity_images/')
+    image = CloudinaryField('activity_images/', default='https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.personality-insights.com%2Fdefault-profile-pic%2F&psig=AOvVaw05weK3HVtZw68bQ5ekVMuw&ust=1684855572822000&source=images&cd=vfe&ved=0CBEQjRxqFwoTCJCAiqOeif8CFQAAAAAdAAAAABAD')
     date = models.DateField()
     time = models.TimeField()
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='PENDING')
