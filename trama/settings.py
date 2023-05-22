@@ -170,7 +170,7 @@ USE_TZ = True
 #     # and creating unique names for each version so they can safely be cached forever.
 #     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATIC_URL = "/static/"
-MEDIA_URL = ''
+MEDIA_URL = '/media/'
 
 # STATICFILES_DIRS = [
 #     BASE_DIR / 'static'

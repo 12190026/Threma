@@ -145,7 +145,9 @@
                                                 <th>Geog</th>
                                                 <th>Dzongkhag</th>
                                                 <th>Role</th>
+                                                {% if user.role == "ADMIN" %}
                                                 <th>Actions</th>
+                                                {% endif %}
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -164,11 +166,13 @@
                                                 <td>{{ member.dzongkhag }}</td>
                                                 <td>{{ member.role }}</td>
                                                 <td>
+                                                    {% if user.role == "ADMIN" %}
                                                     <div class="d-flex">
                                                         <button type="button" class="btn btn-primary edit-button" data-member-cid="{{ member.cid }}" data-toggle="modal" data-target="#editMemberModal{{ member.cid }}">Edit</button>
                                                         <button class="btn btn-primary edit-button delete-button" data-member-cid="{{ member.cid }}" style="color: white; background-color: red;">Delete</button>
 
                                                     </div>
+                                                    {% endif %}
                                                 </td>
                                             </tr>
                                             {% endfor %}

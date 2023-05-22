@@ -144,7 +144,9 @@
                                             <th>Geog</th>
                                             <th>Dzongkhag</th>
                                             <th>Stage Of Threma</th>
+                                            {% if user.role == "MANAGER" %}
                                             <th>Actions</th>
+                                            {% endif %}
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -162,11 +164,13 @@
                                             <td>{{ member.dzongkhag }}</td>
                                             <td>{{ member.stage_of_threma }}</td>
                                             <td>
+                                                {% if user.role == "MANAGER" %}
                                                 <div class="d-flex">
                                                     <button type="button" class="btn btn-primary edit-button" data-member-cid="{{ member.cid }}" data-toggle="modal" data-target="#editMemberModal{{ member.cid }}">Edit</button>
                                                     <button class="btn btn-primary edit-button delete-button" data-member-cid="{{ member.cid }}" style="color: white; background-color: red;">Delete</button>
 
                                                 </div>
+                                                {% endif %}
                                             </td>
                                             <!-- <td><img src="{{ member.profilepic.url }}" class="rounded-circle me-2" width="30" height="30"></td> -->
                                         </tr>
