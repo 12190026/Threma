@@ -31,6 +31,11 @@ urlpatterns = [
 
     path('add_member_practitioner/', views.add_member_practitioner, name='add_member_practitioner'),
 
+    path('bulk_upload/', views.bulk_upload, name='bulk_upload'),
+
+    path('export_practitioners/', views.export_practitioners, name='export_practitioners'),
+
+
     path('add_activity/', views.add_activity, name='add_activity'),
 
     path('add_semso/', views.add_semso, name='add_semso'),
@@ -69,5 +74,7 @@ urlpatterns = [
     path('uiactivity/', views.uiactivity, name='uiactivity'),
 
     path('uifinance/', views.uifinance, name='uifinance'),
+
+    path('uisemso/', views.uifinance, name='uisemso'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

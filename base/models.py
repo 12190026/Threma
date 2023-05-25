@@ -5,6 +5,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 import datetime
 from cloudinary.models import CloudinaryField
 
+
 YEAR_CHOICES = []
 
 for r in range(1980, (datetime.datetime.now().year+1)):
@@ -85,12 +86,11 @@ class Practitioner(AbstractBaseUser):
         ('Lami Nyelijor', 'Lami Nyelijor'),
     )
 
-    cid = models.CharField(max_length=11, unique=True, validators=[MinLengthValidator(11)])
+    cid = models.CharField(unique=True, validators=[MinLengthValidator(11)])
     name = models.CharField(max_length=255)
     responsibility = models.CharField(max_length=255)
     present_address = models.CharField(max_length=255)
-    contact_no = models.CharField(max_length=8, validators=[MinLengthValidator(8)])
-    card_no = models.CharField(max_length=255)
+    contact_no = models.CharField(validators=[MinLengthValidator(8)])
     village = models.CharField(max_length=255)
     geog = models.CharField(max_length=255)
     dzongkhag = models.CharField(max_length=255)

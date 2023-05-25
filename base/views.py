@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 from .models import  ExecutiveMember, Practitioner, Activity, FinancialStatement, TransferForm, Semso
-from .forms import ExecutiveMemberForm, PractitionerForm, LoginForm, ActivityForm, FinancialStatementForm, CidForm, ProfilePictureForm, PasswordChangeForm, TransferForms, SemsoForm
+from .forms import ExecutiveMemberForm, PractitionerForm, LoginForm, ActivityForm, FinancialStatementForm, CidForm, ProfilePictureForm, PasswordChangeForm, TransferForms, SemsoForm, BulkUploadForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .backends import CustomBackend
@@ -18,6 +18,10 @@ from django.views.generic import View
 import os
 from django.conf import settings
 import json
+import csv, io
+import pandas as pd
+from .resource import PractitionerResource
+
 
 def login_admin(request):
     page = 'adminlogin'
@@ -243,6 +247,81 @@ def add_member_practitioner(request):
             messages.error(request, 'Form submission failed. Please check your input.')  # Show error message
     return render(request, 'base/practitioner.html', {'form': form})
 
+import openpyxl
+from django.db import IntegrityError
+
+def bulk_upload(request):
+    if request.method == 'POST' and request.FILES['excel_file']:
+        excel_file = request.FILES['excel_file']
+        wb = openpyxl.load_workbook(excel_file)
+        sheet = wb.active
+
+        headers = [cell.value for cell in sheet[1]]  # Get the header values
+
+        for row in sheet.iter_rows(min_row=2, values_only=True):
+            data = dict(zip(headers, row))  # Map header values to row values
+            print(data)
+
+            # Extract the relevant attributes from the data dictionary
+            cid = int(data.get('cid', '')) if data.get('cid') else None
+            name = data.get('name', '')
+            responsibility = data.get('responsibility', '')
+            present_address = data.get('present_address', '')
+            contact_no = int(data.get('contact_no', '')) if data.get('cid') else None
+            village = data.get('village', '')
+            geog = data.get('geog', '')
+            dzongkhag = data.get('dzongkhag', '')
+            stage_of_threma = data.get('stage_of_threma', '')
+
+            try:
+                practitioner = Practitioner.objects.create(
+                    cid=cid,
+                    name=name,
+                    responsibility=responsibility,
+                    present_address=present_address,
+                    contact_no=contact_no,
+                    village=village,
+                    geog=geog,
+                    dzongkhag=dzongkhag,
+                    stage_of_threma=stage_of_threma
+                )
+            except IntegrityError:
+                continue  # Ignore the row with null cid and move to the next row
+
+        return redirect('practitioner')  # Redirect to the practitioner page
+
+    else:
+        form = BulkUploadForm()
+
+    return render(request, 'base/practitioner.html', {'form': form})
+
+
+
+def export_practitioners(request):
+    practitioners = Practitioner.objects.all()
+    data = {
+        'CID': [practitioner.cid for practitioner in practitioners],
+        'Name': [practitioner.name for practitioner in practitioners],
+        'Responsibility': [practitioner.responsibility for practitioner in practitioners],
+        'Present Address': [practitioner.present_address for practitioner in practitioners],
+        'Contact No': [practitioner.contact_no for practitioner in practitioners],
+        'Village': [practitioner.village for practitioner in practitioners],
+        'Geog': [practitioner.geog for practitioner in practitioners],
+        'Dzongkhag': [practitioner.dzongkhag for practitioner in practitioners],
+        'Stage of Threma': [practitioner.stage_of_threma for practitioner in practitioners],
+        'Is Active': [practitioner.is_active for practitioner in practitioners],
+    }
+
+    df = pd.DataFrame(data)
+
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=practitioners.xlsx'
+    df.to_excel(response, index=False)
+
+    return response
+
+
+
 @login_required
 def add_activity(request):
     if request.method == 'POST':
@@ -367,11 +446,9 @@ def edit_member(request, member_cid):
 def edit_practitioner(request, member_cid):
     if request.method == 'POST':
         name = request.POST.get('name')
-        email = request.POST.get('email')
         responsibility = request.POST.get('responsibility')
         present_address = request.POST.get('present_address')
         contact_no = request.POST.get('contact_no')
-        card_no = request.POST.get('card_no')
         village = request.POST.get('village')
         geog = request.POST.get('geog')
         dzongkhag = request.POST.get('dzongkhag')
@@ -380,11 +457,9 @@ def edit_practitioner(request, member_cid):
         try:
             member = Practitioner.objects.get(cid=member_cid)
             member.name = name
-            member.email = email
             member.responsibility = responsibility
             member.present_address = present_address
             member.contact_no = contact_no
-            member.card_no = card_no
             member.village = village
             member.geog = geog
             member.dzongkhag = dzongkhag

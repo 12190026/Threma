@@ -12,10 +12,46 @@
 
                             
 
-                            <!-- Add a data-toggle attribute with "modal" value to the button -->
-                            {% if user.role == "MANAGER" %}
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addMemberModal">Add Members</button>
-                             {% endif %}
+<!-- Add a data-toggle attribute with "modal" value to the button -->
+{% if user.role == "MANAGER" %}
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addMemberModal">Add Members</button>
+{% endif %}
+
+
+{% if user.role == "MANAGER" %}
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#bulkUploadModal">Bulk Upload</button>
+{% endif %}
+
+<!-- File selection popup -->
+<div class="modal fade" id="bulkUploadModal" tabindex="-1" role="dialog" aria-labelledby="bulkUploadModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="bulkUploadModalLabel">Bulk Upload</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="{% url 'bulk_upload' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="file" name="excel_file" accept=".xlsx" required>
+                    <button type="submit">Upload</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- <form method="POST" enctype="multipart/form-data" action="{% url 'bulk_upload' %}">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="file">Select File:</label>
+      <input type="file" name="file" id="file" accept=".xlsx">
+    </div>
+    <button type="submit" class="btn btn-primary">Upload</button>
+  </form> -->
+  
+
 <!-- Define the modal with the id "addMemberModal" -->
 <div class="modal fade" id="addMemberModal" tabindex="-1" role="dialog" aria-labelledby="addMemberModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -41,10 +77,7 @@
                               
                                 <label for="name">Name:</label><br>
                                 <input type="text" id="name" name="name" required><br>
-                              
-                                <label for="email">Email:</label><br>
-                                <input type="email" id="email" name="email" required><br>
-                              
+                            
                                 <label for="responsibility">Responsibility:</label><br>
                                 <input type="text" id="responsibility" name="responsibility" required><br>
                               
@@ -54,9 +87,7 @@
                                 <label for="contact_no">Contact No:</label><br>
                                 <input type="text" id="contact_no" name="contact_no" minlength="8" required><br>
                               
-                                <label for="card_no">Card No:</label><br>
-                                <input type="text" id="card_no" name="card_no" required><br>
-                              
+                            
                                 <label for="village">Village:</label><br>
                                 <input type="text" id="village" name="village" required><br>
                               
@@ -139,7 +170,6 @@
                                             <th>Present Address</th>
                                             <th>CID</th>
                                             <th>Contact No</th>
-                                            <th>Card No</th>
                                             <th>Village</th>
                                             <th>Geog</th>
                                             <th>Dzongkhag</th>
@@ -158,7 +188,6 @@
                                             <td>{{ member.present_address }}</td>
                                             <td>{{ member.cid }}</td>
                                             <td>{{ member.contact_no }}</td>
-                                            <td>{{ member.card_no }}</td>
                                             <td>{{ member.village }}</td>
                                             <td>{{ member.geog }}</td>
                                             <td>{{ member.dzongkhag }}</td>
@@ -177,6 +206,10 @@
                                         {% endfor %}
                                     </tbody>
                                 </table>
+                                <div class="text-center mt-3">
+                                    <a href="{% url 'export_practitioners' %}" class="btn btn-primary">Export to Excel</a>
+                                </div>
+                                
                             </div>
                         </div>
                           <!-- Define the modal with the id "editMemberModal" -->
@@ -205,9 +238,6 @@
                                                           <label for="edit_name">Name:</label><br>
                                                           <input type="text" id="edit_name" name="name" value="{{ member.name }}" required><br>
                                                           
-                                                          <label for="edit_email">Email:</label><br>
-                                                          <input type="email" id="edit_email" name="email" value="{{ member.email }}" required><br>
-                                                       
                                                           <label for="edit_responsibility">Responsibility:</label><br>
                                                           <input type="text" id="edit_responsibility" name="responsibility" value="{{ member.responsibility }}" required><br>
                                                       
@@ -216,10 +246,7 @@
                                                       
                                                           <label for="edit_contact_no">Contact No:</label><br>
                                                           <input type="text" id="edit_contact_no" name="contact_no" value="{{ member.contact_no }}" minlength="8" required><br>
-                                                      
-                                                          <label for="edit_card_no">Card No:</label><br>
-                                                          <input type="text" id="edit_card_no" name="card_no" value="{{ member.card_no }}" required><br>
-                                                      
+                                                
                                                           <label for="edit_village">Village:</label><br>
                                                           <input type="text" id="edit_village" name="village" value="{{ member.village }}" required><br>
                                                       
@@ -255,6 +282,14 @@
                     </div>
                 </div>
         
+                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
 
                                  <!-- Include the necessary JavaScript files for Bootstrap -->
                                  <script>
@@ -350,12 +385,18 @@
       });
     });
   </script>
+
+<script>
+    $(document).ready(function() {
+        {% if messages %}
+            {% for message in messages %}
+                toastr.{{ message.tags }}('{{ message }}');
+            {% endfor %}
+        {% endif %}
+    });
+</script>
+
                                 
-            
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-
+   
 
         {% endblock %}
