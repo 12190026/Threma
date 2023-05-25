@@ -75,6 +75,6 @@ urlpatterns = [
 
     path('uifinance/', views.uifinance, name='uifinance'),
 
-    path('uisemso/', views.uifinance, name='uisemso'),
+    path('uisemso/', views.uisemso, name='uisemso'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

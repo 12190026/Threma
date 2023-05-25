@@ -12,15 +12,13 @@
 
                             
 
-<!-- Add a data-toggle attribute with "modal" value to the button -->
-{% if user.role == "MANAGER" %}
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addMemberModal">Add Members</button>
-{% endif %}
-
-
-{% if user.role == "MANAGER" %}
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#bulkUploadModal">Bulk Upload</button>
-{% endif %}
+                            {% if user.role == "MANAGER" %}
+                            <div class="button-group">
+                              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addMemberModal">Add Members</button>
+                              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#bulkUploadModal">Bulk Upload</button>
+                            </div>
+                          {% endif %}
+                          
 
 <!-- File selection popup -->
 <div class="modal fade" id="bulkUploadModal" tabindex="-1" role="dialog" aria-labelledby="bulkUploadModalLabel" aria-hidden="true">

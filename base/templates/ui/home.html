@@ -17,6 +17,30 @@
     <link rel='stylesheet' type="text/css" media="screen" href="{% static 'fonts/ionicons.min.css' %}">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/css/pikaday.min.css">
+    <style>
+.image-container {
+    position: relative;
+}
+
+    .hover-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 10px;
+        background-color: white;
+        color: black;
+        text-align: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .item:hover .hover-text {
+        opacity: 1;
+    }
+
+
+    </style>
 </head>
 
 <body>
@@ -34,20 +58,35 @@
             <div class="container">
                 <div class="row g-0 align-items-stretch">
                     <div class="col-md-6 col-lg-4 item zoom-on-hover" style="margin-bottom: 20px;">
-                        <a href="#">
+                        <a href="#" class="image-container">
                             <img class="img-fluid image" src="{% static 'img/nature/111111.jpg' %}">
+                            <div class="hover-text">
+                                <h3>Visualization</h3> Practitioner uses their imagination to create a mental image of Dudjom Krodikali in their mind's eye.
+                            </div>
                         </a>
                     </div>
+                    
+                    
                     <div class="col-md-6 col-lg-4 item zoom-on-hover" style="margin-bottom: 20px;">
-                        <a href="#">
+                        <a href="#" class="image-container">
                             <img class="img-fluid image" src="{% static 'img/nature/123.jpg' %}">
+                            <div class="hover-text">
+                                <h3> Mantra recitation</h3>
+                                The practitioner may use a mala, a string of beads used for counting repetitions of the mantra.
+                            </div>
                         </a>
                     </div>
+                    
                     <div class="col-md-6 col-lg-4 item zoom-on-hover" style="margin-bottom: 20px;">
-                        <a href="#">
+                        <a href="#" class="image-container">
                             <img class="img-fluid image" src="{% static 'img/tech/339444205_744640010362910_4713254438820632069_n.jpg' %}">
+                            <div class="hover-text">
+                                <h3>Other ritual practices</h3>
+                                Practice of Krodikali seems like any other rituals with the melodic recitation of the texts
+                            </div>
                         </a>
                     </div>
+                    
                 </div>
             </div>
         </section>
@@ -109,12 +148,8 @@
         </div>
     </section>
 
-    <footer class="page-footer">
-        <div class="container">
-            <div class="links"><a href="#">About me</a><a href="#">Contact me</a></div>
-            <div class="social-icons"><a href="#"><i class="icon ion-social-facebook"></i></a><a href="#"><i class="icon ion-social-instagram-outline"></i></a><a href="#"><i class="icon ion-social-twitter"></i></a></div>
-        </div>
-    </footer>
+    {% include 'footer.html'  %}
+    
     <script src="{% static 'bootstrap/js/bootstrap02.min.js' %}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/pikaday.min.js"></script>
     <script src="{% static 'js/theme02.js' %}"></script>    

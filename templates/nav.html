@@ -15,30 +15,47 @@
         .navbar-nav .nav-link.active {
             color: black;
         }
+
+        .navbar {
+            min-height: 50px; /* Adjust the value to your desired height */
+        }
+        
+        .navbar img {
+            width: 50px; /* Adjust the value to your desired size */
+        }
+        
+        .navbar-toggler {
+            margin-top: 5px; /* Adjust the value to adjust the positioning of the toggler */
+        }
+        
+        .navbar-nav .nav-link {
+            margin-top: 5px; /* Adjust the value to adjust the spacing between the links */
+        }
     </style>
 </head>
 <body>
     <nav class="navbar navbar-light navbar-expand-lg fixed-top bg-white clean-navbar">
         <div class="container">
-            <img src="{% static 'img/ellipse-1@2x.png' %}" style="width: 78px;">
+            <img src="{% static 'img/ellipse-1@2x.png' %}">
+            <img src="{% static 'img/logo.png' %}">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navcol-1" aria-controls="navcol-1" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navcol-1">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.view_name == 'home' %}active{% endif %}" href="{% url 'home' %}" style="margin-top: 20px;">Home</a>
+                        <a class="nav-link {% if request.resolver_match.view_name == 'home' %}active{% endif %}" href="{% url 'home' %}">Home</a>
                     </li>
                     <li class="nav-item {% if request.resolver_match.view_name == 'uiactivity' %}active{% endif %}">
-                        <a class="nav-link" href="{% url 'uiactivity' %}" style="margin-top: 20px;">Activities</a>
+                        <a class="nav-link" href="{% url 'uiactivity' %}">Activities</a>
                     </li>
                     <li class="nav-item {% if request.resolver_match.view_name == 'uifinance' %}active{% endif %}">
-                        <a class="nav-link" href="{% url 'uifinance' %}" style="margin-top: 20px;">Finance</a>
+                        <a class="nav-link" href="{% url 'uifinance' %}">Finance</a>
                     </li>
                     <li class="nav-item {% if request.resolver_match.view_name == 'aboutus' %}active{% endif %}">
-                        <a class="nav-link" href="{% url 'aboutus' %}" style="margin-top: 20px;">About Us</a>
+                        <a class="nav-link" href="{%url 'aboutus' %}">About Us</a>
                     </li>
-                    <li class="nav-item" style="margin-bottom: 0px;margin-top: 20px;">
+                    <li class="nav-item">
                         <a class="nav-link" href="{% url 'uisemso' %}">Semso</a>
                     </li>
                 </ul>

@@ -571,3 +571,7 @@ def uiactivity(request):
     }
 
     return render(request, 'ui/uiactivity.html', context)
+    
+def uisemso(request):
+    semso_data = Semso.objects.all()
+    return render(request, 'ui/uisemso.html', {'semso_data': semso_data})
