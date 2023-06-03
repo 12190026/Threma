@@ -70,55 +70,64 @@
             <div class="container">
                 <div class="block-heading">
                     <h2 class="text-info">In Progress</h2>
-                </div>
-                <div class="row">
-                    {% for activity in in_progress_activities %}
-                    <div class="col-md-6">
-                        <div class="card activity-item shadow">
-                            <div class="card-body activity-info">
-                                <h6 class="card-title activity-title">{{ activity.name }}</h6>
-                                <button type="button" class="btn btn-primary" onclick="showImage('{{ activity.image.url }}')">
-                                    View Image
-                                </button>
-                                <div class="activity-description">
-                                    <p>{{ activity.description }}</p>
-                                    <p><i class="far fa-calendar-alt"></i> {{ activity.date }}</p>
-                                    <p><i class="far fa-clock"></i> {{ activity.time }}</p>
+                    {% if in_progress_activities %}
+                        <div class="row">
+                            {% for activity in in_progress_activities %}
+                            <div class="col-md-6">
+                                <div class="card activity-item shadow">
+                                    <div class="card-body activity-info">
+                                        <h6 class="card-title activity-title">{{ activity.name }}</h6>
+                                        <button type="button" class="btn btn-primary" onclick="showImage('{{ activity.image.url }}')">
+                                            View Image
+                                        </button>
+                                        <div class="activity-description">
+                                            <p>{{ activity.description }}</p>
+                                            <p><i class="far fa-calendar-alt"></i> {{ activity.date }}</p>
+                                            <p><i class="far fa-clock"></i> {{ activity.time }}</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+                            {% endfor %}
                         </div>
-                    </div>
-                    {% endfor %}
+                    {% else %}
+                        <p class="text-center">No Activity in Progress!</p>
+                    {% endif %}
                 </div>
             </div>
         </section>
-
+        
         <section class="portfolio-block">
             <div class="container">
                 <div class="block-heading">
                     <h2 class="text-info">Completed</h2>
-                </div>
-                <div class="row">
-                    {% for activity in completed_activities %}
-                    <div class="col-md-6">
-                        <div class="card activity-item shadow">
-                            <div class="card-body activity-info">
-                                <h6 class="card-title activity-title">{{ activity.name }}</h6>
-                                <button type="button" class="btn btn-primary" onclick="showImage('{{ activity.image.url }}')">
-                                    View Image
-                                </button>
-                                <div class="activity-description">
-                                    <p>{{ activity.description }}</p>
-                                    <p><i class="far fa-calendar-alt"></i> {{ activity.date }}</p>
-                                    <p><i class="far fa-clock"></i> {{ activity.time }}</p>
+                    {% if completed_activities %}
+                        <div class="row">
+                            {% for activity in completed_activities %}
+                            <div class="col-md-6">
+                                <div class="card activity-item shadow">
+                                    <div class="card-body activity-info">
+                                        <h6 class="card-title activity-title">{{ activity.name }}</h6>
+                                        <button type="button" class="btn btn-primary" onclick="showImage('{{ activity.image.url }}')">
+                                            View Image
+                                        </button>
+                                        <div class="activity-description">
+                                            <p>{{ activity.description }}</p>
+                                            <p><i class="far fa-calendar-alt"></i> {{ activity.date }}</p>
+                                            <p><i class="far fa-clock"></i> {{ activity.time }}</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+                            {% endfor %}
                         </div>
-                    </div>
-                    {% endfor %}
+                    {% else %}
+                        <p class="text-center">No Activity Completed!</p>
+                    {% endif %}
                 </div>
             </div>
         </section>
+        
 
         <!-- Define the modal for viewing the image -->
         <div class="modal fade" id="viewImageModal" tabindex="-1" role="dialog" aria-labelledby="viewImageModalLabel" aria-hidden="true">

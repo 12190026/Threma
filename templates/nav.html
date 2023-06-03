@@ -50,13 +50,10 @@
                         <a class="nav-link" href="{% url 'uiactivity' %}">Activities</a>
                     </li>
                     <li class="nav-item {% if request.resolver_match.view_name == 'uifinance' %}active{% endif %}">
-                        <a class="nav-link" href="{% url 'uifinance' %}">Finance</a>
+                        <a class="nav-link" href="{% url 'uifinance' %}">Center</a>
                     </li>
                     <li class="nav-item {% if request.resolver_match.view_name == 'aboutus' %}active{% endif %}">
                         <a class="nav-link" href="{%url 'aboutus' %}">About Us</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'uisemso' %}">Semso</a>
                     </li>
                 </ul>
             </div>

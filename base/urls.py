@@ -44,6 +44,22 @@ urlpatterns = [
 
     path('submit_transfer_form/', views.submit_transfer_form, name='submit_transfer_form'),
 
+    path('get-letter/', views.get_letter, name='get-letter'),
+
+    path('view_letter/<int:transfer_id>/', views.view_letter, name='view_letter'),
+
+    path('retrieve_practitioner/', views.retrieve_practitioner, name='retrieve_practitioner'),
+
+    path('change_status/<str:cid>/', views.change_status, name='change_status'),
+
+    path('upload_picture/<str:cid>/', views.upload_picture, name='upload_picture'),
+
+    path('upload_image/', views.upload_image, name='upload_image'),
+
+
+
+
+
     
     path('upload_statement/', views.upload_statement, name='upload_statement'),
 
@@ -60,9 +76,7 @@ urlpatterns = [
     path('practitioner/<int:member_cid>/delete/', views.delete_practitioner, name='delete_practitioner'),
 
     path('change_password/', views.change_password, name='change_password'),
-
-    path('change-password/', PasswordChangeView.as_view(template_name='change_password.html'), name='password_change'),
-
+    
     path('logout/', views.logout_view, name='logout'),
   
 

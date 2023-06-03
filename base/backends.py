@@ -1,6 +1,7 @@
 from django.contrib.auth.backends import BaseBackend
 from django.core.exceptions import MultipleObjectsReturned
 from .models import ExecutiveMember
+from django.contrib.auth.hashers import make_password
 
 class CustomBackend(BaseBackend):
     def authenticate(self, request, cid=None, password=None, role=None, **kwargs):
@@ -18,5 +19,6 @@ class CustomBackend(BaseBackend):
             return None
 
     def change_password(self, user, new_password):
-        user.set_password(new_password)
+        hashed_password = make_password(new_password)
+        user.password = hashed_password
         user.save()

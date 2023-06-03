@@ -4,6 +4,7 @@ from django.core.validators import MinLengthValidator
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin, AbstractUser
 import datetime
 from cloudinary.models import CloudinaryField
+from django.utils import timezone
 
 
 YEAR_CHOICES = []
@@ -86,7 +87,7 @@ class Practitioner(AbstractBaseUser):
         ('Lami Nyelijor', 'Lami Nyelijor'),
     )
 
-    cid = models.CharField(unique=True, validators=[MinLengthValidator(11)])
+    cid = models.CharField(primary_key=True, validators=[MinLengthValidator(11)], max_length=11)
     name = models.CharField(max_length=255)
     responsibility = models.CharField(max_length=255)
     present_address = models.CharField(max_length=255)
@@ -138,13 +139,29 @@ class FinancialStatement(models.Model):
     def __str__(self):
         return str(self.year)
 
-class TransferForm(models.Model):
-    cid = models.CharField(max_length=11)
-    name = models.CharField(max_length=100)
-    email = models.EmailField()
-    contact_no = models.CharField(max_length=20)
-    present_address = models.CharField(max_length=200)  # Specify the maximum length
-    reason = models.CharField(max_length=200)
+class Transfer(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected'),
+    ]
+
+    practitioner = models.OneToOneField(Practitioner, primary_key=True, on_delete=models.CASCADE)
+    reason = models.CharField(max_length=255)
+    date = models.DateTimeField(default=timezone.now, editable=False)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
+    picture = CloudinaryField('transfer_pictures', blank=True, null=True)
+
+    def __str__(self):
+        return f"Transfer {self.practitioner.cid}: {self.practitioner.name} - {self.reason}"
+
+    def approve(self):
+        self.status = 'approved'
+        self.save()
+
+    def reject(self):
+        self.status = 'rejected'
+        self.save()
 
 class Semso(models.Model):
     date = models.DateField()

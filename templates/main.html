@@ -27,24 +27,19 @@
         <div class="d-flex flex-column" id="content-wrapper">
             <div id="content">
       <!-- profile.html -->
-<!-- profile.html -->
+
 <nav class="navbar navbar-light navbar-expand bg-white shadow mb-4 topbar static-top" style="background: var(--bs-danger);">
     <div class="container-fluid">
         <button class="btn btn-link d-md-none rounded-circle me-3" id="sidebarToggleTop" type="button"><i class="fas fa-bars"></i></button>
         <ul class="navbar-nav flex-nowrap ms-auto">
-            <li class="nav-item dropdown d-sm-none no-arrow">
-                <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"></a>
-                <div class="dropdown-menu dropdown-menu-end p-3 animated--grow-in" aria-labelledby="searchDropdown">
-                    <form class="me-auto navbar-search w-100">
-                        <div class="input-group">
-                            <input class="bg-light form-control border-0 small" type="text" placeholder="Search for ...">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary py-0" type="button"><i class="fas fa-search"></i></button>
-                            </div>
-                        </div>
-                    </form>
+          <li class="nav-item">
+            {% if user.is_authenticated %}
+                <div class="d-flex align-items-center">
+                    <span class="nav-link role" style="color: #000000;">{{ user.role }} DASHBOARD</span>
                 </div>
-            </li>
+            {% endif %}
+        </li>
+
             <li class="nav-item dropdown no-arrow">
                 <div class="nav-item dropdown no-arrow">
                     <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="{% url 'profile' %}">
@@ -95,85 +90,79 @@
         </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
     </div>
     </div>
-    <!-- Change Password Modal -->
+<!-- Change Password Modal -->
 <div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="changePasswordModalLabel">Change Password</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form method="POST" action="{% url 'change_password' %}">
-            {% csrf_token %}
-            <div class="mb-3">
-              <label for="old_password" class="form-label">Old Password</label>
-              <input type="password" class="form-control" id="old_password" name="old_password" required>
-              {% if form.errors.old_password %}
-              <small class="text-danger">{{ form.errors.old_password }}</small>
-              {% endif %}
-            </div>
-            <div class="mb-3">
-              <label for="new_password1" class="form-label">New Password</label>
-              <input type="password" class="form-control" id="new_password1" name="new_password1" required>
-            </div>
-            <div class="mb-3">
-              <label for="new_password2" class="form-label">Confirm Password</label>
-              <input type="password" class="form-control" id="new_password2" name="new_password2" required>
-              {% if form.errors.new_password2 %}
-              <small class="text-danger">{{ form.errors.new_password2 }}</small>
-              {% endif %}
-            </div>
-            <button type="submit" class="btn btn-primary">Save Changes</button>
-          </form>
-        </div>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="changePasswordModalLabel">Change Password</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="POST" action="{% url 'change_password' %}">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label for="old_password" class="form-label">Old Password</label>
+            <input type="password" class="form-control" id="old_password" name="old_password" required>
+            {% if form.errors.old_password %}
+            <small class="text-danger">{{ form.errors.old_password }}</small>
+            {% endif %}
+          </div>
+          <div class="mb-3">
+            <label for="new_password1" class="form-label">New Password</label>
+            <input type="password" class="form-control" id="new_password1" name="new_password1" required>
+          </div>
+          <div class="mb-3">
+            <label for="new_password2" class="form-label">Confirm Password</label>
+            <input type="password" class="form-control" id="new_password2" name="new_password2" required>
+            {% if form.errors.new_password2 %}
+            <small class="text-danger">{{ form.errors.new_password2 }}</small>
+            {% endif %}
+          </div>
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </form>
       </div>
     </div>
   </div>
-  
-    
+</div>
 
-  <script>
-    $(document).ready(function() {
-  $('#change-password-form').on('submit', function(event) {
-    event.preventDefault();
-    
-    var formData = $(this).serialize();
-    
-    $.ajax({
-      url: '/change_password/',
-      type: 'POST',
-      data: formData,
-      dataType: 'json',
-      success: function(response) {
-        if (response.success) {
-          $('#change-password-messages').html('');
-          $('#changePasswordModal').modal('hide');
-          alert(response.message); // Display success message in an alert or modify as needed
-        } else {
-          var errors = response.errors;
-          var errorHTML = '<div class="alert alert-danger">';
-          for (var field in errors) {
-            errorHTML += '<p>' + errors[field][0].message + '</p>';
+<script>
+  $(document).ready(function() {
+    $('#changePasswordForm').on('submit', function(event) {
+      event.preventDefault();
+      var formData = $(this).serialize();
+
+      $.ajax({
+        url: '/change_password/',
+        type: 'POST',
+        data: formData,
+        dataType: 'json',
+        success: function(response) {
+          if (response.success) {
+            $('#change-password-messages').html('');
+            $('#changePasswordModal').modal('hide');
+            alert(response.message); // Display success message in an alert or modify as needed
+          } else {
+            var errors = response.errors;
+            var errorHTML = '<div class="alert alert-danger">';
+            for (var field in errors) {
+              errorHTML += '<p>' + errors[field][0].message + '</p>';
+            }
+            errorHTML += '</div>';
+            $('#change-password-messages').html(errorHTML);
           }
-          errorHTML += '</div>';
-          $('#change-password-messages').html(errorHTML);
+        },
+        error: function(xhr, status, error) {
+          var errorMessage = '<div class="alert alert-danger">Form submission error: ' + error + '</div>';
+          $('#change-password-messages').html(errorMessage);
         }
-      },
-      error: function(xhr, status, error) {
-        console.log(error);
-      }
+      });
     });
   });
-});
-
-  </script>
-    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
-    <script src="{% static 'js/chart.min.js' %}"></script>
-    <script src="{% static 'js/bs-init.js' %}"></script>
-    <script src="{% static 'js/theme.js' %}"></script>    
+</script>
+<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/chart.min.js' %}"></script>
+<script src="{% static 'js/bs-init.js' %}"></script>
+<script src="{% static 'js/theme.js' %}"></script>
 </body>
-
-
-
 </html>

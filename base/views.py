@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
-from .models import  ExecutiveMember, Practitioner, Activity, FinancialStatement, TransferForm, Semso
-from .forms import ExecutiveMemberForm, PractitionerForm, LoginForm, ActivityForm, FinancialStatementForm, CidForm, ProfilePictureForm, PasswordChangeForm, TransferForms, SemsoForm, BulkUploadForm
+from .models import  ExecutiveMember, Practitioner, Activity, FinancialStatement, Semso, Transfer
+from .forms import ExecutiveMemberForm, PractitionerForm, LoginForm, TransferForm, ActivityForm, FinancialStatementForm, CidForm, ProfilePictureForm, PasswordChangeForm, SemsoForm, BulkUploadForm, ChangePasswordForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .backends import CustomBackend
@@ -18,9 +18,8 @@ from django.views.generic import View
 import os
 from django.conf import settings
 import json
-import csv, io
 import pandas as pd
-from .resource import PractitionerResource
+
 
 
 def login_admin(request):
@@ -32,7 +31,7 @@ def login_admin(request):
         user = authenticate(request, username=username, password=password)
         if user is not None and user.is_superuser:
             login(request, user)
-            return render(request, 'base/index.html')  # Update this response as needed
+            return redirect('index')  # Update this response as needed
         else:
             messages.error(request, 'Invalid login credentials.')
             return render(request, 'base/adminlogin.html')  # Update this response as needed
@@ -122,20 +121,143 @@ def index(request):
 
     return render(request, 'base/index.html', context)
 
-
-
-@login_required(login_url=('adminlogin', 'executivelogin'))
 def transferform(request):
-    if request.method == 'GET':
-        cid = request.GET.get('cid')
-        try:
-            member = ExecutiveMember.objects.get(cid=cid)
-        except ExecutiveMember.DoesNotExist:
-            member = None
-        return render(request, 'base/transferform.html', {'member': member})
+    if request.method == 'POST':
+        form = TransferForm(request.POST, request.FILES)
+        if form.is_valid():
+            cid = form.cleaned_data['cid']
+            reason = form.cleaned_data['reason']
+            picture = form.cleaned_data['picture']
+            practitioner = Practitioner.objects.get(cid=cid)
+            transfer = Transfer(practitioner=practitioner, reason=reason, picture=picture)
+            transfer.save()
+            return redirect('transferform')  # Redirect to the transferform view after successful submission
     else:
-        return render(request, 'base/transferform.html')
+        form = TransferForm()
 
+    transfers = Transfer.objects.all()  # Retrieve all transfer objects from the database
+    practitioner = Practitioner.objects.last()  # Retrieve the latest practitioner object from the database
+    context = {
+        'form': form,
+        'transfers': transfers,
+        'practitioner': practitioner  # Pass the practitioner object to the template context
+    }
+
+    return render(request, 'base/transferform.html', context)
+
+
+from .forms import PictureUploadForm
+
+def upload_image(request):
+    if request.method == 'POST':
+        cid = request.POST.get('cid')
+        image = request.FILES.get('image')
+
+        try:
+            transfer = Transfer.objects.get(practitioner__cid=cid)
+            transfer.picture = image
+            transfer.save()
+
+            # Return a JSON response to indicate a successful upload
+            return JsonResponse({'message': 'Image uploaded successfully'})
+        
+        except Transfer.DoesNotExist:
+            # Return a JSON response with an error message if the Transfer object does not exist
+            return JsonResponse({'error': 'Transfer does not exist'})
+
+    # Return a JSON response with an error message if the request method is not POST
+    return JsonResponse({'error': 'Invalid request method'})
+
+
+
+def upload_picture(request, cid):
+    if request.method == 'POST':
+        # Assuming you have a model named Transfer to store the picture
+        # Retrieve the transfer based on the given cid
+        try:
+            transfer = Transfer.objects.get(practitioner__cid=cid)
+        except Transfer.DoesNotExist:
+            return JsonResponse({'message': 'Transfer not found'}, status=404)
+        
+        # Retrieve the uploaded picture from the request
+        picture = request.FILES.get('picture')
+        
+        if picture:
+            # Save the picture to the transfer
+            transfer.picture = picture
+            transfer.save()
+            
+            return JsonResponse({'message': 'Picture uploaded successfully'})
+        else:
+            return JsonResponse({'message': 'No picture found in the request'}, status=400)
+    
+    return JsonResponse({'message': 'Invalid request method'}, status=405)
+
+def get_letter(request):
+    cid = request.GET.get('cid')
+
+    transfers = Transfer.objects.filter(practitioner__cid=cid)
+
+    practitioners = []
+    for transfer in transfers:
+        practitioners.append(transfer.practitioner)
+
+    context = {
+        'practitioners': practitioners,
+    }
+
+    return render(request, 'base/transferform.html', context)
+
+def view_letter(request, transfer_id):
+    transfer = get_object_or_404(Transfer, pk=transfer_id)
+    practitioner = transfer.practitioner
+
+    return render(request, 'base/transferform.html', {'practitioner': practitioner})
+
+def retrieve_practitioner(request):
+    cid = request.GET.get('cid')
+    try:
+        transfer = Transfer.objects.select_related('practitioner').get(practitioner__cid=cid)
+        practitioner = transfer.practitioner
+
+        data = {
+            'name': practitioner.name,
+            'cid': practitioner.cid,
+            'contact_no': practitioner.contact_no,
+            'dzongkhag': practitioner.dzongkhag,
+            'gewog': practitioner.geog,
+            'village': practitioner.village,
+            'reason': transfer.reason,
+            'date': transfer.date.isoformat(),
+        }
+
+        if transfer.picture:
+            data['picture'] = transfer.picture.url
+
+        return JsonResponse(data)
+    except Transfer.DoesNotExist:
+        return JsonResponse({'error': 'Practitioner not found'})
+
+def change_status(request, cid):
+    transfer = get_object_or_404(Transfer, practitioner__cid=cid)
+
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        if action == 'approve':
+            transfer.status = 'approved'
+            transfer.save()
+
+        elif action == 'reject':
+            transfer.status = 'rejected'
+            transfer.save()
+
+        return redirect('transferform')
+
+    context = {
+        'transfer': transfer,
+        'cid': cid,  # Add the cid value to the context
+    }
+    return render(request, 'base/transferform.html', context)
 
 
 @login_required(login_url=('adminlogin', 'executivelogin'))
@@ -352,63 +474,70 @@ def upload_statement(request):
     return render(request, 'base/finance.html', context)
 
 
-def display_member_info(request):
-    if request.method == 'GET':
-        cid = request.GET.get('cid')
-        try:
-            member = get_object_or_404(ExecutiveMember, cid=cid)
-            data = {
-                'member': {
-                    'name': member.name,
-                    'email': member.email,
-                    'contact_no': member.contact_no,
-                    'present_address': member.present_address,
-                }
-            }
-            return JsonResponse(data)
-        except ExecutiveMember.DoesNotExist:
-            return JsonResponse({'error': 'Member not found.'})
+# def display_member_info(request):
+#     if request.method == 'GET':
+#         cid = request.GET.get('cid')
+#         try:
+#             member = get_object_or_404(Practitioner, cid=cid)
+#             data = {
+#                 'member': {
+#                     'name': member.name,
+#                     'contact_no': member.contact_no,
+#                     'present_address': member.present_address,
+#                 }
+#             }
+#             return JsonResponse(data)
+#         except ExecutiveMember.DoesNotExist:
+#             return JsonResponse({'error': 'Member not found.'})
 
-    return JsonResponse({'error': 'Invalid request method.'})
+#     return JsonResponse({'error': 'Invalid request method.'})
+
+# def submit_transfer_form(request):
+#     if request.method == 'POST':
+#         form = TransferForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('transferform')  # Redirect to a success page
+#     else:
+#         form = TransferForm()
+#     return render(request, 'base/transferform.html', {'form': form})
+
+
+def display_member_info(request):
+    cid = request.GET.get('cid')
+    try:
+        member = Practitioner.objects.get(cid=cid)
+        data = {
+            'member': {
+                'cid': member.cid,
+                'name': member.name,
+                'contact_no': member.contact_no,
+                'present_address': member.present_address
+            }
+        }
+    except Practitioner.DoesNotExist:
+        data = {'error': 'Member not found.'}
+    
+    return JsonResponse(data)
 
 def submit_transfer_form(request):
     if request.method == 'POST':
-        form = TransferForms(request.POST)
-        if form.is_valid():
-            form.save()  # Save the form data to the TransferForm model
-            return redirect('transferform')  # Redirect to a success page or another URL
-    else:
-        form = TransferForms()
-    
-    return render(request, 'base/transferform.html', {'form': form})
-
-
-# def display_member_info(request):
-#     if request.method == 'GET':
-#         cid = request.GET.get('cid', '')
-#         member = get_member_info(cid)  # Replace this with your actual code to retrieve member information
-
-#         if member:
-#             # Create an instance of the TransferForm form
-#             form = TransferForms(request.GET)
-
-#             if form.is_valid():
-#                 reason = form.cleaned_data['reason']
-
-#                 # Create a new instance of the TransferForm model and save the data
-#                 transfer_form = TransferForm(cid=member.cid, name=member.name, email=member.email, contact_no=member.contact_no,
-#                                                   present_address=member.present_address, reason=reason)
-#                 transfer_form.save()
-
-#                 # Add any additional logic or redirection here
-
-#             return render(request, 'member_info.html', {'member': member, 'form': form})
-
-#     return render(request, 'member_info.html')
-    
-
-
-
+        cid = request.POST.get('cid')
+        reason = request.POST.get('reason')
+        
+        try:
+            practitioner = Practitioner.objects.get(cid=cid)
+            transfer = Transfer.objects.create(practitioner=practitioner, reason=reason)
+            transfer.save()
+            
+            messages.success(request, 'Transfer form submitted successfully.')
+            return redirect('transferform')
+        except Practitioner.DoesNotExist:
+            return JsonResponse({'error': 'Member not found.'})
+        except Exception as e:
+            return JsonResponse({'error': str(e)})
+        
+    return JsonResponse({'error': 'Invalid request method.'})
 
 def edit_member(request, member_cid):
     if request.method == 'POST':
@@ -491,24 +620,31 @@ def delete_practitioner(request, member_cid):
     else:
         return redirect(reverse('practitioner'))  # Redirect to the executives page if the request method is not POST
 
-
-@login_required(login_url=('adminlogin', 'executivelogin'))
 def change_password(request):
     if request.method == 'POST':
-        form = PasswordChangeForm(request.user, request.POST)
+        form = ChangePasswordForm(request.user, request.POST)
         if form.is_valid():
-            user = form.save()
-            update_session_auth_hash(request, user)
-            messages.success(request, 'Your password has been successfully changed.')
-            return redirect('index')
+            new_password = form.cleaned_data['new_password1']
+            backend = CustomBackend()
+            backend.change_password(request.user, new_password)
+            # Optionally, you can authenticate the user with the new password
+            authenticated_user = authenticate(request, cid=request.user.cid, password=new_password, role=request.user.role)
+            if authenticated_user:
+                login(request, authenticated_user)
+                messages.success(request, 'Your password has been changed successfully.')
+                return redirect('index')  # Redirect to a success page
+            else:
+                # Handle authentication failure if necessary
+                messages.error(request, 'Failed to authenticate with the new password.')
+        else:
+            # Form submission has errors
+            errors = form.errors.get_json_data()
+            return JsonResponse({'success': False, 'errors': errors})
     else:
-        form = PasswordChangeForm(request.user)
+        form = ChangePasswordForm(request.user)
 
-    context = {
-        'form': form,  # Pass the password change form to the template context
-    }
+    return render(request, 'main.html', {'form': form})
 
-    return HttpResponse({'success': False, 'errors': form.errors})  # Return form errors as JSON response
 
 def semso(request):
     semso_entries = Semso.objects.all()
@@ -537,7 +673,7 @@ def logout_view(request):
         return redirect('admin_login')  # Replace 'admin_login' with the desired admin login URL
     else:
         return redirect('executive_login')  # Replace 'executive_login' with the desired executive login URL
-# UI Starts from here on out
+
 
 def home(request):
     return render(request, 'ui/home.html')

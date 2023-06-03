@@ -1,8 +1,9 @@
 from django import forms
 from django.forms import ModelForm, Form
-from .models import ExecutiveMember, Practitioner, Activity, FinancialStatement, TransferForm, Semso
+from .models import ExecutiveMember, Practitioner, Activity, FinancialStatement,  Semso, Transfer 
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import PasswordChangeForm
+from .backends import CustomBackend
 
 class ExecutiveMemberForm(ModelForm):
     
@@ -71,7 +72,20 @@ class ChangePasswordForm(PasswordChangeForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        # Add custom validation if needed
+
+        # Check if new password and confirm password match
+        new_password1 = cleaned_data.get('new_password1')
+        new_password2 = cleaned_data.get('new_password2')
+        if new_password1 and new_password2 and new_password1 != new_password2:
+            self.add_error('new_password2', 'New password and confirm password must match.')
+
+        # Check if old password is correct
+        old_password = cleaned_data.get('old_password')
+        user = self.user
+        if old_password and user:
+            if not authenticate(request=None, username=user.username, password=old_password):
+                self.add_error('old_password', 'Incorrect old password.')
+
         return cleaned_data
 
 
@@ -115,10 +129,29 @@ class PractitionerForm(ModelForm):
 class CidForm(Form):
     cid = forms.CharField()
 
-class TransferForms(forms.ModelForm):
+
+class TransferForm(ModelForm):
     class Meta:
-        model = TransferForm
-        fields = ['cid', 'name', 'email', 'contact_no', 'present_address', 'reason']
+        model = Transfer
+        fields = ['practitioner', 'reason', 'picture', 'status']
+        labels = {
+            'practitioner': 'Practitioner',
+            'reason': 'Reason',
+            'picture': 'Picture',
+            'status': 'Status',
+        }
+        widgets = {
+            'practitioner': forms.Select(attrs={'class': 'form-control'}),
+            'reason': forms.Textarea(attrs={'class': 'form-control'}),
+            'picture': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'status': forms.Select(attrs={'class': 'form-control'}),
+        }
+
+
+class PictureUploadForm(forms.Form):
+    class Meta:
+        model = Transfer
+        fields = ['picture']
 
 class ProfilePictureForm(Form):
     profile_pic = forms.ImageField()

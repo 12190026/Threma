@@ -1,2 +1,0 @@
-# Threma
- Final Year Project

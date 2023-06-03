@@ -50,7 +50,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'import_export',
     'base.apps.BaseConfig',
-    'cloudinary'
+    'cloudinary',
+
 ]
 
 MIDDLEWARE = [
@@ -191,6 +192,16 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 # Media files configuration
 # MEDIA_URL = '/media/'
 # MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES': [
+#         'rest_framework.authentication.TokenAuthentication',
+#     ],
+#     'DEFAULT_PERMISSION_CLASSES': [
+#         'rest_framework.permissions.IsAuthenticated',
+#     ],
+# }
+
 
 
 
