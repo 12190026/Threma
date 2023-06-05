@@ -711,3 +711,18 @@ def uiactivity(request):
 def uisemso(request):
     semso_data = Semso.objects.all()
     return render(request, 'ui/uisemso.html', {'semso_data': semso_data})
+
+
+#API
+
+from rest_framework import viewsets
+from .serializers import ExecutiveMemberSerializer, ActivitySerializer
+
+class ExecutiveMemberViewSet(viewsets.ModelViewSet):
+    queryset = ExecutiveMember.objects.all()
+    serializer_class = ExecutiveMemberSerializer
+
+
+class ActivityViewSet(viewsets.ModelViewSet):
+    queryset = Activity.objects.all()
+    serializer_class = ActivitySerializer

@@ -51,6 +51,9 @@ INSTALLED_APPS = [
     'import_export',
     'base.apps.BaseConfig',
     'cloudinary',
+    'rest_framework',
+    'corsheaders',
+
 
 ]
 
@@ -59,6 +62,7 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -70,6 +74,14 @@ cloudinary.config(
   api_key = "331758864728447", 
   api_secret = "hV_MZzF6piEoR5tlQcXOgFKv4Ds" 
 )
+
+CORS_ORIGIN_ALLOW_ALL = False
+
+CORS_ORIGIN_WHITELIST = [
+    'http://127.0.0.1:8000',
+    'http://localhost:3000',  # Replace with the URL of your React Native app
+]
+
 
 ROOT_URLCONF = 'trama.urls'
 

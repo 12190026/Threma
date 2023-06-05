@@ -1,10 +1,24 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth.views import PasswordChangeView
+from rest_framework import routers
+from .views import ExecutiveMemberViewSet
+
+
+
+router = routers.DefaultRouter()
+
+router.register('activities', views.ActivityViewSet)
+router.register('executive-members', ExecutiveMemberViewSet)
+
+
+
 
 urlpatterns = [
+    path('api/', include(router.urls)),
+
     path('adminlogin/', views.login_admin, name='admin_login'),
     
     path('index/', views.index, name='index'),
