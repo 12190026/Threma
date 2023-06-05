@@ -12,7 +12,10 @@ router = routers.DefaultRouter()
 
 router.register('activities', views.ActivityViewSet)
 router.register('executive-members', ExecutiveMemberViewSet)
-
+router.register(r'practitioners', views.PractitionerViewSet)
+router.register(r'financial-statements', views.FinancialStatementViewSet)
+router.register(r'transfers', views.TransferViewSet)
+router.register(r'semsos', views.SemsoViewSet)
 
 
 

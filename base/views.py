@@ -716,13 +716,28 @@ def uisemso(request):
 #API
 
 from rest_framework import viewsets
-from .serializers import ExecutiveMemberSerializer, ActivitySerializer
+from .serializers import ExecutiveMemberSerializer, PractitionerSerializer, ActivitySerializer, FinancialStatementSerializer, TransferSerializer, SemsoSerializer
 
 class ExecutiveMemberViewSet(viewsets.ModelViewSet):
     queryset = ExecutiveMember.objects.all()
     serializer_class = ExecutiveMemberSerializer
 
+class PractitionerViewSet(viewsets.ModelViewSet):
+    queryset = Practitioner.objects.all()
+    serializer_class = PractitionerSerializer
 
 class ActivityViewSet(viewsets.ModelViewSet):
     queryset = Activity.objects.all()
     serializer_class = ActivitySerializer
+
+class FinancialStatementViewSet(viewsets.ModelViewSet):
+    queryset = FinancialStatement.objects.all()
+    serializer_class = FinancialStatementSerializer
+
+class TransferViewSet(viewsets.ModelViewSet):
+    queryset = Transfer.objects.all()
+    serializer_class = TransferSerializer
+
+class SemsoViewSet(viewsets.ModelViewSet):
+    queryset = Semso.objects.all()
+    serializer_class = SemsoSerializer
