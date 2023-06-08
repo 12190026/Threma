@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Activity Page - Threma</title>
+
+    <link rel='stylesheet' type="text/css" media="screen" href="{% static 'bootstrap/css/bootstrap02.min.css' %}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,700&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Alfa+Slab+One&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto&amp;display=swap">
+
+    <link rel='stylesheet' type="text/css" media="screen" href="{% static 'fonts/fontawesome-all.min.css' %}">
+    <link rel='stylesheet' type="text/css" media="screen" href="{% static 'fonts/ionicons.min.css' %}">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/css/pikaday.min.css">
+    <style>
+        .activity-item {
+            margin-bottom: 20px;
+        }
+    
+        .activity-item .card {
+            height: 100%;
+        }
+
+        #popup-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 400px;
+        }
+
+        #popup-image {
+            max-width: 100%;
+            max-height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    {% include 'nav.html'  %}
+    <main class="page lanidng-page">
+        <section class="portfolio-block block-intro" style="background: url(&quot;{% static 'img/011.jpg' %}&quot;) top / cover no-repeat;height: 780px;">
+            <div class="container">
+                <div class="about-me">
+                    <p style="color: rgb(255,255,255);text-align: left;font-family: 'Alfa Slab One', serif;font-size: 39px;"><br>Always <br>open your <br>mind first<br>than opening <br>your mouth<br> <br>~Dungse Garap Rinpoche<br><br></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Add your activity content here -->
+        <section class="portfolio-block activity">
+            <div class="accordion-item" id="accordion-item2">
+                <div class="accordion-cab" id="accordion-cab2">
+                    <h6 class="text-center accordion-titulo" style="color: #EF9712;"><br>Activities</h6>
+                    <div style="display: flex; align-items: center; justify-content: center;">
+                        <hr style="background-color: #EF9712; height: 4px; width: 80px; border: none; margin-right: 8px;">
+                        <i class="fas fa-bell" style="color: #EF9712; font-size: 20px;"></i>
+                        <hr style="background-color: #EF9712; height: 4px; width: 80px; border: none; margin-left: 8px;">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <section class="portfolio-block">
+            <div class="container">
+                <div class="block-heading">
+                    <h2 class="text-info">In Progress</h2>
+                    {% if in_progress_activities %}
+                        <div class="row">
+                            {% for activity in in_progress_activities %}
+                            <div class="col-md-6">
+                                <div class="card activity-item shadow">
+                                    <div class="card-body activity-info">
+                                        <h6 class="card-title activity-title">{{ activity.name }}</h6>
+                                        <button type="button" class="btn btn-primary" onclick="showImage('{{ activity.image.url }}')">
+                                            View Image
+                                        </button>
+                                        <div class="activity-description">
+                                            <p>{{ activity.description }}</p>
+                                            <p><i class="far fa-calendar-alt"></i> {{ activity.date }}</p>
+                                            <p><i class="far fa-clock"></i> {{ activity.time }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-center">No Activity in Progress!</p>
+                    {% endif %}
+                </div>
+            </div>
+        </section>
+        
+        <section class="portfolio-block">
+            <div class="container">
+                <div class="block-heading">
+                    <h2 class="text-info">Completed</h2>
+                    {% if completed_activities %}
+                        <div class="row">
+                            {% for activity in completed_activities %}
+                            <div class="col-md-6">
+                                <div class="card activity-item shadow">
+                                    <div class="card-body activity-info">
+                                        <h6 class="card-title activity-title">{{ activity.name }}</h6>
+                                        <button type="button" class="btn btn-primary" onclick="showImage('{{ activity.image.url }}')">
+                                            View Image
+                                        </button>
+                                        <div class="activity-description">
+                                            <p>{{ activity.description }}</p>
+                                            <p><i class="far fa-calendar-alt"></i> {{ activity.date }}</p>
+                                            <p><i class="far fa-clock"></i> {{ activity.time }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-center">No Activity Completed!</p>
+                    {% endif %}
+                </div>
+            </div>
+        </section>
+        
+
+        <!-- Define the modal for viewing the image -->
+        <div class="modal fade" id="viewImageModal" tabindex="-1" role="dialog" aria-labelledby="viewImageModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="viewImageModalLabel">View Image</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="popup-container">
+                            <img id="popup-image" src="" alt="Popup Image">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% include 'footer.html'  %}
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="{% static 'bootstrap/js/bootstrap02.min.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/pikaday.min.js"></script>
+    <script src="{% static 'js/theme02.js' %}"></script>    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.6.0/js/bootstrap.min.js"></script>
+
+    <script>
+        function showImage(imageUrl) {
+            var popupImage = document.getElementById('popup-image');
+            popupImage.src = imageUrl;
+            $('#viewImageModal').modal('show');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+
+
+{% load static %}
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Dashboard</title>
+    
+    <link rel='stylesheet' type="text/css" media="screen" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+   
+    
+    <link rel='stylesheet' type="text/css" media="screen" href="{% static 'fonts/fontawesome-all.min.css' %}">
+    
+    <link rel='stylesheet' type="text/css" media="screen" href="{% static 'css/untitled.css' %}">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
+
+</head>
+
+<body id="page-top">
+    <div id="wrapper">
+
+        {% include 'navbar.html'  %}
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content">
+      <!-- profile.html -->
+
+<nav class="navbar navbar-light navbar-expand bg-white shadow mb-4 topbar static-top" style="background: var(--bs-danger);">
+    <div class="container-fluid">
+        <button class="btn btn-link d-md-none rounded-circle me-3" id="sidebarToggleTop" type="button"><i class="fas fa-bars"></i></button>
+        <ul class="navbar-nav flex-nowrap ms-auto">
+          <li class="nav-item">
+            {% if user.is_authenticated %}
+                <div class="d-flex align-items-center">
+                    <span class="nav-link role" style="color: #000000;">{{ user.role }} DASHBOARD</span>
+                </div>
+            {% endif %}
+        </li>
+
+            <li class="nav-item dropdown no-arrow">
+                <div class="nav-item dropdown no-arrow">
+                    <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="{% url 'profile' %}">
+                        {% if user.is_authenticated %}
+                            <span class="d-none d-lg-inline me-2 text-gray-600 small">{{ user.name }}</span>
+                            {% if user.profile_pic %}
+                                <img class="border rounded-circle img-profile" src="{{ user.profile_pic.url }}">
+                            {% else %}
+                                <img class="border rounded-circle img-profile" src="{% static 'profile_pics/default_profile_pic.png' %}">
+                            {% endif %}
+                        {% endif %}
+                    </a>
+                    
+                    <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in">
+                        <a class="dropdown-item" href="{% url 'profile' %}">
+                            <i class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Profile
+                        </a>
+                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
+                            <i class="fas fa-cogs fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Change Password
+                        </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{% url 'logout' %}">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Logout
+                                </a>
+
+                    </div>
+                </div>
+            </li>
+            
+            
+        </ul>
+    </div>
+</nav>
+        
+        
+      
+
+        {% block content %}
+            
+
+        {% endblock %}
+       
+            <footer class="bg-white sticky-footer">
+                <div class="container my-auto">
+                    <div class="text-center my-auto copyright"><span>Copyright © Threma 2023</span></div>
+                </div>
+            </footer>
+        </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+    </div>
+    </div>
+<!-- Change Password Modal -->
+<div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="changePasswordModalLabel">Change Password</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="POST" action="{% url 'change_password' %}">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label for="old_password" class="form-label">Old Password</label>
+            <input type="password" class="form-control" id="old_password" name="old_password" required>
+            {% if form.errors.old_password %}
+            <small class="text-danger">{{ form.errors.old_password }}</small>
+            {% endif %}
+          </div>
+          <div class="mb-3">
+            <label for="new_password1" class="form-label">New Password</label>
+            <input type="password" class="form-control" id="new_password1" name="new_password1" required>
+          </div>
+          <div class="mb-3">
+            <label for="new_password2" class="form-label">Confirm Password</label>
+            <input type="password" class="form-control" id="new_password2" name="new_password2" required>
+            {% if form.errors.new_password2 %}
+            <small class="text-danger">{{ form.errors.new_password2 }}</small>
+            {% endif %}
+          </div>
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function() {
+    $('#changePasswordForm').on('submit', function(event) {
+      event.preventDefault();
+      var formData = $(this).serialize();
+
+      $.ajax({
+        url: '/change_password/',
+        type: 'POST',
+        data: formData,
+        dataType: 'json',
+        success: function(response) {
+          if (response.success) {
+            $('#change-password-messages').html('');
+            $('#changePasswordModal').modal('hide');
+            alert(response.message); // Display success message in an alert or modify as needed
+          } else {
+            var errors = response.errors;
+            var errorHTML = '<div class="alert alert-danger">';
+            for (var field in errors) {
+              errorHTML += '<p>' + errors[field][0].message + '</p>';
+            }
+            errorHTML += '</div>';
+            $('#change-password-messages').html(errorHTML);
+          }
+        },
+        error: function(xhr, status, error) {
+          var errorMessage = '<div class="alert alert-danger">Form submission error: ' + error + '</div>';
+          $('#change-password-messages').html(errorMessage);
+        }
+      });
+    });
+  });
+</script>
+<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/chart.min.js' %}"></script>
+<script src="{% static 'js/bs-init.js' %}"></script>
+<script src="{% static 'js/theme.js' %}"></script>
+</body>
+</html>

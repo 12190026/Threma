@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Financial Statement - Threma</title>
+
+    <link rel='stylesheet' type="text/css" media="screen" href="{% static 'bootstrap/css/bootstrap02.min.css' %}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,700&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Alfa+Slab+One&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto&amp;display=swap">
+
+    <link rel='stylesheet' type="text/css" media="screen" href="{% static 'fonts/fontawesome-all.min.css' %}">
+    <link rel='stylesheet' type="text/css" media="screen" href="{% static 'fonts/ionicons.min.css' %}">
+    <style>
+        #accordion-item3 .accordion-cab {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    
+        #accordion-item3 .accordion-titulo {
+            color: #EF9712;
+        }
+    
+        #accordion-item3 .accordion-content {
+            text-align: center;
+            margin-top: 20px;
+            height: calc(100vh - 780px); /* Set the height to cover remaining screen space */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        #accordion-item3 .accordion-content img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+    </style>
+    
+
+</head>
+
+<body>
+    {% include 'nav.html'  %}
+    <main class="page lanidng-page">
+        <section class="portfolio-block block-intro" style="background: url(&quot;{% static 'img/011.jpg' %}&quot;) top / cover no-repeat;height: 780px;">
+            <div class="container">
+                <div class="about-me">
+                    <p style="color: rgb(255,255,255);text-align: left;font-family: 'Alfa Slab One', serif;font-size: 39px;"><br>Always <br>open your <br>mind first<br>than opening <br>your mouth<br> <br>~Dungse Garap Rinpoche<br><br></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Financial Statement content here -->
+
+        <section class="portfolio-block activity">
+            <div class="accordion-item" id="accordion-item2">
+                <div class="accordion-cab" id="accordion-cab2">
+                    <h6 class="text-center accordion-titulo" style="color: #EF9712;"><br>Center</h6>
+                    <div style="display: flex; align-items: center; justify-content: center;">
+                        <hr style="background-color: #EF9712; height: 4px; width: 80px; border: none; margin-right: 8px;">
+                        <i class="fas fa-bell" style="color: #EF9712; font-size: 20px;"></i>
+                        <hr style="background-color: #EF9712; height: 4px; width: 80px; border: none; margin-left: 8px;">
+                    </div>
+                </div>
+            </div>
+            
+        </section>
+
+        <section class="portfolio-block call-to-action border-bottom" style="background: url(&quot;{% static 'img/center.png' %}&quot;)  bottom / auto no-repeat;height: 600px; margin-bottom: 40px;">
+
+        </section>
+
+
+    </main>
+
+
+    {% include 'footer.html'  %}
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <script src="{% static 'bootstrap/js/bootstrap02.min.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/pikaday.min.js"></script>
+    <script src="{% static 'js/theme02.js' %}"></script>    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.6.0/js/bootstrap.min.js"></script>
+
+
+
+
+</body>
+</html>

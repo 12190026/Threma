@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html>
+<head>
+    <link rel='stylesheet' type="text/css" media="screen" href="{% static 'bootstrap/css/bootstrap03.min.css' %}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,400i,700,700i,600,600i&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans&amp;display=swap">
+    <link rel='stylesheet' type="text/css" media="screen" href="{% static 'bootstrap/css/bootstrap02.min.css' %}">
+    <link rel='stylesheet' type="text/css" media="screen" href="{% static 'fonts/fontawesome-all.min.css' %}">
+    <link rel='stylesheet' type="text/css" media="screen" href="{% static 'fonts/simple-line-icons.min.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.1/baguetteBox.min.css">
+    <link rel='stylesheet' type="text/css" media="screen" href="{% static 'css/vanilla-zoom.min.css' %}">
+    <style>
+        .navbar-nav .nav-link.active {
+            color: black;
+        }
+
+        .navbar {
+            min-height: 50px; /* Adjust the value to your desired height */
+        }
+        
+        .navbar img {
+            width: 50px; /* Adjust the value to your desired size */
+        }
+        
+        .navbar-toggler {
+            margin-top: 5px; /* Adjust the value to adjust the positioning of the toggler */
+        }
+        
+        .navbar-nav .nav-link {
+            margin-top: 5px; /* Adjust the value to adjust the spacing between the links */
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-light navbar-expand-lg fixed-top bg-white clean-navbar">
+        <div class="container">
+            <div>
+                <img src="{% static 'img/ellipse-1@2x.png' %}">
+                <img src="{% static 'img/logo.png' %}">
+            </div>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navcol-1" aria-controls="navcol-1" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navcol-1">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.view_name == 'home' %}active{% endif %}" href="{% url 'home' %}">Home</a>
+                    </li>
+                    <li class="nav-item {% if request.resolver_match.view_name == 'uiactivity' %}active{% endif %}">
+                        <a class="nav-link" href="{% url 'uiactivity' %}">Activities</a>
+                    </li>
+                    <li class="nav-item {% if request.resolver_match.view_name == 'uifinance' %}active{% endif %}">
+                        <a class="nav-link" href="{% url 'uifinance' %}">Center</a>
+                    </li>
+                    <li class="nav-item {% if request.resolver_match.view_name == 'aboutus' %}active{% endif %}">
+                        <a class="nav-link" href="{%url 'aboutus' %}">About Us</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

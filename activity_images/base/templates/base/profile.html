@@ -1,0 +1,150 @@
+{% extends 'main.html' %}
+
+{% load static %}
+
+{% block content %}
+       
+                <div class="container-fluid">
+                    <h3 class="text-dark mb-4">Profile</h3>
+                    <div class="row mb-3">
+                            <div class="col-lg-4">
+                                <div class="card mb-3">
+                                    <div class="card-body text-center shadow-lg">
+                                        {% if user.profile_pic %}
+                                            <label for="profile-pic-input" class="d-block">
+                                                <img class="rounded-circle mb-3 mt-4" src="{{ user.profile_pic.url }}" width="160" height="160">
+                                            </label>
+                                        {% else %}
+                                            <label for="profile-pic-input" class="d-block">
+                                                <img class="rounded-circle mb-3 mt-4" src="{% static 'img/default_profile_pic.jpg' %}" width="160" height="160">
+                                            </label>
+                                        {% endif %}
+                                        <div class="mb-3">
+                                            <form method="POST" enctype="multipart/form-data">
+                                                {% csrf_token %}
+                                                <input type="file" name="profile_pic" id="profile-pic-input" style="display: none;">
+                                                <button class="btn btn-primary btn-sm" type="submit">Change Photo</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                           
+                            
+                            
+                          =
+                        </div>
+                        <div class="col-lg-8">
+                        
+                            <div class="row">
+                                <div class="col">
+                                    <div class="card shadow mb-3">
+                                        <div class="card-header py-3">
+                                            <p class="text-primary m-0 fw-bold">User Info</p>
+                                        </div>
+                                        <div class="card-body">
+                                        
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="name"><strong>Name</strong></label>
+                                                        <p>{{ name }}</p>
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="email"><strong>Email Address</strong></label>
+                                                        <p>{{ email }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="cid"><strong>CID</strong></label>
+                                                        <p>{{ cid }}</p>
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="responsibility"><strong>Responsibility</strong></label>
+                                                        <p>{{ responsibility }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="present_address"><strong>Present Address</strong></label>
+                                                        <p>{{ present_address }}</p>
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="village"><strong>Village</strong></label>
+                                                        <p>{{ village }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="geog"><strong>Geog</strong></label>
+                                                        <p>{{ geog }}</p>
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="dzongkhag"><strong>Dzongkhag</strong></label>
+                                                        <p>{{ dzongkhag }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                                </div>
+                                              
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- <div class="card shadow">
+                                        <div class="card-header py-3">
+                                            <p class="text-primary m-0 fw-bold">Contact Settings</p>
+                                        </div>
+                                        <div class="card-body">
+                                            <form>
+                                                <div class="mb-3"><label class="form-label" for="address"><strong>Address</strong></label><input class="form-control" type="text" id="address" placeholder="Sunset Blvd, 38" name="address"></div>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <div class="mb-3"><label class="form-label" for="city"><strong>City</strong></label><input class="form-control" type="text" id="city" placeholder="Los Angeles" name="city"></div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="mb-3"><label class="form-label" for="country"><strong>Country</strong></label><input class="form-control" type="text" id="country" placeholder="USA" name="country"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3"><button class="btn btn-primary btn-sm" type="submit">Save&nbsp;Settings</button></div>
+                                            </form>
+                                        </div>
+                                    </div> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="card shadow mb-5">
+                        <div class="card-header py-3">
+                            <p class="text-primary m-0 fw-bold">Forum Settings</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <form>
+                                        <div class="mb-3"><label class="form-label" for="signature"><strong>Signature</strong><br></label><textarea class="form-control" id="signature" rows="4" name="signature"></textarea></div>
+                                        <div class="mb-3">
+                                            <div class="form-check form-switch"><input class="form-check-input" type="checkbox" id="formCheck-1"><label class="form-check-label" for="formCheck-1"><strong>Notify me about new replies</strong></label></div>
+                                        </div>
+                                        <div class="mb-3"><button class="btn btn-primary btn-sm" type="submit">Save Settings</button></div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+                </div>
+                {% endblock %}

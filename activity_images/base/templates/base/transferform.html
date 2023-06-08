@@ -1,0 +1,438 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+{% load static %}
+<div class="container-fluid">
+    <h3 class="text-dark mb-4">Transfer Form</h3>
+    <div class="card shadow">
+        <div class="card-header py-3 d-flex justify-content-between">
+            <p class="text-primary m-0 fw-bold">Transfer Form Info</p>
+            
+            {% if user.role == "MANAGER" %}
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#transferFormModal">Generate Form</button>
+            {% endif %}
+        </div>
+
+        <!-- Transfer Form Modal -->
+        <div class="modal fade" id="transferFormModal" tabindex="-1" role="dialog" aria-labelledby="transferFormModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="transferFormModalLabel">Transfer Form</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="transferForm" method="POST" action="{% url 'submit_transfer_form' %}">
+                            {% csrf_token %}
+                            <div class="form-group row">
+                                <label for="cid" class="col-sm-2 col-form-label">CID:</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="cid" name="cid" class="form-control" minlength="11" required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="reason" class="col-sm-2 col-form-label">Reason:</label>
+                                <div class="col-sm-10">
+                                    <textarea id="reason" name="reason" class="form-control" maxlength="200" required></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-10 offset-sm-2">
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 text-nowrap">
+                    <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
+                        <label class="form-label">Show&nbsp;
+                            <select class="d-inline-block form-select form-select-sm" onchange="changePageSize(this.value)">
+                                <option value="10" {% if page_size == 10 %}selected{% endif %}>10</option>
+                                <option value="25" {% if page_size == 25 %}selected{% endif %}>25</option>
+                                <option value="50" {% if page_size == 50 %}selected{% endif %}>50</option>
+                                <option value="100" {% if page_size == 100 %}selected{% endif %}>100</option>
+                            </select>
+                        &nbsp;</label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="text-md-end dataTables_filter" id="dataTable_filter">
+                        <label class="form-label">
+                            <input type="text" id="searchInput" class="form-control form-control-sm" aria-controls="dataTable" placeholder="Search" onkeyup="searchTable()">
+                        </label>
+                    </div>
+                </div>
+                </div>
+              
+                <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
+                    <table class="table my-0" id="dataTable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Date</th>
+                                <th>View</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Loop through the data retrieved from the database and populate the table rows -->
+                            {% for transfer in transfers %}
+                            <tr>
+                                <td>{{ transfer.practitioner.name }}</td>
+                                <td>{{ transfer.date }}</td>
+                                <td>
+                                    <button class="btn btn-primary" onclick="showLetter('{{ transfer.practitioner.cid }}'); uploadPicture('{{ transfer.practitioner.cid }}')">View Form</button>
+                                </td>
+                                <td>{{ transfer.status }}</td>
+
+                            
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+<!-- view_letter.html -->
+<div class="modal fade" id="viewLetterModal" tabindex="-1" role="dialog" aria-labelledby="viewLetterModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewLetterModalLabel">View Form</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="letter-container">
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <div>
+                            <img src="{% static 'img/ellipse-1@2x.png' %}" alt="Left Logo" style="width: 100px;">
+                        </div>
+                        <div style="text-align: center;">
+                            <h3>DUDJOM DHARMA HOUSE</h3>
+                            <h4>Krodikali Association</h4>
+                            <p>Bidung, Trashigang</p>
+                        </div>
+                        <div>
+                            <img src="{% static 'img/logo.png' %}" alt="Right Logo" style="width: 100px;">
+                        </div>
+                    </div>
+                    <hr> <!-- Add a line separating the section -->
+
+                    <!-- Add the formal letter content -->
+                    <p>Date: <span class="practitioner-date"></span></p>
+                    <p>To:</p>
+                    <p>The Chairperson</p>
+                    <p>Galikhar Theoema Tshogchung</p>
+                    <p>Mongar Dzongkhag</p>
+                    <p>Sub: Transfer of Throema Practitioner</p>
+                    <p>Sir,</p>
+                    <p>Please find the details of the following Nyamlenpa from Bidung Tshogchung transferred to Mongar:</p>
+                                            
+                        <!-- Display the practitioner details -->
+                        <table style="border: 1px solid black; width: 90%;">
+                            <tr>
+                                <td style="border: 1px solid black; padding: 5px; width: 30%;"><strong>Name:</strong></td>
+                                <td style="border: 1px solid black; padding: 5px; width: 70%;"><span class="practitioner-name"></span></td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black; padding: 5px; width: 30%;"><strong>CID:</strong></td>
+                                <td style="border: 1px solid black; padding: 5px; width: 70%;"><span class="practitioner-cid"></span></td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black; padding: 5px; width: 30%;"><strong>Contact No:</strong></td>
+                                <td style="border: 1px solid black; padding: 5px; width: 70%;"><span class="practitioner-contact"></span></td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black; padding: 5px; width: 30%;"><strong>Dzongkhag:</strong></td>
+                                <td style="border: 1px solid black; padding: 5px; width: 70%;"><span class="practitioner-dzongkhag"></span></td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black; padding: 5px; width: 30%;"><strong>Gewog:</strong></td>
+                                <td style="border: 1px solid black; padding: 5px; width: 70%;"><span class="practitioner-gewog"></span></td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black; padding: 5px; width: 30%;"><strong>Village:</strong></td>
+                                <td style="border: 1px solid black; padding: 5px; width: 70%;"><span class="practitioner-village"></span></td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black; padding: 5px; width: 30%;"><strong>Reason:</strong></td>
+                                <td style="border: 1px solid black; padding: 5px; width: 70%;"><span class="practitioner-reason"></span></td>
+                            </tr>
+                 
+                            
+                        </table>
+
+                        <p>This is submitted for your kind information and necessary record.</p>
+                        <p>Yours faithfully,</p>
+
+            
+                    {% if user.role == "CHAIRPERSON" %}  
+                    <div>
+                        <label for="imageInput" id="imageLabel" style="cursor: pointer;">
+                            <div id="signatureBox" style="width: 150px; height: 150px; border: 1px solid black; display: flex; align-items: center; justify-content: center;">
+                                <span id="imageText" style="font-weight: bold;">Signature</span>
+                            </div>
+                        </label>
+                        <input type="file" id="imageInput" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+                    </div>
+                    
+                    {% endif %}
+
+
+                    {% if user.role != "CHAIRPERSON" %}
+
+                        <div id="letter-container">
+                            <div class="practitioner-details">
+                              <!-- Other practitioner details -->
+                              <img class="practitioner-image" src="" alt="Practitioner Image" style="width: 200px; height: 200px;">
+                            </div>
+                          </div>
+                    {% endif %}
+                          
+                    
+                    
+                        
+                        
+
+                                                        
+                        <p>Ngagi Wangchuk</p>
+                        <p>Chairperson</p>
+                        <p>Bidung Throema Tshochung</p>
+
+                        
+                  
+                     
+                </div>
+                {% if user.role == "CHAIRPERSON" %} 
+                    <button id="approveButton" class="btn btn-primary" onclick="">Approve</button>
+                    <button id="rejectButton" class="btn btn-danger" onclick="">Reject</button>
+                
+                {% endif %}                  
+                </div>
+            
+    
+            
+        </div>
+    </div>
+</div>
+
+
+
+
+
+           
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+<script>
+$(document).ready(function() {
+    // Bind a click event to the label element
+    $('#imageLabel').click(function(e) {
+        e.preventDefault(); // Prevent the default click behavior
+        
+        // Trigger the file input element
+        $('#imageInput').click();
+    });
+
+    // Listen for changes in the file input element
+    $('#imageInput').change(function() {
+        var file = this.files[0];
+        var cid = currentCid;
+        
+        if (file) {
+            // Display the selected file name as the label text
+            $('#imageLabel').text(file.name);
+            
+            // Perform the image upload request
+            uploadImage(cid);
+            
+            // Reset the file input value
+            $(this).val('');
+        }
+    });
+});
+
+</script>
+
+<script>
+    var currentCid = null;
+
+    function showLetter(cid) {
+    currentCid = cid;
+
+    // Update the approve and reject button actions with the current CID
+    $('#approveButton').attr('onclick', 'sendStatusChange("approve", "' + currentCid + '")');
+    $('#rejectButton').attr('onclick', 'sendStatusChange("reject", "' + currentCid + '")');
+
+    // Perform an AJAX request to retrieve the practitioner details
+    $.ajax({
+        url: '/retrieve_practitioner/',
+        data: { cid: cid },
+        success: function(response) {
+            // Update the letter content with the practitioner details
+            var letterContent = $('#letter-container');
+            letterContent.find('.practitioner-cid').text(response.cid);
+            letterContent.find('.practitioner-name').text(response.name);
+            letterContent.find('.practitioner-contact').text(response.contact_no);
+            letterContent.find('.practitioner-dzongkhag').text(response.dzongkhag);
+            letterContent.find('.practitioner-gewog').text(response.gewog);
+            letterContent.find('.practitioner-village').text(response.village);
+            letterContent.find('.practitioner-reason').text(response.reason);
+            
+            
+            var dateValue = response.date.split('T')[0];
+            letterContent.find('.practitioner-date').text(dateValue);
+
+
+            // Check if the response includes a picture URL
+            if (response.picture) {
+                var practitionerImage = letterContent.find('.practitioner-image');
+                practitionerImage.attr('src', response.picture);
+                practitionerImage.show();
+            } else {
+                letterContent.find('.practitioner-image').hide();
+            }
+
+    
+            // Show the letter modal
+            const viewLetterModal = new bootstrap.Modal(document.getElementById('viewLetterModal'));
+            viewLetterModal.show();
+        },
+        error: function() {
+            console.error('An error occurred while retrieving practitioner details.');
+        }
+    });
+}
+
+
+    function sendStatusChange(action, cid) {
+        // Get the CSRF token from the page
+        var csrfToken = $('[name=csrfmiddlewaretoken]').val();
+
+        // Perform the status change request
+        $.ajax({
+            url: '/change_status/' + cid + '/',
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrfToken
+            },
+            data: { action: action },
+            success: function(response) {
+                // Handle the success response if needed
+                location.reload();
+                console.log('Status change successful');
+            },
+            error: function() {
+                // Handle the error response if needed
+                console.error('An error occurred while changing the status.');
+            }
+        });
+    }
+
+    function uploadImage(cid) {
+    // Get the CSRF token from the page
+    var csrfToken = $('[name=csrfmiddlewaretoken]').val();
+
+    // Prepare the image file to be uploaded
+    var imageFile = $('#imageInput').prop('files')[0];
+    var formData = new FormData();
+    formData.append('image', imageFile);
+    formData.append('cid', cid);
+
+    // Perform the image upload request
+    $.ajax({
+        url: '/upload_image/',
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrfToken
+        },
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+            // Update the message in the browser
+            showMessage('Image upload successful');
+        },
+        error: function() {
+            // Update the message in the browser
+            showMessage('An error occurred while uploading the image.');
+        }
+    });
+}
+
+function showMessage(message) {
+    // Create a new element to display the message
+    var messageElement = document.createElement('p');
+    messageElement.textContent = message;
+
+    // Append the message element to the document body
+    document.body.appendChild(messageElement);
+}
+
+</script>
+
+
+<script>
+    function searchTable() {
+        // Retrieve the search input value
+        var input = document.getElementById("searchInput").value.toLowerCase();
+        // Get all table rows
+        var rows = document.getElementsByTagName("tr");
+
+        // Loop through the rows and hide those that don't match the search input
+        for (var i = 0; i < rows.length; i++) {
+            var cid = rows[i].getElementsByTagName("td")[1];
+            var name = rows[i].getElementsByTagName("td")[0]; // Assuming name is the first column (index 0)
+
+            if (cid && name) {
+                var cidValue = cid.textContent || cid.innerText;
+                var nameValue = name.textContent || name.innerText;
+
+                if (cidValue.toLowerCase().indexOf(input) > -1 || nameValue.toLowerCase().indexOf(input) > -1) {
+                    rows[i].style.display = ""; // Show the row
+                } else {
+                    rows[i].style.display = "none"; // Hide the row
+                }
+            }
+        }
+    }
+</script>
+
+<script>
+    function changePageSize(pageSize) {
+        // Get all the table rows
+        var rows = document.querySelectorAll("#dataTable tbody tr");
+
+        // Loop through each row
+        rows.forEach(function(row, index) {
+            // Check if the row should be visible based on the selected page size
+            if (index < pageSize) {
+                row.style.display = ""; // Show the row
+            } else {
+                row.style.display = "none"; // Hide the row
+            }
+        });
+    }
+</script>
+
+
+
+        
+{% endblock %}

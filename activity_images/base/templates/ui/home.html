@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Home - Threma</title>
+
+    <link rel='stylesheet' type="text/css" media="screen" href="{% static 'bootstrap/css/bootstrap02.min.css' %}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,700&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Alfa+Slab+One&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto&amp;display=swap">
+
+    <link rel='stylesheet' type="text/css" media="screen" href="{% static 'fonts/fontawesome-all.min.css' %}">
+    <link rel='stylesheet' type="text/css" media="screen" href="{% static 'fonts/ionicons.min.css' %}">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/css/pikaday.min.css">
+    <style>
+.image-container {
+    position: relative;
+}
+
+    .hover-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 10px;
+        background-color: white;
+        color: black;
+        text-align: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .item:hover .hover-text {
+        opacity: 1;
+    }
+
+
+    </style>
+</head>
+
+<body>
+    {% include 'nav.html'  %}
+    <main class="page lanidng-page">
+        <section class="portfolio-block block-intro" style="background: url(&quot;{% static 'img/011.jpg' %}&quot;) top / cover no-repeat;height: 780px;">
+            <div class="container">
+                <div class="about-me">
+                    <p style="color: rgb(255,255,255);text-align: left;font-family: 'Alfa Slab One', serif;font-size: 39px;"><br>Always <br>open your <br>mind first<br>than opening <br>your mouth<br> <br>~Dungse Garap Rinpoche<br><br></p>
+                </div>
+            </div>
+        </section>
+
+        <section class="portfolio-block photography" style="margin-top: 20px;">
+            <div class="container">
+                <div class="heading">
+                    <h2 class="text-center accordion-titulo" style="color: #EF9712;"><br>What We Do</h6>
+                </div>
+              
+                <div class="row g-0 align-items-stretch">
+                    <div class="col-md-6 col-lg-4 item zoom-on-hover" style="margin-bottom: 20px;">
+                        <a href="#" class="image-container">
+                            <img class="img-fluid image" src="{% static 'img/nature/111111.jpg' %}">
+                            <div class="hover-text">
+                                <h3>Visualization</h3> Practitioner uses their imagination to create a mental image of Dudjom Krodikali in their mind's eye.
+                            </div>
+                        </a>
+                    </div>
+                    
+                    
+                    <div class="col-md-6 col-lg-4 item zoom-on-hover" style="margin-bottom: 20px;">
+                        <a href="#" class="image-container">
+                            <img class="img-fluid image" src="{% static 'img/nature/123.jpg' %}">
+                            <div class="hover-text">
+                                <h3> Mantra recitation</h3>
+                                The practitioner may use a mala, a string of beads used for counting repetitions of the mantra.
+                            </div>
+                        </a>
+                    </div>
+                    
+                    <div class="col-md-6 col-lg-4 item zoom-on-hover" style="margin-bottom: 20px;">
+                        <a href="#" class="image-container">
+                            <img class="img-fluid image" src="{% static 'img/tech/339444205_744640010362910_4713254438820632069_n.jpg' %}">
+                            <div class="hover-text">
+                                <h3>Other ritual practices</h3>
+                                Practice of Krodikali seems like any other rituals with the melodic recitation of the texts
+                            </div>
+                        </a>
+                    </div>
+                    
+                </div>
+            </div>
+        </section>
+
+        <section class="portfolio-block call-to-action border-bottom" style="background: url(&quot;{% static 'img/t.jpg' %}&quot;)  bottom / auto no-repeat;height: 327.594px;margin-top: 46px;">
+            <div class="container">
+                <div class="d-flex justify-content-center align-items-center content">
+                    <h3 style="color: rgb(255,255,255);text-align: center;font-weight: bold;font-size: 49px;"><br>Give, <br>even if you only have little<br><br></h3>
+                </div>
+            </div>
+        </section>
+
+        <section class="portfolio-block skills" style="background-image: url('{% static 'static/img/Dharmawheel1.png' %}'); background-color: rgba(255, 255, 255, 0.88); background-blend-mode: overlay; background-size: cover; background-position: center;">
+            <div class="container">
+                <div class="heading">
+                    <h2 style="font-family: Roboto, sans-serif; font-weight: bold; color: #F08618;">Explore About Us</h2>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card special-skill-item border-0">
+                            <div class="card-body">
+                                <p class="card-text" id="text-container" style="text-align: left; color: rgb(0, 0, 0); font-size: 20px; max-height: 100%; overflow: hidden; text-overflow: ellipsis;"><br>Kyabje Dungse Garab Rinpochhe, one of the original lineage holders of the Dudjom New Treasure lineage, formed a Krodhikali practitioner group for lay people in Thimphu, Bhutan to preserve Buddhism, especially the Dudjom New Treasure lineage. The group grew rapidly, and there are now over 20,000 Krodhikali practitioners in Bhutan, organized into 42 Dudjom Dharma Houses registered under Druk Throema Tshogpa.<br><br></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 offset-lg-1 item zoom-on-hover">
+                        <a href="#">
+                            <img class="img-fluid image" id="image" src="{% static 'img/tech/339444205_744640010362910_4713254438820632069_n.jpg' %}">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <section class="bg-light" id="team">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="team-member"><img class="rounded-circle mx-auto" src="{% static 'img/team/1.jpg' %}">
+                        <h4>Kay Garland</h4>
+                        <p class="text-muted">Chairperson</p>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="team-member"><img class="rounded-circle mx-auto" src="{% static 'img/team/2.jpg' %}">
+                        <h4>Larry Parker</h4>
+                        <p class="text-muted">Manager</p>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="team-member"><img class="rounded-circle mx-auto" src="{% static 'img/team/3.jpg' %}">
+                        <h4>Diana Pertersen</h4>
+                        <p class="text-muted">Treasurer</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {% include 'footer.html'  %}
+    
+    <script src="{% static 'bootstrap/js/bootstrap02.min.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/pikaday.min.js"></script>
+    <script src="{% static 'js/theme02.js' %}"></script>    
+    <script>
+        window.addEventListener('DOMContentLoaded', function() {
+            var textContainer = document.getElementById('text-container');
+            var image = document.getElementById('image');
+            textContainer.style.maxHeight = image.offsetHeight + 'px';
+        });
+    </script>
+</body>
+
+</html>

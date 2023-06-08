@@ -1,0 +1,426 @@
+{% extends 'main.html' %}
+
+{% block content %}
+       
+        
+                <div class="container-fluid">
+                    <h3 class="text-dark mb-4">Team</h3>
+                    
+                        <div class="card shadow">
+                            <div class="card-header py-3 d-flex justify-content-between">
+                                <p class="text-primary m-0 fw-bold">Excutive Info</p>
+                                                       <!-- Add a data-toggle attribute with "modal" value to the button -->
+                                                       {% if user.role == "ADMIN" %}
+                                                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addMemberModal">Add Members</button>
+                                                       {% endif %}
+
+                                <!-- Define the modal with the id "addMemberModal" -->
+                                <div class="modal fade" id="addMemberModal" tabindex="-1" role="dialog" aria-labelledby="addMemberModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="addMemberModalLabel">Add Members</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <!-- Use Bootstrap's grid system to align the form fields properly -->
+                                                <div class="container">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            
+                                                            <form method="post" action="{% url 'add_member' %}">
+
+                                                                    {% csrf_token %}
+                                                                    <label for="cid">CID:</label><br>
+                                                                    <input type="text" id="cid" name="cid" minlength="11" required><br>
+                                                                  
+                                                                    <label for="name">Name:</label><br>
+                                                                    <input type="text" id="name" name="name" required><br>
+                                                                  
+                                                                    <label for="email">Email:</label><br>
+                                                                    <input type="email" id="email" name="email" required><br>
+                                                                  
+                                                                    <label for="role">Role:</label><br>
+                                                                    <select id="role" name="role" required>
+                                                                      <option value="" disabled selected>Select your role</option>
+                                                                      <option value="MANAGER">Manager</option>
+                                                                      <option value="CHAIRPERSON">Chairperson</option>
+                                                                      <option value="TREASURER">Treasurer</option>
+                                                                    </select><br>
+                                                                  
+                                                                    <label for="responsibility">Responsibility:</label><br>
+                                                                    <input type="text" id="responsibility" name="responsibility" required><br>
+                                                                  
+                                                                    <label for="present_address">Present Address:</label><br>
+                                                                    <input type="text" id="present_address" name="present_address" required><br>
+                                                                  
+                                                                    <label for="contact_no">Contact No:</label><br>
+                                                                    <input type="text" id="contact_no" name="contact_no" minlength="8" required><br>
+                                                                  
+                                                                    <label for="card_no">Card No:</label><br>
+                                                                    <input type="text" id="card_no" name="card_no" required><br>
+                                                                  
+                                                                    <label for="village">Village:</label><br>
+                                                                    <input type="text" id="village" name="village" required><br>
+                                                                  
+                                                                    <label for="geog">Gewog:</label><br>
+                                                                    <input type="text" id="geog" name="geog" required><br>
+                                                                  
+                                                                    <label for="dzongkhag">Dzongkhag:</label><br>
+                                                                    <input type="text" id="dzongkhag" name="dzongkhag" required><br>
+                                                                  
+                                                                    <label for="password">Password:</label><br>
+                                                                    <input type="password" id="password" name="password" required><br>
+                                                                  
+                                                                    <label for="confirm_password">Confirm Password:</label><br>
+                                                                    <input type="password" id="confirm_password" name="confirm_password" required><br>
+
+                                                                    {% if form.errors %}
+                                                                        <div class="alert alert-danger" role="alert">
+                                                                            {% for field, errors in form.errors.items %}
+                                                                                {% for error in errors %}
+                                                                                    <p>{{ field }}: {{ error }}</p>
+                                                                                {% endfor %}
+                                                                            {% endfor %}
+                                                                        </div>
+                                                                    {% endif %}
+                                                                  
+                                                        
+                                                                <!-- Add a submit button with class "btn btn-primary" -->
+                                                                <button type="submit" class="btn btn-primary">Confirm</button>
+                                                                {% if messages %}
+                                                                    <div class="alert alert-danger" role="alert">
+                                                                        {% for message in messages %}
+                                                                            {{ message }}
+                                                                        {% endfor %}
+                                                                    </div>
+                                                                {% endif %}
+                                                            </form>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>                                                                                     
+                                        </div>
+                                    </div>
+                                </div>   
+
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 text-nowrap">
+                                        <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
+                                            <label class="form-label">Show&nbsp;
+                                                <select class="d-inline-block form-select form-select-sm" onchange="changePageSize(this.value)">
+                                                    <option value="10" {% if page_size == 10 %}selected{% endif %}>10</option>
+                                                    <option value="25" {% if page_size == 25 %}selected{% endif %}>25</option>
+                                                    <option value="50" {% if page_size == 50 %}selected{% endif %}>50</option>
+                                                    <option value="100" {% if page_size == 100 %}selected{% endif %}>100</option>
+                                                </select>
+                                            &nbsp;</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">   
+                                        <div class="text-md-end dataTables_filter" id="dataTable_filter">
+                                            <label class="form-label">
+                                                <input type="text" id="searchInput" class="form-control form-control-sm" aria-controls="dataTable" placeholder="Search" onkeyup="searchTable()">
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
+                                    <table class="table my-0" id="dataTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Email</th>
+                                                <th>Responsibility</th>
+                                                <th>Present Address</th>
+                                                <th>CID</th>
+                                                <th>Contact No</th>
+                                                <th>Card No</th>
+                                                <th>Village</th>
+                                                <th>Geog</th>
+                                                <th>Dzongkhag</th>
+                                                <th>Role</th>
+                                                {% if user.role == "ADMIN" %}
+                                                <th>Actions</th>
+                                                {% endif %}
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Loop through the data retrieved from the database and populate the table rows -->
+                                            {% for member in ExecutiveMember %}
+                                            <tr>
+                                                <td>{{ member.name }}</td>
+                                                <td>{{ member.email }}</td>
+                                                <td>{{ member.responsibility }}</td>
+                                                <td>{{ member.present_address }}</td>
+                                                <td>{{ member.cid }}</td>
+                                                <td>{{ member.contact_no }}</td>
+                                                <td>{{ member.card_no }}</td>
+                                                <td>{{ member.village }}</td>
+                                                <td>{{ member.geog }}</td>
+                                                <td>{{ member.dzongkhag }}</td>
+                                                <td>{{ member.role }}</td>
+                                                <td>
+                                                    {% if user.role == "ADMIN" %}
+                                                    <div class="d-flex">
+                                                        <button type="button" class="btn btn-primary edit-button" data-member-cid="{{ member.cid }}" data-toggle="modal" data-target="#editMemberModal{{ member.cid }}">Edit</button>
+                                                        <button class="btn btn-primary edit-button delete-button" data-member-cid="{{ member.cid }}" style="color: white; background-color: red;">Delete</button>
+
+                                                    </div>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            
+                                <!-- Define the modal with the id "editMemberModal" -->
+                                {% for member in ExecutiveMember %}
+                                <div class="modal fade" id="editMemberModal{{ member.cid }}" tabindex="-1" role="dialog" aria-labelledby="editMemberModalLabel{{ member.cid }}" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="editMemberModalLabel{{ member.cid }}">Edit Member</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <!-- Use Bootstrap's grid system to align the form fields properly -->
+                                                <div class="container">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <form method="post" action="{% url 'edit_member' member.cid %}" class="edit-form">
+                                                                {% csrf_token %}
+                                                                <!-- Include the form fields for editing the member details -->
+                                                                <!-- Adjust the field values as per your specific requirements -->
+                                                                <label for="edit_cid">CID:</label><br>
+                                                                <input type="number" id="edit_cid" name="cid" value="{{ member.cid }}" minlength="11" required><br>
+                                                                
+                                                                <label for="edit_name">Name:</label><br>
+                                                                <input type="text" id="edit_name" name="name" value="{{ member.name }}" required><br>
+                                                                
+                                                                <label for="edit_email">Email:</label><br>
+                                                                <input type="email" id="edit_email" name="email" value="{{ member.email }}" required><br>
+                                                                
+                                                                <label for="edit_role">Role:</label><br>
+                                                                <select id="edit_role" name="role" required>
+                                                                    <option value="" disabled selected>Select your role</option>
+                                                                    <option value="MANAGER" {% if member.role == 'MANAGER' %}selected{% endif %}>Manager</option>
+                                                                    <option value="CHAIRPERSON" {% if member.role == 'CHAIRPERSON' %}selected{% endif %}>Chairperson</option>
+                                                                    <option value="TREASURER" {% if member.role == 'TREASURER' %}selected{% endif %}>Treasurer</option>
+                                                                    <option value="ADMIN" {% if member.role == 'ADMIN' %}selected{% endif %}>Admin</option>
+                                                                </select><br>
+                                                            
+                                                                <label for="edit_responsibility">Responsibility:</label><br>
+                                                                <input type="text" id="edit_responsibility" name="responsibility" value="{{ member.responsibility }}" required><br>
+                                                            
+                                                                <label for="edit_present_address">Present Address:</label><br>
+                                                                <input type="text" id="edit_present_address" name="present_address" value="{{ member.present_address }}" required><br>
+                                                            
+                                                                <label for="edit_contact_no">Contact No:</label><br>
+                                                                <input type="number" id="edit_contact_no" name="contact_no" value="{{ member.contact_no }}" minlength="8" required><br>
+                                                            
+                                                                <label for="edit_card_no">Card No:</label><br>
+                                                                <input type="number" id="edit_card_no" name="card_no" value="{{ member.card_no }}" required><br>
+                                                            
+                                                                <label for="edit_village">Village:</label><br>
+                                                                <input type="text" id="edit_village" name="village" value="{{ member.village }}" required><br>
+                                                            
+                                                                <label for="edit_geog">Gewog:</label><br>
+                                                                <input type="text" id="edit_geog" name="geog" value="{{ member.geog }}" required><br>
+                                                            
+                                                                <label for="edit_dzongkhag">Dzongkhag:</label><br>
+                                                                <input type="text" id="edit_dzongkhag" name="dzongkhag" value="{{ member.dzongkhag }}" required><br>
+                                                            
+                                                                <!-- Add a submit button with class "btn btn-primary" -->
+                                                                <button type="submit" class="btn btn-primary">Update</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                                
+                                
+                            </div>
+                        
+                     </div>
+              
+             </div>
+            
+        
+
+                     <!-- Include the necessary JavaScript files for Bootstrap -->
+                     <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Attach a click event listener to all edit buttons
+            $('.edit-button').click(function() {
+                // Get the member CID associated with the button
+                var memberCID = $(this).data('member-cid');
+
+                // Show the corresponding modal popup
+                $('#editMemberModal' + memberCID).modal('show');
+            });
+
+            // Attach a submit event listener to all edit forms
+            $('.edit-form').submit(function(e) {
+                e.preventDefault();
+
+                // Get the form data
+                var formData = $(this).serialize();
+
+                // Send an AJAX request to update the member data
+                $.ajax({
+                    type: 'POST',
+                    url: $(this).attr('action'),
+                    data: formData,
+                    success: function(response) {
+                        // Handle the success response (e.g., show a success message)
+                        alert('Member data updated successfully');
+                        // Optionally, you can reload the page or update the specific table row with the updated data
+                        location.reload();
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle the error response (e.g., display an error message)
+                        alert('An error occurred while updating the member data');
+                    }
+                });
+            });
+        });
+    </script> -->
+
+    
+                     <script>
+                        function searchTable() {
+                            // Retrieve the search input value
+                            var input = document.getElementById("searchInput").value.toLowerCase();
+                            // Get all table rows
+                            var rows = document.getElementsByTagName("tr");
+                    
+                            // Loop through the rows and hide those that don't match the search input
+                            for (var i = 0; i < rows.length; i++) {
+                                var cid = rows[i].getElementsByTagName("td")[4];
+                                var name = rows[i].getElementsByTagName("td")[0]; // Assuming name is the first column (index 0)
+                    
+                                if (cid && name) {
+                                    var cidValue = cid.textContent || cid.innerText;
+                                    var nameValue = name.textContent || name.innerText;
+                    
+                                    if (cidValue.toLowerCase().indexOf(input) > -1 || nameValue.toLowerCase().indexOf(input) > -1) {
+                                        rows[i].style.display = ""; // Show the row
+                                    } else {
+                                        rows[i].style.display = "none"; // Hide the row
+                                    }
+                                }
+                            }
+                        }
+                    </script>
+
+<script>
+    const editButtons = document.querySelectorAll('.edit-button');
+
+    editButtons.forEach((button) => {
+        button.addEventListener('click', (event) => {
+            const formId = event.currentTarget.getAttribute('data-member-cid');
+            const editForm = document.getElementById(`editForm${formId}`);
+
+            editForm.addEventListener('submit', (submitEvent) => {
+                submitEvent.preventDefault();
+
+                const formData = new FormData(editForm);
+                fetch(editForm.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest', // Add this header for Django to identify it as an AJAX request
+                        'X-CSRFToken': '{{ csrf_token }}' // Add the CSRF token for security (assuming you have CSRF protection enabled)
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Handle successful response (e.g., display success message, update UI)
+                            console.log(data.message);
+                        } else {
+                            // Handle error response (e.g., display error message)
+                            console.error(data.message);
+                        }
+                    })
+                    .catch(error => {
+                        // Handle errors (e.g., display error message)
+                        console.error(error);
+                    });
+            });
+        });
+    });
+</script>
+
+<script>
+    document.querySelectorAll('.delete-button').forEach(function(button) {
+      button.addEventListener('click', function(event) {
+        var memberCID = event.target.getAttribute('data-member-cid');
+        if (confirm("Are you sure you want to delete this member?")) {
+          // Make an AJAX request to the delete_member URL
+          fetch('/members/' + memberCID + '/delete/', {
+            method: 'POST',
+            headers: {
+              'X-CSRFToken': '{{ csrf_token }}'
+            }
+          })
+          .then(function(response) {
+            if (response.ok) {
+              alert("Member with CID " + memberCID + " deleted successfully.");
+              location.reload(); // Refresh the page
+            } else {
+              alert("Failed to delete member with CID " + memberCID + ".");
+            }
+          })
+          .catch(function(error) {
+            console.error('Error:', error);
+          });
+        }
+      });
+    });
+  </script>
+  
+               
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        function changePageSize(pageSize) {
+            // Get all the table rows
+            var rows = document.querySelectorAll("#dataTable tbody tr");
+    
+            // Loop through each row
+            rows.forEach(function(row, index) {
+                // Check if the row should be visible based on the selected page size
+                if (index < pageSize) {
+                    row.style.display = ""; // Show the row
+                } else {
+                    row.style.display = "none"; // Hide the row
+                }
+            });
+        }
+    </script>
+    
+
+
+           
+        {% endblock %}
+
+       
+   

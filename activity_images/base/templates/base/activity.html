@@ -1,0 +1,264 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+{% load static %} 
+
+<style>
+    #popup-container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+    
+    #popup-image {
+        max-width: 100%;
+        max-height: 100%;
+    }
+</style>
+<div class="container-fluid">
+    <h3 class="text-dark mb-4">Activity</h3>
+    <div class="card shadow">
+        <div class="card-header py-3 d-flex justify-content-between">
+            <p class="text-primary m-0 fw-bold">Activity Info</p>
+            
+            {% if user.role == "MANAGER" %}
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addMemberModal">Add Activity</button>
+            {% endif %}
+            
+            <!-- Define the modal with the id "addMemberModal" -->
+            <div class="modal fade" id="addMemberModal" tabindex="-1" role="dialog" aria-labelledby="addMemberModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addMemberModalLabel">Add Activity</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- Use Bootstrap's grid system to align the form fields properly -->
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <form method="post" enctype="multipart/form-data" action="{% url 'add_activity' %}">
+                                            {% csrf_token %}
+                                            <label for="name">Activity Name:</label>
+                                            <input type="text" id="name" name="name" required style="width: 100%;">
+                                            <br>
+                                            <label for="description">Description:</label>
+                                            <textarea id="description" name="description" required style="width: 100%;"></textarea>
+                                            <br>
+                                            <label for="image">Image:</label>
+                                            <input type="file" id="image" name="image" accept="image/*" required style="width: 100%;">
+                                            <br>
+                                            <label for="date">Date:</label>
+                                            <input type="date" id="date" name="date" required style="width: 100%;">
+                                            <br>
+                                            <label for="time">Time:</label>
+                                            <input type="time" id="time" name="time" required style="width: 100%;">
+                                            <br>
+                                            <input type="submit" value="Add Activity">
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 text-nowrap">
+                    <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
+                        <label class="form-label">Show&nbsp;
+                            <select class="d-inline-block form-select form-select-sm" onchange="changePageSize(this.value)">
+                                <option value="10" {% if page_size == 10 %}selected{% endif %}>10</option>
+                                <option value="25" {% if page_size == 25 %}selected{% endif %}>25</option>
+                                <option value="50" {% if page_size == 50 %}selected{% endif %}>50</option>
+                                <option value="100" {% if page_size == 100 %}selected{% endif %}>100</option>
+                            </select>
+                            &nbsp;
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-6">   
+                    <div class="text-md-end dataTables_filter" id="dataTable_filter">
+                        <label class="form-label">
+                            <input type="text" id="searchInput" class="form-control form-control-sm" aria-controls="dataTable" placeholder="Search" onkeyup="searchTable()">
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
+                <table class="table my-0" id="dataTable">
+                    <thead>
+                        <tr>
+                            <th>Activity Name</th>
+                            <th>Description</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Poster</th>
+                            <th>Status</th>
+                            {% if user.role == "MANAGER" %}
+                            <th>Actions</th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Loop through the data retrieved from the database and populate the table rows -->
+                        {% for activity in Activity %}
+                        <tr>
+                            <td>{{ activity.name }}</td>
+                            <td>{{ activity.description }}</td>
+                            <td>{{ activity.date }}</td>
+                            <td>{{ activity.time }}</td>
+                            <td>
+                                <button class="btn btn-primary" onclick="showPopup('{{ activity.image.url }}')">View Image</button>
+                            </td>
+                            <td>{{ activity.status }}</td>
+                            {% if user.role == "MANAGER" %}
+                            <td>
+                                {% if activity.status == 'PENDING' %}
+                                <form method="post" action="{% url 'update_activity_status' activity.activity_id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-success">Mark as Complete</button>
+                                </form>
+                                {% else %}
+                                Completed
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="d-flex">
+                                    <button type="button" class="btn btn-primary me-2" data-toggle="modal" data-target="#editActivityModal{{ activity.activity_id }}">Edit</button>
+                                    <form method="post" action="{% url 'delete_activity' activity.activity_id %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                    </form>
+                                </div>
+                            </td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                
+                
+            </div>
+                        
+                        <!-- Define the modal for editing the activity -->
+            {% for activity in Activity %}
+            <div class="modal fade" id="editActivityModal{{ activity.activity_id }}" tabindex="-1" aria-labelledby="editActivityModal{{ activity.activity_id }}Label" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editActivityModal{{ activity.activity_id }}Label">Edit Activity</h5>
+                            <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form method="post" enctype="multipart/form-data" action="{% url 'edit_activity' activity.activity_id %}">
+                                {% csrf_token %}
+                                <label for="edit-name">Activity Name:</label>
+                                <input type="text" id="edit-name" name="name" value="{{ activity.name }}" required style="width: 100%;">
+                                <br>
+                                <label for="edit-description">Description:</label>
+                                <textarea id="edit-description" name="description" required style="width: 100%;">{{ activity.description }}</textarea>
+                                <br>
+                                <label for="edit-image">Image:</label>
+                                <input type="file" id="edit-image" name="image" accept="image/*" style="width: 100%;">
+                                {% if activity.image %}
+                                    <img src="{{ activity.image.url }}" alt="Activity Image" style="width: 200px;">
+                                {% else %}
+                                    <img src="{{ activity.default_image.url }}" alt="Default Image" style="width: 200px;">
+                                {% endif %}
+                                <br>
+                                <label for="edit-date">Date:</label>
+                                <input type="date" id="edit-date" name="date" value="{{ activity.date|date:'Y-m-d' }}" required style="width: 100%;">
+                                <br>
+                                <label for="edit-time">Time:</label>
+                                <input type="time" id="edit-time" name="time" value="{{ activity.time|time:'H:i' }}" required style="width: 100%;">
+                                <br>
+                                <input type="submit" value="Save Changes">
+                            </form>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            {% endfor %}
+
+            
+            <!-- Define the modal for viewing the image -->
+            <div class="modal fade" id="viewImageModal" tabindex="-1" role="dialog" aria-labelledby="viewImageModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="viewImageModalLabel">View Image</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div id="popup-container">
+                                <img id="popup-image" src="" alt="Popup Image">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include the necessary JavaScript files for Bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        function searchTable() {
+            // Retrieve the search input value
+            var input = document.getElementById("searchInput").value.toLowerCase();
+            // Get all table rows
+            var rows = document.getElementsByTagName("tr");
+
+            // Loop through the rows and hide those that don't match the search input
+            for (var i = 0; i < rows.length; i++) {
+                var cid = rows[i].getElementsByTagName("td")[2];
+                var name = rows[i].getElementsByTagName("td")[0]; // Assuming name is the first column (index 0)
+
+                if (cid && name) {
+                    var cidValue = cid.textContent || cid.innerText;
+                    var nameValue = name.textContent || name.innerText;
+
+                    if (cidValue.toLowerCase().indexOf(input) > -1 || nameValue.toLowerCase().indexOf(input) > -1) {
+                        rows[i].style.display = ""; // Show the row
+                    } else {
+                        rows[i].style.display = "none"; // Hide the row
+                    }
+                }
+            }
+        }
+
+        function showPopup(imageUrl) {
+            var popupImage = document.getElementById("popup-image");
+            popupImage.src = imageUrl;
+            // Show the modal
+            $('#viewImageModal').modal('show');
+        }
+
+        function changePageSize(pageSize) {
+            // Get all the table rows
+            var rows = document.querySelectorAll("#dataTable tbody tr");
+
+            // Loop through each row
+            rows.forEach(function(row, index) {
+                // Check if the row should be visible based on the selected page size
+                if (index < pageSize) {
+                    row.style.display = ""; // Show the row
+                } else {
+                    row.style.display = "none"; // Hide the row
+                }
+            });
+        }
+    </script>
+{% endblock %}

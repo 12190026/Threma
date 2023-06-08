@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+{% load static %} 
+
+<html>
+<head>
+    <link rel='stylesheet' type="text/css" media="screen" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
+
+    <link rel='stylesheet' type="text/css" media="screen" href="{% static 'fonts/fontawesome-all.min.css' %}">
+
+    <link rel='stylesheet' type="text/css" media="screen" href="{% static 'css/untitled.css' %}">
+</head>
+
+<body>
+    <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0" style="background: #59131D;">
+        <!-- Navbar content goes here -->
+        <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0" style="background: #59131D;">
+            <div class="container-fluid d-flex flex-column p-0">
+                <a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#" style="background: url(&quot;{% static 'img/ellipse-1@2x.png' %}&quot;) no-repeat;background-size: contain;width: 108px;height: 109px;">
+                    <div class="sidebar-brand-icon rotate-n-15"></div>
+                    <div class="sidebar-brand-text mx-3"></div>
+                </a>
+                <hr class="sidebar-divider my-0">
+                <ul class="navbar-nav text-light" id="accordionSidebar" style="text-align: center;">
+                    <li class="nav-item {% if request.path == '/' %}active{% endif %}">
+                        <a class="nav-link" href="{% url 'index' %}">
+                            <i class="fas fa-home"></i><span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item {% if request.path == '/executives/' %}active{% endif %}">
+                        <a class="nav-link" href="{% url 'executives' %}">
+                            <i class="fas fa-user"></i><span>Executives</span>
+                        </a>
+                    </li>
+                    <li class="nav-item {% if request.path == '/practitioner/' %}active{% endif %}">
+                        <a class="nav-link" href="{% url 'practitioner' %}">
+                            <i class="fas fa-tasks"></i><span>Practitioner</span>
+                        </a>
+                    </li>
+                    <li class="nav-item {% if request.path == '/activity/' %}active{% endif %}">
+                        <a class="nav-link" href="{% url 'activity' %}">
+                            <i class="fas fa-money-check-alt"></i><span>Activities</span>
+                        </a>
+                    </li>
+                    <li class="nav-item {% if request.path == '/finance/' %}active{% endif %}">
+                        <a class="nav-link" href="{% url 'finance' %}">
+                            <i class="far fa-money-bill-alt"></i><span>Finance</span>
+                        </a>
+                    </li>
+                    <li class="nav-item {% if request.path == '/transferform/' %}active{% endif %}">
+                        <a class="nav-link" href="{% url 'transferform' %}">
+                            <i class="far fa-file-alt"></i><span>Transfer Form</span>
+                        </a>
+                    </li>
+                    <li class="nav-item {% if request.path == '/semso/' %}active{% endif %}">
+                        <a class="nav-link" href="{% url 'semso' %}">
+                            <i class="far fa-file-alt"></i><span>Semso</span>
+                        </a>
+                    </li>
+                </ul>
+              
+            </div>
+        </nav>
+        <!-- ... -->
+    </nav>
+    
+</body>
+</html>
+
