@@ -4,6 +4,8 @@ from .models import ExecutiveMember, Practitioner, Activity, FinancialStatement,
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import PasswordChangeForm
 from .backends import CustomBackend
+from django.core.exceptions import ValidationError
+
 
 class ExecutiveMemberForm(ModelForm):
     
@@ -121,10 +123,42 @@ class LoginForm(Form):
 
 
 class PractitionerForm(ModelForm):
-
     class Meta:
         model = Practitioner
         fields = '__all__'
+
+    def clean_cid(self):
+        cid = self.cleaned_data.get('cid')
+        # Add your custom validation logic here
+        # For example, check if CID already exists
+        if Practitioner.objects.filter(cid=cid).exists():
+            raise ValidationError("CID already exists")
+        try:
+            cid = int(cid)
+        except ValueError:
+            raise ValidationError("CID should be an integer")
+        return cid
+
+    def clean_contact_no(self):
+        contact_no = self.cleaned_data.get('contact_no')
+        # Add your custom validation logic here
+        # For example, check if contact number is valid
+        if not contact_no.isdigit():
+            raise ValidationError("Invalid contact number")
+        try:
+            contact_no = int(contact_no)
+        except ValueError:
+            raise ValidationError("Contact number should be an integer")
+        return contact_no
+
+    def clean_card_no(self):
+        card_no = self.cleaned_data.get('card_no')
+        # Add your custom validation logic here
+        try:
+            card_no = int(card_no)
+        except ValueError:
+            raise ValidationError("Card number should be an integer")
+        return card_no
 
 class CidForm(Form):
     cid = forms.CharField()

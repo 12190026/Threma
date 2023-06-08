@@ -22,7 +22,7 @@ router.register(r'semsos', views.SemsoViewSet)
 urlpatterns = [
     path('api/', include(router.urls)),
 
-    path('adminlogin/', views.login_admin, name='admin_login'),
+    path('adminlogin/', views.login_admin, name='adminlogin'),
     
     path('index/', views.index, name='index'),
 
@@ -30,7 +30,7 @@ urlpatterns = [
 
     path('add_member/', views.add_member, name='add_member'),
 
-    path('executivelogin/', views.login_executive, name='executive_login'),
+    path('executivelogin/', views.login_executive, name='executivelogin'),
 
     path('practitioner/', views.practitioner, name='practitioner'),
 
@@ -43,6 +43,13 @@ urlpatterns = [
     path('finance/', views.finance, name='finance'),
      
     path('main/', views.main, name='main'),
+
+    
+    path('edit_activity/<int:activity_id>/', views.edit_activity, name='edit_activity'),
+
+    path('delete_activity/<int:activity_id>/delete/', views.delete_activity, name='delete_activity'),
+        
+
 
     path('transferform/', views.transferform, name='transferform'),
 

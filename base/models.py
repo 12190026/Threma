@@ -52,7 +52,7 @@ class ExecutiveMember(AbstractBaseUser, PermissionsMixin):
     village = models.CharField(max_length=255)
     geog = models.CharField(max_length=255)
     dzongkhag = models.CharField(max_length=255)
-    profile_pic = CloudinaryField('profile_pics', default='https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.personality-insights.com%2Fdefault-profile-pic%2F&psig=AOvVaw05weK3HVtZw68bQ5ekVMuw&ust=1684855572822000&source=images&cd=vfe&ved=0CBEQjRxqFwoTCJCAiqOeif8CFQAAAAAdAAAAABAD')
+    profile_pic = CloudinaryField('profile_pics', default='profile-icon-login-head-icon-vector_teheof.jpg')
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     last_login = models.DateTimeField(null=True, blank=True)
@@ -89,13 +89,17 @@ class Practitioner(AbstractBaseUser):
 
     cid = models.CharField(primary_key=True, validators=[MinLengthValidator(11)], max_length=11)
     name = models.CharField(max_length=255)
+    profile_pic = CloudinaryField('profile_pics', default='profile-icon-login-head-icon-vector_teheof.jpg')
+    bob = models.DateField()
     responsibility = models.CharField(max_length=255)
     present_address = models.CharField(max_length=255)
     contact_no = models.CharField(validators=[MinLengthValidator(8)])
     village = models.CharField(max_length=255)
+    card_no = models.CharField(max_length=50)
+    tshogchung = models.CharField(max_length=255)
     geog = models.CharField(max_length=255)
     dzongkhag = models.CharField(max_length=255)
-    stage_of_threma = models.CharField(max_length=255, choices=STAGE_CHOICES)
+    stage_of_threma = models.CharField(max_length=255, choices=STAGE_CHOICES, blank=True, null=True)
     is_active = models.BooleanField(default=True)
 
     USERNAME_FIELD = 'cid'
@@ -133,11 +137,12 @@ class Activity(models.Model):
         return self.name
 
 class FinancialStatement(models.Model):
-    year = models.PositiveIntegerField(choices=YEAR_CHOICES)
+    year = models.PositiveIntegerField(choices=YEAR_CHOICES, unique=True)
     image = CloudinaryField('financial_statements/')
 
     def __str__(self):
         return str(self.year)
+
 
 class Transfer(models.Model):
     STATUS_CHOICES = [

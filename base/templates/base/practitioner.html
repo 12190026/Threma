@@ -65,72 +65,84 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-md-12">
-                            
+
                             <form method="post" action="{% url 'add_member_practitioner' %}">
-                                {% csrf_token %}
-                                
-              
-                                <label for="cid">CID:</label><br>
-                                <input type="text" id="cid" name="cid" minlength="11" required><br>
+                              {% csrf_token %}
+                          
+                              <label for="cid">CID:</label><br>
+                              <input type="text" id="cid" name="cid" minlength="11" required>
+                              <div id="cid-error" class="error"></div>
+                              <br>
                               
-                                <label for="name">Name:</label><br>
-                                <input type="text" id="name" name="name" required><br>
-                            
-                                <label for="responsibility">Responsibility:</label><br>
-                                <input type="text" id="responsibility" name="responsibility" required><br>
-                              
-                                <label for="present_address">Present Address:</label><br>
-                                <input type="text" id="present_address" name="present_address" required><br>
-                              
-                                <label for="contact_no">Contact No:</label><br>
-                                <input type="text" id="contact_no" name="contact_no" minlength="8" required><br>
-                              
-                            
-                                <label for="village">Village:</label><br>
-                                <input type="text" id="village" name="village" required><br>
-                              
-                                <label for="geog">Geog:</label><br>
-                                <input type="text" id="geog" name="geog" required><br>
+                          
+                              <label for="name">Name:</label><br>
+                              <input type="text" id="name" name="name" required>
+                              <br>
+                          
+                              <label for="profile_pic">Profile Picture:</label><br>
+                              <input type="file" id="profile_pic" name="profile_pic" accept="image/*">
+                              <br>
+                          
+                              <label for="bob">Date of Birth:</label><br>
+                              <input type="date" id="bob" name="bob" required>
+                              <br>
+                          
+                              <label for="responsibility">Responsibility:</label><br>
+                              <input type="text" id="responsibility" name="responsibility" required>
+                              <br>
+                          
+                              <label for="present_address">Present Address:</label><br>
+                              <input type="text" id="present_address" name="present_address" required>
+                              <br>
 
-                                <label for="dzongkhag">Dzongkhag:</label><br>
-                                <input type="text" id="dzongkhag" name="dzongkhag" required><br>
-
-                                <label for="stage_of_threma">Stage of Therma:</label><br>
-                                <select id="stage_of_threma" name="stage_of_threma" required>
-                                    <option value="Chapdro">Chapdro</option>
-                                    <option value="Semkey">Semkey</option>
-                                    <option value="Mendray">Mendray</option>
-                                    <option value="Yoenla Dinpa">Yoenla Dinpa</option>
-                                    <option value="Ku Sum Domdey">Ku Sum Domdey</option>
-                                    <option value="Lami Nyelijor">Lami Nyelijor</option>
-                                </select><br>
-
-
-                                <!-- Add a submit button with class "btn btn-primary" -->
-                                <div style="margin-top: 10px;"></div> <!-- Add a spacer with margin-top to create space -->
-                                <button type="submit" class="btn btn-primary">Confirm</button>
+                              <label for="tshogchung">Tshochung:</label><br>
+                              <input type="text" id="tshogchung" name="tshogchung" required>
+                              <br>
+                          
+                              <label for="contact_no">Contact No:</label><br>
+                              <input type="number" id="contact_no" name="contact_no" minlength="8" maxlength="8" required>
+                              <br>
+                          
+                              <label for="card_no">Card No:</label><br>
+                              <input type="number" id="card_no" name="card_no" required>
+                              <br>
+                          
+                              <label for="village">Village:</label><br>
+                              <input type="text" id="village" name="village" required>
+                              <br>
+                          
+                              <label for="geog">Gewog:</label><br>
+                              <input type="text" id="geog" name="geog" required>
+                              <br>
+                          
+                              <label for="dzongkhag">Dzongkhag:</label><br>
+                              <input type="text" id="dzongkhag" name="dzongkhag" required>
+                              <br>
+                          
+                              <label for="stage_of_threma">Stage of Therma:</label><br>
+                              <select id="stage_of_threma" name="stage_of_threma" required>
+                                <option value="Chapdro">Chapdro</option>
+                                <option value="Semkey">Semkey</option>
+                                <option value="Mendray">Mendray</option>
+                                <option value="Yoenla Dinpa">Yoenla Dinpa</option>
+                                <option value="Ku Sum Domdey">Ku Sum Domdey</option>
+                                <option value="Lami Nyelijor">Lami Nyelijor</option>
+                              </select>
+                              <br>
+                          
+                              <!-- Add a submit button with class "btn btn-primary" -->
+                              <div style="margin-top: 10px;"></div>
+                              <button type="submit" class="btn btn-primary">Confirm</button>
                             </form>
-
-                            {% if messages %}
-                                <script>
-                                $(document).ready(function() {
-                                    {% for message in messages %}
-                                        toastr.{{ message.tags }}('{{ message }}');
-                                    {% endfor %}
-                                });
-                                </script>
-                            {% endif %}
                         </div>
                     </div>
                 </div>
             </div>
-           
-            
-            
-            
         </div>
     </div>
 </div>
+
+
 
                                        
 
@@ -164,12 +176,15 @@
                                     <thead>
                                         <tr>
                                             <th>Name</th>
+                                            <th>DOB</th>
                                             <th>Responsibility</th>
                                             <th>Present Address</th>
                                             <th>CID</th>
+                                            <th>Card No</th>
                                             <th>Contact No</th>
                                             <th>Village</th>
-                                            <th>Geog</th>
+                                            <th>Tshogchung</th>
+                                            <th>Gewog</th>
                                             <th>Dzongkhag</th>
                                             <th>Stage Of Threma</th>
                                             {% if user.role == "MANAGER" %}
@@ -182,10 +197,13 @@
                                         {% for member in Practitioner %}
                                         <tr>
                                             <td>{{ member.name }}</td>
+                                            <td>{{ member.bob}}</td>
                                             <td>{{ member.responsibility }}</td>
                                             <td>{{ member.present_address }}</td>
                                             <td>{{ member.cid }}</td>
+                                            <td>{{ member.card_no }}</td>
                                             <td>{{ member.contact_no }}</td>
+                                            <td>{{ member.tshogchung }}</td>
                                             <td>{{ member.village }}</td>
                                             <td>{{ member.geog }}</td>
                                             <td>{{ member.dzongkhag }}</td>
@@ -204,9 +222,12 @@
                                         {% endfor %}
                                     </tbody>
                                 </table>
+                                  
+                                {% if user.role == "MANAGER" %}
                                 <div class="text-center mt-3">
                                     <a href="{% url 'export_practitioners' %}" class="btn btn-primary">Export to Excel</a>
                                 </div>
+                                {% endif %}
                                 
                             </div>
                         </div>
@@ -226,7 +247,7 @@
                                           <div class="container">
                                               <div class="row">
                                                   <div class="col-md-12">
-                                                      <form method="post" action="{% url 'edit_practitioner' member.cid %}" class="edit-form">
+                                                      <form method="post" enctype="multipart/form-data" action="{% url 'edit_practitioner' member.cid %}" class="edit-form">
                                                           {% csrf_token %}
                                                           <!-- Include the form fields for editing the member details -->
                                                           <!-- Adjust the field values as per your specific requirements -->
@@ -235,6 +256,18 @@
                                                           
                                                           <label for="edit_name">Name:</label><br>
                                                           <input type="text" id="edit_name" name="name" value="{{ member.name }}" required><br>
+
+                                                          <label for="edit_profile_pic">Profile Picture:</label><br>
+                                                            {% if member.profile_pic %}
+                                                                <img src="{{ member.profile_pic.url }}" alt="Profile Picture" style="width: 200px;"><br>
+                                                            {% else %}
+                                                                <img src="{{ member.profile_pic.url }}" alt="Previous Profile Picture" style="width: 200px;"><br>
+                                                            {% endif %}
+                                                            <input type="file" id="edit_profile_pic" name="profile_pic" accept="image/*">
+                                                            <br>
+
+                                                          <label for="edit_bob">Date of Birth:</label><br>
+                                                          <input type="date" id="edit_bob" name="bob" value="{{ member.bob|date:"Y-m-d" }}" required><br>
                                                           
                                                           <label for="edit_responsibility">Responsibility:</label><br>
                                                           <input type="text" id="edit_responsibility" name="responsibility" value="{{ member.responsibility }}" required><br>
@@ -244,11 +277,18 @@
                                                       
                                                           <label for="edit_contact_no">Contact No:</label><br>
                                                           <input type="text" id="edit_contact_no" name="contact_no" value="{{ member.contact_no }}" minlength="8" required><br>
+
+                                                          <label for="edit_card_no">Card No:</label><br>
+                                                          <input type="text" id="edit_card_no" name="card_no" value="{{ member.card_no }}" required><br>
+                                                        
+                                                          <label for="edit_village">Tshogchung:</label><br>
+                                                          <input type="text" id="edit_tshogchung" name="tshogchung" value="{{ member.tshogchung }}" required><br>
+                                                      
                                                 
                                                           <label for="edit_village">Village:</label><br>
                                                           <input type="text" id="edit_village" name="village" value="{{ member.village }}" required><br>
                                                       
-                                                          <label for="edit_geog">Geog:</label><br>
+                                                          <label for="edit_geog">Gewog:</label><br>
                                                           <input type="text" id="edit_geog" name="geog" value="{{ member.geog }}" required><br>
                                                       
                                                           <label for="edit_dzongkhag">Dzongkhag:</label><br>
@@ -384,17 +424,50 @@
     });
   </script>
 
+
 <script>
-    $(document).ready(function() {
-        {% if messages %}
-            {% for message in messages %}
-                toastr.{{ message.tags }}('{{ message }}');
-            {% endfor %}
-        {% endif %}
-    });
+    function changePageSize(pageSize) {
+        // Get all the table rows
+        var rows = document.querySelectorAll("#dataTable tbody tr");
+
+        // Loop through each row
+        rows.forEach(function(row, index) {
+            // Check if the row should be visible based on the selected page size
+            if (index < pageSize) {
+                row.style.display = ""; // Show the row
+            } else {
+                row.style.display = "none"; // Hide the row
+            }
+        });
+    }
 </script>
 
-                                
-   
+<script>
+
+$(document).ready(function() {
+  $('#cid').on('keyup', function() {
+    var cidValue = $(this).val();
+
+    // Perform AJAX request to check the cid uniqueness
+    $.ajax({
+      type: 'POST',
+      url: '{% url "add_member_practitioner" %}',
+      data: { 'cid': cidValue },
+      dataType: 'json',
+      success: function(response) {
+        if (response.error) {
+          $('#cid-error').text(response.error).show();
+        } else {
+          $('#cid-error').text('').hide();
+        }
+      },
+      error: function() {
+        // Handle AJAX error
+      }
+    });
+  });
+});
+</script>
+
 
         {% endblock %}

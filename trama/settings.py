@@ -75,13 +75,6 @@ cloudinary.config(
   api_secret = "hV_MZzF6piEoR5tlQcXOgFKv4Ds" 
 )
 
-CORS_ORIGIN_ALLOW_ALL = False
-
-CORS_ORIGIN_WHITELIST = [
-    'http://127.0.0.1:8000',
-    'http://localhost:3000',  # Replace with the URL of your React Native app
-]
-
 
 ROOT_URLCONF = 'trama.urls'
 

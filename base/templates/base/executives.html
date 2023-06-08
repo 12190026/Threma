@@ -48,7 +48,6 @@
                                                                       <option value="MANAGER">Manager</option>
                                                                       <option value="CHAIRPERSON">Chairperson</option>
                                                                       <option value="TREASURER">Treasurer</option>
-                                                                      <option value="ADMIN">Admin</option>
                                                                     </select><br>
                                                                   
                                                                     <label for="responsibility">Responsibility:</label><br>
@@ -66,7 +65,7 @@
                                                                     <label for="village">Village:</label><br>
                                                                     <input type="text" id="village" name="village" required><br>
                                                                   
-                                                                    <label for="geog">Geog:</label><br>
+                                                                    <label for="geog">Gewog:</label><br>
                                                                     <input type="text" id="geog" name="geog" required><br>
                                                                   
                                                                     <label for="dzongkhag">Dzongkhag:</label><br>
@@ -77,6 +76,16 @@
                                                                   
                                                                     <label for="confirm_password">Confirm Password:</label><br>
                                                                     <input type="password" id="confirm_password" name="confirm_password" required><br>
+
+                                                                    {% if form.errors %}
+                                                                        <div class="alert alert-danger" role="alert">
+                                                                            {% for field, errors in form.errors.items %}
+                                                                                {% for error in errors %}
+                                                                                    <p>{{ field }}: {{ error }}</p>
+                                                                                {% endfor %}
+                                                                            {% endfor %}
+                                                                        </div>
+                                                                    {% endif %}
                                                                   
                                                         
                                                                 <!-- Add a submit button with class "btn btn-primary" -->
@@ -90,15 +99,6 @@
                                                                 {% endif %}
                                                             </form>
 
-                                                            <!-- {% if messages %}
-                                                                <script>
-                                                                $(document).ready(function() {
-                                                                    {% for message in messages %}
-                                                                        toastr.{{ message.tags }}('{{ message }}');
-                                                                    {% endfor %}
-                                                                });
-                                                                </script>
-                                                            {% endif %} -->
                                                         </div>
                                                     </div>
                                                 </div>
@@ -201,7 +201,7 @@
                                                                 <!-- Include the form fields for editing the member details -->
                                                                 <!-- Adjust the field values as per your specific requirements -->
                                                                 <label for="edit_cid">CID:</label><br>
-                                                                <input type="text" id="edit_cid" name="cid" value="{{ member.cid }}" minlength="11" required><br>
+                                                                <input type="number" id="edit_cid" name="cid" value="{{ member.cid }}" minlength="11" required><br>
                                                                 
                                                                 <label for="edit_name">Name:</label><br>
                                                                 <input type="text" id="edit_name" name="name" value="{{ member.name }}" required><br>
@@ -225,15 +225,15 @@
                                                                 <input type="text" id="edit_present_address" name="present_address" value="{{ member.present_address }}" required><br>
                                                             
                                                                 <label for="edit_contact_no">Contact No:</label><br>
-                                                                <input type="text" id="edit_contact_no" name="contact_no" value="{{ member.contact_no }}" minlength="8" required><br>
+                                                                <input type="number" id="edit_contact_no" name="contact_no" value="{{ member.contact_no }}" minlength="8" required><br>
                                                             
                                                                 <label for="edit_card_no">Card No:</label><br>
-                                                                <input type="text" id="edit_card_no" name="card_no" value="{{ member.card_no }}" required><br>
+                                                                <input type="number" id="edit_card_no" name="card_no" value="{{ member.card_no }}" required><br>
                                                             
                                                                 <label for="edit_village">Village:</label><br>
                                                                 <input type="text" id="edit_village" name="village" value="{{ member.village }}" required><br>
                                                             
-                                                                <label for="edit_geog">Geog:</label><br>
+                                                                <label for="edit_geog">Gewog:</label><br>
                                                                 <input type="text" id="edit_geog" name="geog" value="{{ member.geog }}" required><br>
                                                             
                                                                 <label for="edit_dzongkhag">Dzongkhag:</label><br>
@@ -399,6 +399,24 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        function changePageSize(pageSize) {
+            // Get all the table rows
+            var rows = document.querySelectorAll("#dataTable tbody tr");
+    
+            // Loop through each row
+            rows.forEach(function(row, index) {
+                // Check if the row should be visible based on the selected page size
+                if (index < pageSize) {
+                    row.style.display = ""; // Show the row
+                } else {
+                    row.style.display = "none"; // Hide the row
+                }
+            });
+        }
+    </script>
+    
 
 
            

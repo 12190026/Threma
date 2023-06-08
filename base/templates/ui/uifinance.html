@@ -15,6 +15,32 @@
 
     <link rel='stylesheet' type="text/css" media="screen" href="{% static 'fonts/fontawesome-all.min.css' %}">
     <link rel='stylesheet' type="text/css" media="screen" href="{% static 'fonts/ionicons.min.css' %}">
+    <style>
+        #accordion-item3 .accordion-cab {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    
+        #accordion-item3 .accordion-titulo {
+            color: #EF9712;
+        }
+    
+        #accordion-item3 .accordion-content {
+            text-align: center;
+            margin-top: 20px;
+            height: calc(100vh - 780px); /* Set the height to cover remaining screen space */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        #accordion-item3 .accordion-content img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+    </style>
+    
 
 </head>
 
@@ -34,7 +60,7 @@
         <section class="portfolio-block activity">
             <div class="accordion-item" id="accordion-item2">
                 <div class="accordion-cab" id="accordion-cab2">
-                    <h6 class="text-center accordion-titulo" style="color: #EF9712;"><br>Financial Statement</h6>
+                    <h6 class="text-center accordion-titulo" style="color: #EF9712;"><br>Center</h6>
                     <div style="display: flex; align-items: center; justify-content: center;">
                         <hr style="background-color: #EF9712; height: 4px; width: 80px; border: none; margin-right: 8px;">
                         <i class="fas fa-bell" style="color: #EF9712; font-size: 20px;"></i>
@@ -42,43 +68,13 @@
                     </div>
                 </div>
             </div>
-        
-            <div class="container" style="width: 70vw;">
-                <div class="row">
-                    {% for statement in statements %}
-                    <div class="col-md-6">
-                        <div class="card activity-item shadow">
-                            <div class="card-body activity-info">
-                                <h6 class="card-title activity-title">
-                                    <a href="#" onclick="showImage('{{ statement.image.url }}')">
-                                        {{ statement.year }}
-                                    </a>
-                                </h6>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
+            
         </section>
-        
-        <!-- Define the modal for viewing the image -->
-        <div class="modal fade" id="viewImageModal" tabindex="-1" role="dialog" aria-labelledby="viewImageModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="viewImageModalLabel">View Image</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div id="popup-container">
-                            <img id="popup-image" src="" alt="Popup Image" style="max-width: 100%; max-height: 70vh;">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
+
+        <section class="portfolio-block call-to-action border-bottom" style="background: url(&quot;{% static 'img/center.png' %}&quot;)  bottom / auto no-repeat;height: 600px; margin-bottom: 40px;">
+
+        </section>
+
 
     </main>
 
@@ -94,12 +90,6 @@
 
 
 
-    <script>
-        function showImage(imageUrl) {
-            var popupImage = document.getElementById('popup-image');
-            popupImage.src = imageUrl;
-            $('#viewImageModal').modal('show');
-        }
-    </script>
+
 </body>
 </html>

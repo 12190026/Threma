@@ -67,44 +67,55 @@
 
                 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs/dist/tf.min.js"> </script>
                 <script>
-                    document.addEventListener('DOMContentLoaded', function() {
+                  document.addEventListener('DOMContentLoaded', function() {
                       // Retrieve the stage labels and count values from the template context
                       var labels = JSON.parse('{{ labels|escapejs }}');
                       var counts = JSON.parse('{{ counts|escapejs }}');
-                
+              
+                      // Filter out null values from labels and counts arrays
+                      var filteredLabels = [];
+                      var filteredCounts = [];
+                      for (var i = 0; i < labels.length; i++) {
+                          if (labels[i] !== null) {
+                              filteredLabels.push(labels[i]);
+                              filteredCounts.push(counts[i]);
+                          }
+                      }
+              
                       // Create the bar chart
                       var ctx = document.getElementById('stageChart').getContext('2d');
                       new Chart(ctx, {
-                        type: 'bar',
-                        data: {
-                          labels: labels,
-                          datasets: [{
-                            label: 'Number of Practitioners',
-                            data: counts,
-                            backgroundColor: 'rgba(78, 115, 223, 0.5)',
-                            borderColor: 'rgba(78, 115, 223, 1)',
-                            borderWidth: 1
-                          }]
-                        },
-                        options: {
-                          maintainAspectRatio: false,
-                          scales: {
-                            y: {
-                              beginAtZero: true,
-                              ticks: {
-                                precision: 0
-                              }
-                            }
+                          type: 'bar',
+                          data: {
+                              labels: filteredLabels,
+                              datasets: [{
+                                  label: 'Number of Practitioners',
+                                  data: filteredCounts,
+                                  backgroundColor: 'rgba(78, 115, 223, 0.5)',
+                                  borderColor: 'rgba(78, 115, 223, 1)',
+                                  borderWidth: 1
+                              }]
                           },
-                          plugins: {
-                            legend: {
-                              display: false
-                            }
+                          options: {
+                              maintainAspectRatio: false,
+                              scales: {
+                                  y: {
+                                      beginAtZero: true,
+                                      ticks: {
+                                          precision: 0
+                                      }
+                                  }
+                              },
+                              plugins: {
+                                  legend: {
+                                      display: false
+                                  }
+                              }
                           }
-                        }
                       });
-                    });
-                  </script>
+                  });
+              </script>
+              
 
 
 {% endblock %}

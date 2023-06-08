@@ -57,6 +57,7 @@ def login_admin(request):
 #     context = {'page': page}
 #     return render(request, 'base/executivelogin.html', context)
 
+
 def login_executive(request):
     page = 'executivelogin'
 
@@ -92,7 +93,7 @@ def main(request):
     return render(request, 'main.html', context)
 
 
-@login_required(login_url='adminlogin')
+@login_required(login_url='executivelogin') 
 def index(request):
     # Retrieve the counts from the database
     total_members = ExecutiveMember.objects.count()
@@ -121,6 +122,7 @@ def index(request):
 
     return render(request, 'base/index.html', context)
 
+@login_required(login_url='executivelogin') 
 def transferform(request):
     if request.method == 'POST':
         form = TransferForm(request.POST, request.FILES)
@@ -148,6 +150,7 @@ def transferform(request):
 
 from .forms import PictureUploadForm
 
+@login_required(login_url='executivelogin') 
 def upload_image(request):
     if request.method == 'POST':
         cid = request.POST.get('cid')
@@ -169,7 +172,7 @@ def upload_image(request):
     return JsonResponse({'error': 'Invalid request method'})
 
 
-
+@login_required(login_url='executivelogin') 
 def upload_picture(request, cid):
     if request.method == 'POST':
         # Assuming you have a model named Transfer to store the picture
@@ -193,6 +196,7 @@ def upload_picture(request, cid):
     
     return JsonResponse({'message': 'Invalid request method'}, status=405)
 
+@login_required(login_url='executivelogin') 
 def get_letter(request):
     cid = request.GET.get('cid')
 
@@ -208,12 +212,14 @@ def get_letter(request):
 
     return render(request, 'base/transferform.html', context)
 
+@login_required(login_url='executivelogin') 
 def view_letter(request, transfer_id):
     transfer = get_object_or_404(Transfer, pk=transfer_id)
     practitioner = transfer.practitioner
 
     return render(request, 'base/transferform.html', {'practitioner': practitioner})
 
+@login_required(login_url='executivelogin') 
 def retrieve_practitioner(request):
     cid = request.GET.get('cid')
     try:
@@ -238,6 +244,7 @@ def retrieve_practitioner(request):
     except Transfer.DoesNotExist:
         return JsonResponse({'error': 'Practitioner not found'})
 
+@login_required(login_url='executivelogin') 
 def change_status(request, cid):
     transfer = get_object_or_404(Transfer, practitioner__cid=cid)
 
@@ -260,9 +267,11 @@ def change_status(request, cid):
     return render(request, 'base/transferform.html', context)
 
 
+@login_required(login_url='executivelogin') 
 @login_required(login_url=('adminlogin', 'executivelogin'))
 def finance(request):
     finance = FinancialStatement.objects.all()
+    
     context = {
         'FinancialStatement': finance
     }
@@ -277,6 +286,7 @@ def activity(request):
     }
     
     return render(request, 'base/activity.html', context)
+
 
 
 @login_required(login_url='executivelogin')  # Update the login URL
@@ -310,7 +320,7 @@ def profile(request):
     return render(request, 'base/profile.html', context)
 
 
-
+@login_required(login_url='executivelogin') 
 def update_activity_status(request, activity_id):
     activity = Activity.objects.get(activity_id=activity_id)
     if request.method == 'POST':
@@ -319,7 +329,7 @@ def update_activity_status(request, activity_id):
     return redirect('activity')
 
 
-
+@login_required(login_url='executivelogin') 
 def executives(request):
     member = ExecutiveMember.objects.all().values()
     context = {
@@ -328,6 +338,7 @@ def executives(request):
 
     return render(request, 'base/executives.html', context)
 
+@login_required(login_url='executivelogin') 
 def practitioner(request):
     member = Practitioner.objects.all().values()
     context = {
@@ -336,7 +347,7 @@ def practitioner(request):
 
     return render(request, 'base/practitioner.html', context)
 
-
+@login_required(login_url='executivelogin') 
 def add_member(request):
     if request.method == 'POST':
         form = ExecutiveMemberForm(request.POST)
@@ -346,8 +357,12 @@ def add_member(request):
             return redirect('executives')
         else:
             messages.error(request, 'Form submission failed. Please check your input.')  # Show error message
+    else:
+        form = ExecutiveMemberForm()
+
     return render(request, 'base/executives.html', {'form': form})
 
+@login_required(login_url='executivelogin') 
 def search_executive_member(request):
     query = request.GET.get('q')
     if query:
@@ -357,21 +372,37 @@ def search_executive_member(request):
     context = {'results': results}
     return render(request, 'base/executives.html', context)
 
-
+@login_required(login_url='executivelogin')
 def add_member_practitioner(request):
     if request.method == 'POST':
         form = PractitionerForm(request.POST)
         if form.is_valid():
-            form.save()
-            messages.success(request, 'Practitioner added successfully.')  # Show success message
-            return redirect('practitioner')
+            cid = form.cleaned_data['cid']
+            if Practitioner.objects.filter(cid=cid).exists():
+                error_message = 'This CID already exists. Please choose a different one.'
+                return redirect('practitioner')
+            else:
+                form.save()
+                messages.success(request, 'Practitioner added successfully.')
+                return redirect('practitioner')
         else:
-            messages.error(request, 'Form submission failed. Please check your input.')  # Show error message
+            messages.error(request, 'Form submission failed. Please check your input.')
+            return redirect('practitioner')
+    else:
+        form = PractitionerForm()
+
     return render(request, 'base/practitioner.html', {'form': form})
+
+
+
 
 import openpyxl
 from django.db import IntegrityError
+from datetime import datetime
+from django.core.exceptions import ValidationError
 
+
+@login_required(login_url='executivelogin') 
 def bulk_upload(request):
     if request.method == 'POST' and request.FILES['excel_file']:
         excel_file = request.FILES['excel_file']
@@ -385,27 +416,41 @@ def bulk_upload(request):
             print(data)
 
             # Extract the relevant attributes from the data dictionary
-            cid = int(data.get('cid', '')) if data.get('cid') else None
-            name = data.get('name', '')
-            responsibility = data.get('responsibility', '')
-            present_address = data.get('present_address', '')
-            contact_no = int(data.get('contact_no', '')) if data.get('cid') else None
-            village = data.get('village', '')
-            geog = data.get('geog', '')
-            dzongkhag = data.get('dzongkhag', '')
-            stage_of_threma = data.get('stage_of_threma', '')
+            cid = int(data.get('CID', '')) if data.get('CID') else None
+            name = data.get('Name', '')
+            tshogchung = data.get('Tshogchung', '')
+            responsibility = data.get('Responsibility', '')
+            present_address = data.get('Present Address', '')
+            bob_str = data.get('BOB', '')
+            bob_str = bob_str.strftime('%d/%m/%Y') if isinstance(bob_str, datetime) else bob_str
+            contact_no = int(data.get('Contact No', '')) if data.get('CID') else None
+            card_no = int(data.get('Card No', '')) if data.get('CID') else None
+            village = data.get('Village', '')
+            geog = data.get('Geog', '')
+            dzongkhag = data.get('Dzongkhag', '')
+            # stage_of_threma = data.get('stage_of_threma', '')
+
+       
+            try:
+                bob = datetime.strptime(bob_str, '%d/%m/%Y').date() if bob_str else None
+            except ValueError:
+                raise ValidationError(f'Invalid date format for BOB: {bob_str}. It must be in DD/MM/YYYY format.')
+
 
             try:
                 practitioner = Practitioner.objects.create(
                     cid=cid,
                     name=name,
+                    tshogchung=tshogchung,
                     responsibility=responsibility,
                     present_address=present_address,
+                    bob=bob,
                     contact_no=contact_no,
+                    card_no=card_no,
                     village=village,
                     geog=geog,
                     dzongkhag=dzongkhag,
-                    stage_of_threma=stage_of_threma
+                    # stage_of_threma=stage_of_threma
                 )
             except IntegrityError:
                 continue  # Ignore the row with null cid and move to the next row
@@ -418,20 +463,21 @@ def bulk_upload(request):
     return render(request, 'base/practitioner.html', {'form': form})
 
 
-
+@login_required(login_url='executivelogin') 
 def export_practitioners(request):
     practitioners = Practitioner.objects.all()
     data = {
         'CID': [practitioner.cid for practitioner in practitioners],
         'Name': [practitioner.name for practitioner in practitioners],
+        'BOB': [practitioner.bob for practitioner in practitioners],
         'Responsibility': [practitioner.responsibility for practitioner in practitioners],
         'Present Address': [practitioner.present_address for practitioner in practitioners],
         'Contact No': [practitioner.contact_no for practitioner in practitioners],
+        'Card No': [practitioner.card_no for practitioner in practitioners],
         'Village': [practitioner.village for practitioner in practitioners],
         'Geog': [practitioner.geog for practitioner in practitioners],
         'Dzongkhag': [practitioner.dzongkhag for practitioner in practitioners],
         'Stage of Threma': [practitioner.stage_of_threma for practitioner in practitioners],
-        'Is Active': [practitioner.is_active for practitioner in practitioners],
     }
 
     df = pd.DataFrame(data)
@@ -444,7 +490,7 @@ def export_practitioners(request):
 
 
 
-@login_required
+@login_required(login_url='executivelogin') 
 def add_activity(request):
     if request.method == 'POST':
         form = ActivityForm(request.POST, request.FILES)
@@ -458,7 +504,46 @@ def add_activity(request):
         form = ActivityForm()
     return render(request, 'base/activity.html', {'form': form})
 
+def edit_activity(request, activity_id):
+    activity = get_object_or_404(Activity, activity_id=activity_id)
 
+    if request.method == 'POST':
+        # Handle the form submission for editing the activity
+        name = request.POST.get('name')
+        description = request.POST.get('description')
+        image = request.FILES.get('image')
+        date = request.POST.get('date')
+        time = request.POST.get('time')
+
+        try:
+            # Update the activity fields
+            activity.name = name
+            activity.description = description
+            if image:
+                activity.image = image
+            activity.date = date
+            activity.time = time
+            activity.save()
+            # Redirect to the activity list or show a success message
+            return redirect('activity')
+        except:
+            return JsonResponse({'success': False, 'activity': 'Activity not found'})
+
+    return render(request, 'base/activity.html', {'activity': activity})
+def delete_activity(request, activity_id):
+    activity = get_object_or_404(Activity, id=activity_id)
+
+    if request.method == 'POST':
+        # Delete the activity
+        activity.delete()
+
+        # Redirect to the activity list or show a success message
+        return redirect('activity')
+
+    context = {'activity': activity}
+    return render(request, 'base/activity.html', context)
+
+@login_required(login_url='executivelogin') 
 def upload_statement(request):
     if request.method == 'POST':
         form = FinancialStatementForm(request.POST, request.FILES)
@@ -474,35 +559,7 @@ def upload_statement(request):
     return render(request, 'base/finance.html', context)
 
 
-# def display_member_info(request):
-#     if request.method == 'GET':
-#         cid = request.GET.get('cid')
-#         try:
-#             member = get_object_or_404(Practitioner, cid=cid)
-#             data = {
-#                 'member': {
-#                     'name': member.name,
-#                     'contact_no': member.contact_no,
-#                     'present_address': member.present_address,
-#                 }
-#             }
-#             return JsonResponse(data)
-#         except ExecutiveMember.DoesNotExist:
-#             return JsonResponse({'error': 'Member not found.'})
-
-#     return JsonResponse({'error': 'Invalid request method.'})
-
-# def submit_transfer_form(request):
-#     if request.method == 'POST':
-#         form = TransferForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('transferform')  # Redirect to a success page
-#     else:
-#         form = TransferForm()
-#     return render(request, 'base/transferform.html', {'form': form})
-
-
+@login_required(login_url='executivelogin') 
 def display_member_info(request):
     cid = request.GET.get('cid')
     try:
@@ -520,6 +577,7 @@ def display_member_info(request):
     
     return JsonResponse(data)
 
+@login_required(login_url='executivelogin') 
 def submit_transfer_form(request):
     if request.method == 'POST':
         cid = request.POST.get('cid')
@@ -539,6 +597,7 @@ def submit_transfer_form(request):
         
     return JsonResponse({'error': 'Invalid request method.'})
 
+@login_required(login_url='executivelogin') 
 def edit_member(request, member_cid):
     if request.method == 'POST':
         name = request.POST.get('name')
@@ -574,11 +633,16 @@ def edit_member(request, member_cid):
 
 def edit_practitioner(request, member_cid):
     if request.method == 'POST':
+        # Retrieve the form data
         name = request.POST.get('name')
         responsibility = request.POST.get('responsibility')
+        profile_pic = request.FILES.get('profile_pic')
+        bob = request.POST.get('bob')
         present_address = request.POST.get('present_address')
         contact_no = request.POST.get('contact_no')
+        card_no = request.POST.get('card_no')
         village = request.POST.get('village')
+        tshogchung = request.POST.get('tshogchung')
         geog = request.POST.get('geog')
         dzongkhag = request.POST.get('dzongkhag')
         stage_of_threma = request.POST.get('stage_of_threma')
@@ -587,23 +651,31 @@ def edit_practitioner(request, member_cid):
             member = Practitioner.objects.get(cid=member_cid)
             member.name = name
             member.responsibility = responsibility
+            member.bob = bob
             member.present_address = present_address
             member.contact_no = contact_no
+            member.card_no = card_no
+            member.tshogchung = tshogchung
             member.village = village
             member.geog = geog
             member.dzongkhag = dzongkhag
             member.stage_of_threma = stage_of_threma
-            member.save()
-            return redirect('practitioner')  # Redirect to the executives page or any other desired URL
-        except ExecutiveMember.DoesNotExist:
-            return JsonResponse({'success': False, 'message': 'Member not found'})
 
+            # Check if a new profile picture is provided
+            if profile_pic:
+                member.profile_pic = profile_pic
+
+            member.save()
+            return redirect('practitioner')  # Redirect to the practitioners page or any other desired URL
+        except Practitioner.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Member not found'})
 
     return redirect('base/practitioner.html')  # Redirect to the homepage or any other desired URL
 
 
 
 
+@login_required(login_url='executivelogin') 
 def delete_member(request, member_cid):
     if request.method == 'POST':
         member = get_object_or_404(ExecutiveMember, cid=member_cid)
@@ -612,6 +684,7 @@ def delete_member(request, member_cid):
     else:
         return redirect(reverse('executives'))  # Redirect to the executives page if the request method is not POST
 
+@login_required(login_url='executivelogin') 
 def delete_practitioner(request, member_cid):
     if request.method == 'POST':
         member = get_object_or_404(Practitioner, cid=member_cid)
@@ -620,6 +693,7 @@ def delete_practitioner(request, member_cid):
     else:
         return redirect(reverse('practitioner'))  # Redirect to the executives page if the request method is not POST
 
+@login_required(login_url='executivelogin') 
 def change_password(request):
     if request.method == 'POST':
         form = ChangePasswordForm(request.user, request.POST)
@@ -645,12 +719,13 @@ def change_password(request):
 
     return render(request, 'main.html', {'form': form})
 
-
+@login_required(login_url='executivelogin') 
 def semso(request):
     semso_entries = Semso.objects.all()
     context = {'Semso': semso_entries}
     return render(request, 'base/semso.html', context)
 
+@login_required(login_url='executivelogin') 
 def add_semso(request):
     if request.method == 'POST':
         form = SemsoForm(request.POST)
