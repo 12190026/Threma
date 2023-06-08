@@ -37,7 +37,12 @@ class ExecutiveMemberForm(ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        # Add any other custom validation logic here.
+        password = cleaned_data.get('password')
+        confirm_password = cleaned_data.get('confirm_password')
+
+        if password and confirm_password and password != confirm_password:
+            raise forms.ValidationError('The password and confirm password fields must match.')
+
         return cleaned_data
 
 class ActivityForm(ModelForm):
