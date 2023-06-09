@@ -10,75 +10,49 @@
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addMemberModal">Add Financial Statement</button>
                 {% endif %}
             </div>
+            
             <!-- Define the modal with the id "addMemberModal" -->
-<div class="modal fade" id="addMemberModal" tabindex="-1" role="dialog" aria-labelledby="addMemberModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addMemberModalLabel">Add Financial Statement</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <!-- Use Bootstrap's grid system to align the form fields properly -->
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-12">
-                            
-                            <form method="post" enctype="multipart/form-data" action="{% url 'upload_statement' %}">
-                                {% csrf_token %}
-                                <div>
-                                    <label for="year" style="display: inline-block; width: 100px;">Year:</label>
-                                    <input type="text" id="year" name="year" required style="display: inline-block; width: 200px;">
+            <div class="modal fade" id="addMemberModal" tabindex="-1" role="dialog" aria-labelledby="addMemberModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addMemberModalLabel">Add Financial Statement</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- Use Bootstrap's grid system to align the form fields properly -->
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <form id="addStatementForm" method="post" enctype="multipart/form-data" action="{% url 'upload_statement' %}">
+                                            {% csrf_token %}
+                                            <div>
+                                                <label for="year" style="display: inline-block; width: 100px;">Year:</label>
+                                                <input type="text" id="year" name="year" required style="display: inline-block; width: 200px;">
+                                                <span id="yearExistsMessage" style="color: red; display: none;">Year already exists!</span>
+                                            </div>
+                                            <br>
+                                            <div>
+                                                <label for="image" style="display: inline-block; width: 100px;">Image:</label>
+                                                <input type="file" id="image" name="image" accept="image/*" required style="display: inline-block; width: 200px;">
+                                            </div>
+                                            <br>
+                                            <button type="submit">Upload</button>
+                                        </form>
+                                        
+                                    </div>
                                 </div>
-                                <br>
-                                <div>
-                                    <label for="image" style="display: inline-block; width: 100px;">Image:</label>
-                                    <input type="file" id="image" name="image" accept="image/*" required style="display: inline-block; width: 200px;">
-                                </div>
-                                
-                                
-                                <button type="submit">Upload</button>
-                            </form>
-                            
-                              
-             
-
-                    
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-           
             
-            
-            
-        </div>
-    </div>
-</div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-6 text-nowrap">
-                        <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
-                            <label class="form-label">Show&nbsp;
-                                <select class="d-inline-block form-select form-select-sm" onchange="changePageSize(this.value)">
-                                    <option value="10" {% if page_size == 10 %}selected{% endif %}>10</option>
-                                    <option value="25" {% if page_size == 25 %}selected{% endif %}>25</option>
-                                    <option value="50" {% if page_size == 50 %}selected{% endif %}>50</option>
-                                    <option value="100" {% if page_size == 100 %}selected{% endif %}>100</option>
-                                </select>
-                                &nbsp;
-                            </label>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="text-md-end dataTables_filter" id="dataTable_filter">
-                            <label class="form-label">
-                                <input type="text" id="searchInput" class="form-control form-control-sm" aria-controls="dataTable" placeholder="Search" onkeyup="searchTable()">
-                            </label>
-                        </div>
-                    </div>
+                    <!-- Pagination and search controls -->
                 </div>
                 <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
                     <table class="table my-0" id="dataTable">
@@ -102,9 +76,8 @@
                 </div>
             </div>
         </div>
-
-        <!-- Define the modal for viewing the image -->
-        <div class="modal fade" id="viewImageModal" tabindex="-1" role="dialog" aria-labelledby="viewImageModalLabel" aria-hidden="true">
+           <!-- Define the modal for viewing the image -->
+           <div class="modal fade" id="viewImageModal" tabindex="-1" role="dialog" aria-labelledby="viewImageModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -122,10 +95,9 @@
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script> -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
+    
+    
 
     <script>
         function showPopup(imageUrl) {
@@ -133,23 +105,24 @@
             popupImage.src = imageUrl;
             $('#viewImageModal').modal('show');
         }
-    </script>
-
-<script>
-    function changePageSize(pageSize) {
-        // Get all the table rows
-        var rows = document.querySelectorAll("#dataTable tbody tr");
-
-        // Loop through each row
-        rows.forEach(function(row, index) {
-            // Check if the row should be visible based on the selected page size
-            if (index < pageSize) {
-                row.style.display = ""; // Show the row
-            } else {
-                row.style.display = "none"; // Hide the row
-            }
+    
+        $(document).ready(function() {
+            $('#addStatementForm').submit(function(e) {
+                e.preventDefault(); // Prevent form submission
+                
+                var year = $('#year').val();
+                var years = Array.from(document.querySelectorAll("#dataTable tbody tr td:first-child")).map(function(td) {
+                    return td.innerHTML;
+                });
+    
+                if (years.includes(year)) {
+                    $('#yearExistsMessage').show();
+                } else {
+                    // Proceed with form submission
+                    this.submit();
+                }
+            });
         });
-    }
-</script>
-
+    </script>
+    
 {% endblock %}

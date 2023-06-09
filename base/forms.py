@@ -198,7 +198,7 @@ class ProfilePictureForm(Form):
 class SemsoForm(ModelForm):
     class Meta:
         model = Semso
-        fields = ['date', 'event', 'contributor', 'amount']
+        fields = '__all__'
 
 class BulkUploadForm(forms.Form):
     file = forms.FileField(label='Excel File')

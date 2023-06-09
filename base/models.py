@@ -169,6 +169,7 @@ class Transfer(models.Model):
         self.save()
 
 class Semso(models.Model):
+    semso_id = models.AutoField(primary_key=True)
     date = models.DateField()
     event = models.CharField(max_length=100)
     contributor = models.CharField(max_length=100)

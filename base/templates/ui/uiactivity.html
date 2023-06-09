@@ -18,6 +18,18 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/css/pikaday.min.css">
     <style>
+        #popup-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 400px;
+        }
+    
+        #popup-image {
+            max-width: 100%;
+            max-height: 100%;
+        }
+    
         .activity-item {
             margin-bottom: 20px;
         }
@@ -25,17 +37,50 @@
         .activity-item .card {
             height: 100%;
         }
-
-        #popup-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 400px;
+    
+        .activity-description {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: max-height 0.3s;
+            cursor: pointer;
+            line-height: 1.2em; /* Added line */
         }
 
-        #popup-image {
-            max-width: 100%;
-            max-height: 100%;
+        .activity-description.expanded {
+            max-height: none;
+        }
+
+        .activity-info {
+            margin-top: 8px;
+            font-size: 16px;
+            color: #888;
+        }
+
+        .activity-info p {
+            margin-bottom: 0;
+        }
+
+        .activity-info i {
+            margin-right: 5px;
+        }
+
+        .date-text,
+        .time-text {
+            display: inline-block;
+            margin-left: 5px;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .card-title {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .btn-primary {
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -81,10 +126,29 @@
                                             View Image
                                         </button>
                                         <div class="activity-description">
-                                            <p>{{ activity.description }}</p>
+                                            <p class="description-text">
+                                                {% if activity.description|length > 80 %}
+                                                    <span class="truncated">{{ activity.description|truncatechars:70 }}</span>
+                                                    <span class="expand" style="display: none;">{{ activity.description }}</span>
+                                                    {% if activity.description|length > 70 %}
+                                                        <span class="expand-link" style="color: blue;">Expand</span>
+                                                    {% else %}
+                                                        <span class="expand-link" style="color: blue;">Less</span>
+                                                    {% endif %}
+                                                {% else %}
+                                                    {{ activity.description }}
+                                                {% endif %}
+                                            </p>
+                                        </div>
+                                        
+                                        
+                                        
+                                        
+                                        <div class="activity-info">
                                             <p><i class="far fa-calendar-alt"></i> {{ activity.date }}</p>
                                             <p><i class="far fa-clock"></i> {{ activity.time }}</p>
                                         </div>
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -112,10 +176,27 @@
                                             View Image
                                         </button>
                                         <div class="activity-description">
-                                            <p>{{ activity.description }}</p>
+                                            <p class="description-text">
+                                                {% if activity.description|length > 80 %}
+                                                    <span class="truncated">{{ activity.description|truncatechars:70 }}</span>
+                                                    <span class="expand" style="display: none;">{{ activity.description }}</span>
+                                                    <span class="expand-link" style="color: blue;">Expand</span>
+                                                {% else %}
+                                                    {{ activity.description }}
+                                                {% endif %}
+                                            </p>
+                                        </div>
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        <div class="activity-info">
                                             <p><i class="far fa-calendar-alt"></i> {{ activity.date }}</p>
                                             <p><i class="far fa-clock"></i> {{ activity.time }}</p>
                                         </div>
+                                        
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -161,5 +242,48 @@
             $('#viewImageModal').modal('show');
         }
     </script>
+
+
+<script>
+    $(document).ready(function() {
+        $('.activity-description').click(function(event) {
+            event.stopPropagation(); // Prevent event propagation to parent elements
+            var $description = $(this).find('.description-text');
+            $description.find('.truncated').toggle();
+            $description.find('.expand').toggle();
+            $description.find('.full').toggle();
+        });
+    });
+    $(document).ready(function() {
+    $('.expand-link').click(function(event) {
+        event.preventDefault(); // Prevent default anchor link behavior
+        var $description = $(this).closest('.activity-description').find('.description-text');
+        $description.toggleClass('expanded');
+        if ($description.hasClass('expanded')) {
+            $(this).text('Less');
+        } else {
+            $(this).text('Expand');
+        }
+    });
+});
+
+</script>
+
+<script>
+    $(document).ready(function() {
+        $('.activity-description').click(function(event) {
+            event.preventDefault(); // Prevent default anchor link behavior
+            var $description = $(this).find('.description-text');
+            $description.toggleClass('expanded');
+        });
+    });
+</script>
+
+
+
+
+
 </body>
 </html>
+
+

@@ -42,21 +42,6 @@ def login_admin(request):
 
 
 
-# def login_executive(request):
-#     page = 'executivelogin'
-
-#     if request.method == 'POST':
-#         cid = request.POST.get('cid')
-#         password = request.POST.get('password')
-#         user = authenticate(request, cid=cid, password=password, backend='base.backends.CustomBackend')
-#         if user is not None:
-#             login(request, user)
-#             return redirect('index')
-#         else:
-#             messages.error(request, 'Invalid login credentials.')
-#     context = {'page': page}
-#     return render(request, 'base/executivelogin.html', context)
-
 
 def login_executive(request):
     page = 'executivelogin'
@@ -353,14 +338,15 @@ def add_member(request):
         form = ExecutiveMemberForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Member added successfully.')  # Show success message
-            return redirect('executives')
+            return JsonResponse({'message': 'success'})  # Send success response as JSON
         else:
-            messages.error(request, 'Form submission failed. Please check your input.')  # Show error message
+            errors = form.errors.as_json()
+            return JsonResponse(errors, status=400)  # Send form errors as JSON with status 400 (Bad Request)
     else:
         form = ExecutiveMemberForm()
 
     return render(request, 'base/executives.html', {'form': form})
+
 
 @login_required(login_url='executivelogin') 
 def search_executive_member(request):
@@ -375,24 +361,25 @@ def search_executive_member(request):
 @login_required(login_url='executivelogin')
 def add_member_practitioner(request):
     if request.method == 'POST':
-        form = PractitionerForm(request.POST)
+        form = PractitionerForm(request.POST, request.FILES)  # Include request.FILES for file uploads
         if form.is_valid():
             cid = form.cleaned_data['cid']
             if Practitioner.objects.filter(cid=cid).exists():
                 error_message = 'This CID already exists. Please choose a different one.'
-                return redirect('practitioner')
+                return JsonResponse({'error_message': error_message}, status=400)
             else:
-                form.save()
-                messages.success(request, 'Practitioner added successfully.')
-                return redirect('practitioner')
+                practitioner = form.save(commit=False)  # Create a new Practitioner instance without saving to the database yet
+                if 'profile_pic' in request.FILES:  # Check if profile_pic file was uploaded
+                    practitioner.profile_pic = request.FILES['profile_pic']  # Assign the uploaded file to the profile_pic field
+                practitioner.save()  # Save the Practitioner instance to the database
+                return JsonResponse({'message': 'success'})
         else:
-            messages.error(request, 'Form submission failed. Please check your input.')
-            return redirect('practitioner')
+            error_message = 'Form submission failed. Please check your input.'
+            return JsonResponse({'error_message': error_message}, status=400)
     else:
         form = PractitionerForm()
 
     return render(request, 'base/practitioner.html', {'form': form})
-
 
 
 
@@ -504,6 +491,28 @@ def add_activity(request):
         form = ActivityForm()
     return render(request, 'base/activity.html', {'form': form})
 
+def edit_semso(request, semso_id):
+    semso = get_object_or_404(Semso, semso_id=semso_id)
+
+    if request.method == 'POST':
+        form = SemsoForm(request.POST, instance=semso)
+        if form.is_valid():
+            form.save()
+            return redirect('semso')  # Redirect to the semso list page after successful update
+    else:
+        form = SemsoForm(instance=semso)
+
+    return render(request, 'base/semso.html', {'form': form, 'semso': semso})
+
+def delete_semso(request, semso_id):
+    semso = get_object_or_404(Semso, semso_id=semso_id)
+
+    if request.method == 'POST':
+        semso.delete()
+        return redirect('semso')  # Redirect to the list view after deletion
+
+    return render(request, 'base/semso.html', {'semso': semso})
+
 def edit_activity(request, activity_id):
     activity = get_object_or_404(Activity, activity_id=activity_id)
 
@@ -530,6 +539,8 @@ def edit_activity(request, activity_id):
             return JsonResponse({'success': False, 'activity': 'Activity not found'})
 
     return render(request, 'base/activity.html', {'activity': activity})
+
+    
 def delete_activity(request, activity_id):
     activity = get_object_or_404(Activity, id=activity_id)
 
@@ -543,13 +554,17 @@ def delete_activity(request, activity_id):
     context = {'activity': activity}
     return render(request, 'base/activity.html', context)
 
-@login_required(login_url='executivelogin') 
+@login_required(login_url='executivelogin')
 def upload_statement(request):
     if request.method == 'POST':
         form = FinancialStatementForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
-            return redirect('finance')
+            year = form.cleaned_data['year']
+            if FinancialStatement.objects.filter(year=year).exists():
+                messages.error(request, 'Year already exists.')
+            else:
+                form.save()
+                return redirect('finance')
         else:
             messages.error(request, 'Error occurred while adding Financial Statement. Please try again.')
     else:
@@ -557,6 +572,7 @@ def upload_statement(request):
     year_choices = [year for year in range(2015, 2031)]
     context = {'form': form, 'year_choices': year_choices}
     return render(request, 'base/finance.html', context)
+
 
 
 @login_required(login_url='executivelogin') 
@@ -597,7 +613,7 @@ def submit_transfer_form(request):
         
     return JsonResponse({'error': 'Invalid request method.'})
 
-@login_required(login_url='executivelogin') 
+@login_required(login_url='executivelogin')
 def edit_member(request, member_cid):
     if request.method == 'POST':
         name = request.POST.get('name')
@@ -624,12 +640,12 @@ def edit_member(request, member_cid):
             member.dzongkhag = dzongkhag
             member.role = role
             member.save()
-            return redirect('executives')  # Redirect to the executives page or any other desired URL
+            return JsonResponse({'success': True, 'message': 'Member data updated successfully'})
         except ExecutiveMember.DoesNotExist:
             return JsonResponse({'success': False, 'message': 'Member not found'})
 
+    return JsonResponse({'success': False, 'message': 'Invalid request'})
 
-    return redirect('base/executives.html')  # Redirect to the homepage or any other desired URL
 
 def edit_practitioner(request, member_cid):
     if request.method == 'POST':
@@ -666,9 +682,11 @@ def edit_practitioner(request, member_cid):
                 member.profile_pic = profile_pic
 
             member.save()
+            messages.success(request, 'Member updated successfully.')  # Success message
             return redirect('practitioner')  # Redirect to the practitioners page or any other desired URL
         except Practitioner.DoesNotExist:
-            return JsonResponse({'success': False, 'message': 'Member not found'})
+            messages.error(request, 'Member not found.')  # Error message
+            return redirect('practitioner')
 
     return redirect('base/practitioner.html')  # Redirect to the homepage or any other desired URL
 
@@ -693,31 +711,32 @@ def delete_practitioner(request, member_cid):
     else:
         return redirect(reverse('practitioner'))  # Redirect to the executives page if the request method is not POST
 
+def delete_activity(request, activity_id):
+    activity = get_object_or_404(Activity, pk=activity_id)
+
+    if request.method == 'POST':
+        # Delete the activity
+        activity.delete()
+        return redirect(reverse('activity'))  # Redirect to the executives page after deletion
+    else:
+        return redirect(reverse('activity'))  # Redirect to the executives page if the request method is not POST
+
 @login_required(login_url='executivelogin') 
 def change_password(request):
     if request.method == 'POST':
         form = ChangePasswordForm(request.user, request.POST)
         if form.is_valid():
             new_password = form.cleaned_data['new_password1']
-            backend = CustomBackend()
-            backend.change_password(request.user, new_password)
-            # Optionally, you can authenticate the user with the new password
-            authenticated_user = authenticate(request, cid=request.user.cid, password=new_password, role=request.user.role)
-            if authenticated_user:
-                login(request, authenticated_user)
-                messages.success(request, 'Your password has been changed successfully.')
-                return redirect('index')  # Redirect to a success page
-            else:
-                # Handle authentication failure if necessary
-                messages.error(request, 'Failed to authenticate with the new password.')
-        else:
-            # Form submission has errors
-            errors = form.errors.get_json_data()
-            return JsonResponse({'success': False, 'errors': errors})
+            request.user.set_password(new_password)
+            request.user.save()
+            update_session_auth_hash(request, request.user)  # Update session with new password
+
+            messages.success(request, 'Your password has been changed successfully.')
+            return redirect('index')  # Redirect to a success page
     else:
         form = ChangePasswordForm(request.user)
 
-    return render(request, 'main.html', {'form': form})
+    return render(request, 'change_password.html', {'form': form})
 
 @login_required(login_url='executivelogin') 
 def semso(request):
