@@ -104,21 +104,21 @@ WSGI_APPLICATION = 'trama.wsgi.application'
 
 
 
-# DATABASES = {
-#     'default': dj_database_url.parse(env('DATABASE_URL')) 
-
-# }
-
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'Threma',
-        'USER': 'postgres',
-        'PASSWORD': 'somdxd508',
-        'HOST': 'localhost',
-        'PORT': '',
-    }
+    'default': dj_database_url.parse(env('DATABASE_URL')) 
+
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'Threma',
+#         'USER': 'postgres',
+#         'PASSWORD': 'somdxd508',
+#         'HOST': 'localhost',
+#         'PORT': '',
+#     }
+# }
 
 AUTH_USER_MODEL = 'base.ExecutiveMember'
 
