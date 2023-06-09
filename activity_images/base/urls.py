@@ -47,9 +47,10 @@ urlpatterns = [
     
     path('edit_activity/<int:activity_id>/', views.edit_activity, name='edit_activity'),
 
-    path('delete_activity/<int:activity_id>/delete/', views.delete_activity, name='delete_activity'),
         
+    path('activities/<int:activity_id>/delete/', views.delete_activity, name='delete_activity'),
 
+    path('semso/<int:semso_id>/edit/', views.edit_semso, name='edit_semso'),
 
     path('transferform/', views.transferform, name='transferform'),
 
@@ -59,6 +60,7 @@ urlpatterns = [
 
     path('export_practitioners/', views.export_practitioners, name='export_practitioners'),
 
+    path('semso/<int:semso_id>/delete/', views.delete_semso, name='delete_semso'),
 
     path('add_activity/', views.add_activity, name='add_activity'),
 

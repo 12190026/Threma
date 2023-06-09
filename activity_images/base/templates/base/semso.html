@@ -3,7 +3,7 @@
 {% block content %}
 
 {% load static %} 
-       
+
 <style>
     #popup-container {
         position: relative;
@@ -16,164 +16,185 @@
         max-height: 100%;
     }
 </style>
-                <div class="container-fluid">
-                    <h3 class="text-dark mb-4">Semso</h3>
-                    
-                    <div class="card shadow">
-                        <div class="card-header py-3 d-flex justify-content-between">
-                            <p class="text-primary m-0 fw-bold">Semso Info</p>
 
-                            
-
-                            <!-- Add a data-toggle attribute with "modal" value to the button -->
-                            {% if user.role == "MANAGER" %}
-                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addMemberModal">Add Semso</button>
-                            {% endif %}
-
-                        <!-- Define the modal with the id "addMemberModal" -->
-                        <div class="modal fade" id="addMemberModal" tabindex="-1" role="dialog" aria-labelledby="addMemberModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="addMemberModalLabel">Add Semso</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
+<div class="container-fluid">
+    <h3 class="text-dark mb-4">Semso</h3>
+    
+    <div class="card shadow">
+        <div class="card-header py-3 d-flex justify-content-between">
+            <p class="text-primary m-0 fw-bold">Semso Info</p>
+            
+            {% if user.role == "MANAGER" %}
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addSemsoModal">Add Semso</button>
+            {% endif %}
+            
+            <!-- Define the modal with the id "addSemsoModal" -->
+            <div class="modal fade" id="addSemsoModal" tabindex="-1" role="dialog" aria-labelledby="addSemsoModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addSemsoModalLabel">Add Semso</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- Use Bootstrap's grid system to align the form fields properly -->
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <form method="post" enctype="multipart/form-data" action="{% url 'add_semso' %}">
+                                            {% csrf_token %}
+                                            <label for="date">Date:</label>
+                                            <input type="date" id="date" name="date" required style="width: 100%;">
+                                            <br>
+                                            <label for="event">Event:</label>
+                                            <input type="text" id="event" name="event" required style="width: 100%;">
+                                            <br>
+                                            <label for="contributor">Contributor:</label>
+                                            <input type="text" id="contributor" name="contributor" required style="width: 100%;">
+                                            <br>
+                                            <label for="amount">Amount:</label>
+                                            <input type="number" id="amount" name="amount" step="0.01" required style="width: 100%;">
+                                            <br> <br>
+                                            <input type="submit" class="btn btn-sm btn-primary"  value="Add Semso">
+                                        </form>
                                     </div>
-                                    <div class="modal-body">
-                                        <!-- Use Bootstrap's grid system to align the form fields properly -->
-                                        <div class="container">
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    
-                                                    <form method="post" enctype="multipart/form-data" action="{% url 'add_semso' %}">
-                                                        {% csrf_token %}
-                                                        <label for="date">Date:</label>
-                                                        <input type="date" id="date" name="date" required style="width: 100%;">
-                                                        <br>
-                                                        <label for="event">Event:</label>
-                                                        <input type="text" id="event" name="event" required style="width: 100%;">
-                                                        <br>
-                                                        <label for="contributor">Contributor:</label>
-                                                        <input type="text" id="contributor" name="contributor" required style="width: 100%;">
-                                                        <br>
-                                                        <label for="amount">Amount:</label>
-                                                        <input type="number" id="amount" name="amount" step="0.01" required style="width: 100%;">
-                                                        <br>
-                                                        <input type="submit" value="Add Semso">
-                                                    </form>
-                                                    
-                                                    
-                                                    
-                                    
-
-                                            
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                
-                                    
-                                    
-                                    
                                 </div>
                             </div>
                         </div>
-
-                                                            
-
-
-
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6 text-nowrap">
-                                    <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
-                                        <label class="form-label">Show&nbsp;
-                                            <select class="d-inline-block form-select form-select-sm" onchange="changePageSize(this.value)">
-                                                <option value="10" {% if page_size == 10 %}selected{% endif %}>10</option>
-                                                <option value="25" {% if page_size == 25 %}selected{% endif %}>25</option>
-                                                <option value="50" {% if page_size == 50 %}selected{% endif %}>50</option>
-                                                <option value="100" {% if page_size == 100 %}selected{% endif %}>100</option>
-                                            </select>
-                                        &nbsp;</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">   
-                                    <div class="text-md-end dataTables_filter" id="dataTable_filter">
-                                        <label class="form-label">
-                                            <input type="text" id="searchInput" class="form-control form-control-sm" aria-controls="dataTable" placeholder="Search" onkeyup="searchTable()">
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
-                                <table class="table my-0" id="dataTable">
-                                    <thead>
-                                        <tr>
-                                            <th>Date</th>
-                                            <th>Event</th>
-                                            <th>Contributor</th>
-                                            <th>Amount</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <!-- Loop through the data retrieved from the database and populate the table rows -->
-                                        {% for semso in Semso %}
-                                        <tr>
-                                            <td>{{ semso.date }}</td>
-                                            <td>{{ semso.event }}</td>
-                                            <td>{{ semso.contributor }}</td>
-                                            <td>{{ semso.amount }}</td>
-                                        
-                                        </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                            
-                           
-
-
-                           
-                        </div>
-                        
                     </div>
                 </div>
-        
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 text-nowrap">
+                    <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
+                        <label class="form-label">Show&nbsp;
+                            <select class="d-inline-block form-select form-select-sm" onchange="changePageSize(this.value)">
+                                <option value="10" {% if page_size == 10 %}selected{% endif %}>10</option>
+                                <option value="25" {% if page_size == 25 %}selected{% endif %}>25</option>
+                                <option value="50" {% if page_size == 50 %}selected{% endif %}>50</option>
+                                <option value="100" {% if page_size == 100 %}selected{% endif %}>100</option>
+                            </select>
+                        &nbsp;</label>
+                    </div>
+                </div>
+                <div class="col-md-6">   
+                    <div class="text-md-end dataTables_filter" id="dataTable_filter">
+                        <label class="form-label">
+                            <input type="text" id="searchInput" class="form-control form-control-sm" aria-controls="dataTable" placeholder="Search" onkeyup="searchTable()">
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
+                <table class="table my-0" id="dataTable">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Event</th>
+                            <th>Contributor</th>
+                            <th>Amount</th>
+                            {% if user.role == "MANAGER" %}
+                            <th>Actions</th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Loop through the data retrieved from the database and populate the table rows -->
+                        {% for semso in Semso %}
+                        <tr>
+                            <td>{{ semso.date }}</td>
+                            <td>{{ semso.event }}</td>
+                            <td>{{ semso.contributor }}</td>
+                            <td>{{ semso.amount }}</td>
+                            {% if user.role == "MANAGER" %}
+                            <td>
+                                <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#editModal{{ semso.id }}">Edit</button>
+                                <button class="delete-button" style="color: white; background-color: red;" data-semso-id="{{ semso.semso_id }}">Delete</button>
+                            </td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 
-                                 <!-- Include the necessary JavaScript files for Bootstrap -->
-                                 <script>
-                                    function searchTable() {
-                                        // Retrieve the search input value
-                                        var input = document.getElementById("searchInput").value.toLowerCase();
-                                        // Get all table rows
-                                        var rows = document.getElementsByTagName("tr");
-                                
-                                        // Loop through the rows and hide those that don't match the search input
-                                        for (var i = 0; i < rows.length; i++) {
-                                            var cid = rows[i].getElementsByTagName("td")[1];
-                                            var name = rows[i].getElementsByTagName("td")[2]; // Assuming name is the first column (index 0)
-                                
-                                            if (cid && name) {
-                                                var cidValue = cid.textContent || cid.innerText;
-                                                var nameValue = name.textContent || name.innerText;
-                                
-                                                if (cidValue.toLowerCase().indexOf(input) > -1 || nameValue.toLowerCase().indexOf(input) > -1) {
-                                                    rows[i].style.display = ""; // Show the row
-                                                } else {
-                                                    rows[i].style.display = "none"; // Hide the row
-                                                }
-                                            }
-                                        }
-                                    }
-                                </script>
+<!-- Define the modal for each Semso entry using a unique ID -->
+{% for semso in Semso %}
+<div class="modal fade" id="editModal{{ semso.id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel{{ semso.id }}" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel{{ semso.id }}">Edit Semso</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Add your edit form fields here -->
+                <form method="post" enctype="multipart/form-data" action="{% url 'edit_semso' semso.semso_id  %}">
+                    {% csrf_token %}
+                    <label for="date">Date:</label>
+                    <input type="date" id="date" name="date" value="{{ semso.date|date:'Y-m-d' }}" required style="width: 100%;">
+                    <br>
+                    <label for="event">Event:</label>
+                    <input type="text" id="event" name="event" value="{{ semso.event }}" required style="width: 100%;">
+                    <br>
+                    <label for="contributor">Contributor:</label>
+                    <input type="text" id="contributor" name="contributor" value="{{ semso.contributor }}" required style="width: 100%;">
+                    <br>
+                    <label for="amount">Amount:</label>
+                    <input type="number" id="amount" name="amount" step="0.01" value="{{ semso.amount }}" required style="width: 100%;">
+                    <br>
+                    <input type="submit" class="btn btn-primary" value="Save Changes">
+                </form>
+                
+            </div>
+           
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+
+<!-- Include the necessary JavaScript files for Bootstrap -->
+<script>
+    function searchTable() {
+        // Retrieve the search input value
+        var input = document.getElementById("searchInput").value.toLowerCase();
+        // Get all table rows
+        var rows = document.getElementsByTagName("tr");
+        
+        // Loop through the rows and hide those that don't match the search input
+        for (var i = 0; i < rows.length; i++) {
+            var cid = rows[i].getElementsByTagName("td")[1];
+            var name = rows[i].getElementsByTagName("td")[2]; // Assuming name is the first column (index 0)
+            
+            if (cid && name) {
+                var cidValue = cid.textContent || cid.innerText;
+                var nameValue = name.textContent || name.innerText;
+                
+                if (cidValue.toLowerCase().indexOf(input) > -1 || nameValue.toLowerCase().indexOf(input) > -1) {
+                    rows[i].style.display = ""; // Show the row
+                } else {
+                    rows[i].style.display = "none"; // Hide the row
+                }
+            }
+        }
+    }
+</script>
 
 <script>
     function changePageSize(pageSize) {
         // Get all the table rows
         var rows = document.querySelectorAll("#dataTable tbody tr");
-
+        
         // Loop through each row
         rows.forEach(function(row, index) {
             // Check if the row should be visible based on the selected page size
@@ -186,14 +207,40 @@
     }
 </script>
 
-                                
-            
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script> -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    document.querySelectorAll('.delete-button').forEach(function(button) {
+      button.addEventListener('click', function(event) {
+        var semsoId = event.target.getAttribute('data-semso-id');
+        if (confirm("Are you sure you want to delete this Semso entry?")) {
+          // Make an AJAX request to the delete_semso URL
+          fetch(`/semso/${semsoId}/delete/`, {
+            method: 'POST',
+            headers: {
+              'X-CSRFToken': '{{ csrf_token }}'
+            }
+          })
+          .then(function(response) {
+            if (response.ok) {
+              alert("Semso entry with ID " + semsoId + " deleted successfully.");
+              window.location.reload(); // Refresh the page
+            } else {
+              alert("Failed to delete Semso entry with ID " + semsoId + ".");
+            }
+          })
+          .catch(function(error) {
+            console.error('Error:', error);
+          });
+        }
+      });
+    });
+  </script>
+  
 
 
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-        {% endblock %}
+{% endblock %}

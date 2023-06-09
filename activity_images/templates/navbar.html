@@ -14,13 +14,14 @@
 <body>
     <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0" style="background: #59131D;">
         <!-- Navbar content goes here -->
-        <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0" style="background: #59131D;">
-            <div class="container-fluid d-flex flex-column p-0">
-                <a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#" style="background: url(&quot;{% static 'img/ellipse-1@2x.png' %}&quot;) no-repeat;background-size: contain;width: 108px;height: 109px;">
-                    <div class="sidebar-brand-icon rotate-n-15"></div>
-                    <div class="sidebar-brand-text mx-3"></div>
-                </a>
-                <hr class="sidebar-divider my-0">
+        <div class="container-fluid d-flex flex-column p-0">
+            <a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#" style="background: url(&quot;{% static 'img/ellipse-1@2x.png' %}&quot;) no-repeat;background-size: contain;width: 75px;height: 75px;">
+                <div class="sidebar-brand-icon rotate-n-15"></div>
+                <div class="sidebar-brand-text mx-3"></div>
+            </a>
+            <hr class="sidebar-divider my-0">
+            <ul class="navbar-nav text-light" id="accordionSidebar" style="text-align: center;">
+             
                 <ul class="navbar-nav text-light" id="accordionSidebar" style="text-align: center;">
                     <li class="nav-item {% if request.path == '/' %}active{% endif %}">
                         <a class="nav-link" href="{% url 'index' %}">
@@ -54,14 +55,14 @@
                     </li>
                     <li class="nav-item {% if request.path == '/semso/' %}active{% endif %}">
                         <a class="nav-link" href="{% url 'semso' %}">
-                            <i class="far fa-file-alt"></i><span>Semso</span>
+                            <i class="fas fa-donate"></i><span>Semso</span>
                         </a>
                     </li>
                 </ul>
-              
-            </div>
-        </nav>
-        <!-- ... -->
+            </ul>
+        </div>
+    </nav>
+            <!-- ... -->
     </nav>
     
 </body>

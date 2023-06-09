@@ -179,7 +179,7 @@
                                 <label for="edit-time">Time:</label>
                                 <input type="time" id="edit-time" name="time" value="{{ activity.time|time:'H:i' }}" required style="width: 100%;">
                                 <br>
-                                <input type="submit" value="Save Changes">
+                                <input type="submit" class="btn btn-primary" value="Save Changes">
                             </form>
                             
                         </div>
@@ -261,4 +261,37 @@
             });
         }
     </script>
+
+<script>
+    document.querySelectorAll('.delete-button').forEach(function(button) {
+        button.addEventListener('click', function(event) {
+            var activityId = event.target.getAttribute('data-activity-id');
+            if (confirm("Are you sure you want to delete this activity?")) {
+                // Make an AJAX request to the delete_activity URL
+                fetch('/activities/' + activityId + '/delete/', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    }
+                })
+                .then(function(response) {
+                    if (response.ok) {
+                        alert("Activity with ID " + activityId + " deleted successfully.");
+                        location.reload(); // Refresh the page
+                    } else {
+                        alert("Failed to delete activity with ID " + activityId + ".");
+                    }
+                })
+                .catch(function(error) {
+                    console.error('Error:', error);
+                });
+            }
+        });
+    });
+</script>
+
+
+
+
+
 {% endblock %}
