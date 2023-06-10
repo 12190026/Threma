@@ -691,13 +691,15 @@ def edit_member(request, member_cid):
     return JsonResponse({'success': False, 'message': 'Invalid request'})
 
 
+
 def edit_practitioner(request, member_cid):
     if request.method == 'POST':
         # Retrieve the form data
         name = request.POST.get('name')
         responsibility = request.POST.get('responsibility')
-        profile_pic = request.FILES.get('profile_pic')
         bob = request.POST.get('bob')
+            # Check if a new profile picture is uploaded
+        profile_pic = request.FILES.get('profile_pic')
         present_address = request.POST.get('present_address')
         contact_no = request.POST.get('contact_no')
         card_no = request.POST.get('card_no')
@@ -721,8 +723,9 @@ def edit_practitioner(request, member_cid):
             member.dzongkhag = dzongkhag
             member.stage_of_threma = stage_of_threma
 
-            # Check if a new profile picture is provided
+        
             if profile_pic:
+                # Assign the new profile picture
                 member.profile_pic = profile_pic
 
             member.save()
@@ -733,6 +736,7 @@ def edit_practitioner(request, member_cid):
             return redirect('practitioner')
 
     return redirect('base/practitioner.html')  # Redirect to the homepage or any other desired URL
+
 
 
 

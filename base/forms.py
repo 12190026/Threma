@@ -186,6 +186,8 @@ class TransferForm(ModelForm):
             'status': forms.Select(attrs={'class': 'form-control'}),
         }
 
+        
+
 
 class PictureUploadForm(forms.Form):
     class Meta:

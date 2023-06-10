@@ -112,7 +112,7 @@
                             <td>{{ semso.amount }}</td>
                             {% if user.role == "MANAGER" %}
                             <td>
-                                <button class="btn btn btn-primary" data-toggle="modal" data-target="#editModal{{ semso.id }}">Edit</button>
+                                <button class="btn btn btn-primary" data-toggle="modal" data-target="#editModal{{ semso.semso_id }}">Edit</button>
                                 <button class="btn btn-danger delete-button" data-semso-id="{{ semso.semso_id }}">Delete</button>
                             </td>
                             {% endif %}
@@ -127,11 +127,11 @@
 
 <!-- Define the modal for each Semso entry using a unique ID -->
 {% for semso in Semso %}
-<div class="modal fade" id="editModal{{ semso.id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel{{ semso.id }}" aria-hidden="true">
+<div class="modal fade" id="editModal{{ semso.semso_id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel{{ semso.semso_id }}" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editModalLabel{{ semso.id }}">Edit Semso</h5>
+                <h5 class="modal-title" id="editModalLabel{{ semso.semso_id }}">Edit Semso</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
