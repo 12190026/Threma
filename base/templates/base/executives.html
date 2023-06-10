@@ -137,6 +137,8 @@
                                         <tbody>
                                             <!-- Loop through the data retrieved from the database and populate the table rows -->
                                             {% for member in ExecutiveMember %}
+                                            {% if member.role != "ADMIN" %}
+
                                             <tr>
                                                 <td>{{ member.name }}</td>
                                                 <td>{{ member.email }}</td>
@@ -159,6 +161,8 @@
                                                     {% endif %}
                                                 </td>
                                             </tr>
+                                            {% endif %}
+
                                             {% endfor %}
                                         </tbody>
                                     </table>
