@@ -70,7 +70,7 @@
                               {% csrf_token %}
                           
                               <label for="cid">CID:</label><br>
-                              <input type="text" id="cid" name="cid" minlength="11" required>
+                              <input type="text" id="cid" name="cid" minlength="11" maxlength="11" required>
                               <div id="cid-error" class="error"></div>
                               <br>
                               
@@ -210,20 +210,20 @@
                                             <td>{{ member.cid }}</td>
                                             <td>{{ member.card_no }}</td>
                                             <td>{{ member.contact_no }}</td>
-                                            <td>{{ member.tshogchung }}</td>
                                             <td>{{ member.village }}</td>
+                                            <td>{{ member.tshogchung }}</td>
                                             <td>{{ member.geog }}</td>
                                             <td>{{ member.dzongkhag }}</td>
                                             <td>{{ member.stage_of_threma }}</td>
+                                            {% if user.role == "MANAGER" %}
                                             <td>
-                                                {% if user.role == "MANAGER" %}
                                                 <div class="d-flex">
                                                     <button type="button" class="btn btn-primary edit-button" data-member-cid="{{ member.cid }}" data-toggle="modal" data-target="#editMemberModal{{ member.cid }}">Edit</button>
                                                     <button class="btn btn-primary edit-button delete-button" data-member-cid="{{ member.cid }}" style="color: white; background-color: red;">Delete</button>
-
                                                 </div>
-                                                {% endif %}
                                             </td>
+                                            
+                                            {% endif %}
                                             <!-- <td><img src="{{ member.profilepic.url }}" class="rounded-circle me-2" width="30" height="30"></td> -->
                                         </tr>
                                         {% endfor %}
@@ -289,9 +289,9 @@
                                                           <label for="edit_card_no">Card No:</label><br>
                                                           <input type="number" id="edit_card_no" name="card_no" value="{{ member.card_no }}" required><br>
                                                         
-                                                          <label for="edit_village">Tshogchung:</label><br>
+                                                          <label for="edit_tshogchung">Tshogchung:</label><br>
                                                           <input type="text" id="edit_tshogchung" name="tshogchung" value="{{ member.tshogchung }}" required><br>
-                                                      
+                                                                                                                
                                                 
                                                           <label for="edit_village">Village:</label><br>
                                                           <input type="text" id="edit_village" name="village" value="{{ member.village }}" required><br>
@@ -406,10 +406,10 @@
 <script>
     document.querySelectorAll('.delete-button').forEach(function(button) {
       button.addEventListener('click', function(event) {
-        var semsoId = event.target.getAttribute('data-semso-id');
-        if (confirm("Are you sure you want to delete this Semso entry?")) {
-          // Make an AJAX request to the delete_semso URL
-          fetch('/semso/' + semsoId + '/delete/', {
+        var memberCID = event.target.getAttribute('data-member-cid');
+        if (confirm("Are you sure you want to delete this member?")) {
+          // Make an AJAX request to the delete_member URL
+          fetch('/practitioner/' + memberCID + '/delete/', {
             method: 'POST',
             headers: {
               'X-CSRFToken': '{{ csrf_token }}'
@@ -417,10 +417,10 @@
           })
           .then(function(response) {
             if (response.ok) {
-              alert("Semso entry with ID " + semsoId + " deleted successfully.");
-              window.location.href = "/semso/"; // Redirect to the Semso page
+              alert("Practitioner with CID " + memberCID + " deleted successfully.");
+              location.reload(); // Refresh the page
             } else {
-              alert("Failed to delete Semso entry with ID " + semsoId + ".");
+              alert("Failed to delete member with CID " + memberCID + ".");
             }
           })
           .catch(function(error) {
@@ -429,8 +429,7 @@
         }
       });
     });
-</script>
-
+  </script>
 
 
 <script>

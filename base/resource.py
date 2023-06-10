@@ -6,6 +6,9 @@ class PractitionerResource(resources.ModelResource):
         model = Practitioner
         fields = (
             'name',
+            'profile_pic',
+            'tshochung',
+            'bob',
             'responsibility',
             'present_address',
             'cid',

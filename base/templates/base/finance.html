@@ -1,6 +1,25 @@
 {% extends 'main.html' %}
 
 {% block content %}
+
+<style>
+.modal-content {
+    background-color: #fff; /* Set a solid background color */
+}
+
+.modal-body {
+    background-color: #fff; /* Set a solid background color */
+}
+
+.modal-header {
+    background-color: #f8f9fa; /* Set a solid background color */
+}
+
+
+</style>
+
+{% load static %} 
+
     <div class="container-fluid">
         <h3 class="text-dark mb-4">Financial Statement</h3>
         <div class="card shadow">
@@ -60,6 +79,9 @@
                             <tr>
                                 <th>Year</th>
                                 <th>Financial Statement</th>
+                                {% if user.role == "TREASURER" %}
+                                    <th>Actions</th>
+                                {% endif %}
                             </tr>
                         </thead>
                         <tbody>
@@ -69,15 +91,51 @@
                                     <td>
                                         <button class="btn btn-primary" onclick="showPopup('{{ finance.image.url }}')">View Image</button>
                                     </td>
+                                    {% if user.role == "TREASURER" %}
+                                    <td>
+                                        <button class="btn btn btn-primary" data-toggle="modal" data-target="#editModal{{ finance.year }}">Edit</button>
+                                        <button class="btn btn-danger delete-button" data-year="{{ finance.year }}">Delete</button>
+                                    </td>
+                                    {% endif %}
                                 </tr>
+                                
+                                <!-- Define the modal for editing the financial statement -->
+                                <div class="modal fade" id="editModal{{ finance.year }}" tabindex="-1" role="dialog" aria-labelledby="editModal{{ finance.year }}Label" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="editModal{{ finance.year }}Label">Edit Financial Statement</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                
+                                            <div class="modal-body">
+                                                <!-- Add the form fields and controls for editing the financial statement -->
+                                                <!-- For example, you can include text inputs, dropdowns, etc. -->
+                                                <form id="editForm{{ finance.year }}" enctype="multipart/form-data" method="post" action="{% url 'edit_statement' finance.year %}">
+                                                    {% csrf_token %}
+                                                    <!-- Include the existing values of the financial statement in the form fields -->
+                                                    <input type="hidden" name="year" value="{{ finance.year }}">
+                                                    <input type="file" name="image">
+                                                    <input type="submit" class="btn btn-primary" value="Save Changes">
+                                                </form>
+                                            </div>
+                                            
+                                            
+                                        </div>
+                                    </div>
+                                </div>
                             {% endfor %}
                         </tbody>
                     </table>
                 </div>
+                
             </div>
         </div>
-           <!-- Define the modal for viewing the image -->
-           <div class="modal fade" id="viewImageModal" tabindex="-1" role="dialog" aria-labelledby="viewImageModalLabel" aria-hidden="true">
+        
+        <!-- Define the modal for viewing the image -->
+        <div class="modal fade" id="viewImageModal" tabindex="-1" role="dialog" aria-labelledby="viewImageModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -96,9 +154,9 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    
-    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
+    
     <script>
         function showPopup(imageUrl) {
             var popupImage = document.getElementById("popup-image");
@@ -106,23 +164,67 @@
             $('#viewImageModal').modal('show');
         }
     
-        $(document).ready(function() {
-            $('#addStatementForm').submit(function(e) {
-                e.preventDefault(); // Prevent form submission
-                
-                var year = $('#year').val();
-                var years = Array.from(document.querySelectorAll("#dataTable tbody tr td:first-child")).map(function(td) {
-                    return td.innerHTML;
-                });
     
-                if (years.includes(year)) {
-                    $('#yearExistsMessage').show();
-                } else {
-                    // Proceed with form submission
-                    this.submit();
-                }
-            });
-        });
     </script>
-    
+
+
+
+
+<script>
+    document.querySelectorAll('.delete-button').forEach(function(button) {
+  button.addEventListener('click', function(event) {
+    var year = event.target.getAttribute('data-year');
+    if (confirm("Are you sure you want to delete the financial statement for year " + year + "?")) {
+      // Make an AJAX request to the delete_statement URL
+      fetch(`/delete_statement/${year}/`, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': '{{ csrf_token }}'
+        }
+      })
+      .then(function(response) {
+        if (response.ok) {
+          alert("Financial statement for year " + year + " deleted successfully.");
+          window.location.reload(); // Refresh the page
+        } else {
+          alert("Failed to delete the financial statement for year " + year + ".");
+        }
+      })
+      .catch(function(error) {
+        console.error('Error:', error);
+      });
+    }
+  });
+});
+
+
+</script>
+
+
+<script>
+    document.getElementById("addStatementForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+        
+        fetch(this.action, {
+            method: this.method,
+            body: new FormData(this)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.success);
+                window.location.reload(); // Refresh the page
+            } else if (data.error) {
+                alert(data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    });
+</script>
+
+
+
+
 {% endblock %}

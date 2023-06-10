@@ -2,20 +2,17 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 from .models import  ExecutiveMember, Practitioner, Activity, FinancialStatement, Semso, Transfer
-from .forms import ExecutiveMemberForm, PractitionerForm, LoginForm, TransferForm, ActivityForm, FinancialStatementForm, CidForm, ProfilePictureForm, PasswordChangeForm, SemsoForm, BulkUploadForm, ChangePasswordForm
+from .forms import ExecutiveMemberForm, PractitionerForm,  TransferForm, ActivityForm, FinancialStatementForm, ProfilePictureForm, PasswordChangeForm, SemsoForm, BulkUploadForm, ChangePasswordForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .backends import CustomBackend
-from django.utils import timezone
+
 from django.contrib.auth import update_session_auth_hash
 from django.contrib import messages
 from django.contrib.messages import get_messages
-from django.http import JsonResponse, HttpResponseBadRequest
+from django.http import JsonResponse
 from django.urls import reverse
 from django.db.models import Count
-import matplotlib.pyplot as plt
-from django.views.generic import View
-import os
+
 from django.conf import settings
 import json
 import pandas as pd
@@ -491,6 +488,28 @@ def add_activity(request):
         form = ActivityForm()
     return render(request, 'base/activity.html', {'form': form})
 
+
+@login_required(login_url='executivelogin')
+def edit_statement(request, year):
+    finance = get_object_or_404(FinancialStatement, year=year)
+
+    if request.method == 'POST':
+        try:
+            # Handle the form submission and update the financial statement
+            finance.image = request.FILES.get('image')
+            finance.save()
+
+            # Return a success response
+            return JsonResponse({'success': True, 'message': 'Financial statement updated successfully'})
+        except Exception as e:
+            # Return an error response
+            return JsonResponse({'success': False, 'message': str(e)})
+
+    context = {
+        'finance': finance
+    }
+    return render(request, 'base/finance.html', context)
+
 def edit_semso(request, semso_id):
     semso = get_object_or_404(Semso, semso_id=semso_id)
 
@@ -512,6 +531,15 @@ def delete_semso(request, semso_id):
         return redirect('semso')  # Redirect to the list view after deletion
 
     return render(request, 'base/semso.html', {'semso': semso})
+
+def delete_transfer(request, practitioner):
+    transfer = get_object_or_404(Transfer, practitioner=practitioner)
+
+    if request.method == 'POST':
+        transfer.delete()
+        return redirect('transferform')  # Redirect to the list view after deletion
+
+    return render(request, 'base/transferform.html', {'transfer': transfer})
 
 def edit_activity(request, activity_id):
     activity = get_object_or_404(Activity, activity_id=activity_id)
@@ -554,25 +582,20 @@ def delete_activity(request, activity_id):
     context = {'activity': activity}
     return render(request, 'base/activity.html', context)
 
-@login_required(login_url='executivelogin')
 def upload_statement(request):
     if request.method == 'POST':
         form = FinancialStatementForm(request.POST, request.FILES)
         if form.is_valid():
-            year = form.cleaned_data['year']
-            if FinancialStatement.objects.filter(year=year).exists():
-                messages.error(request, 'Year already exists.')
-            else:
-                form.save()
-                return redirect('finance')
+            form.save()
+            return JsonResponse({'success': 'Financial statement added successfully.'})
         else:
-            messages.error(request, 'Error occurred while adding Financial Statement. Please try again.')
+            return JsonResponse({'error': 'Error occurred while adding Financial Statement. Please try again.'})
     else:
         form = FinancialStatementForm()
+
     year_choices = [year for year in range(2015, 2031)]
     context = {'form': form, 'year_choices': year_choices}
-    return render(request, 'base/finance.html', context)
-
+    return JsonResponse(context)
 
 
 @login_required(login_url='executivelogin') 
@@ -604,14 +627,35 @@ def submit_transfer_form(request):
             transfer = Transfer.objects.create(practitioner=practitioner, reason=reason)
             transfer.save()
             
-            messages.success(request, 'Transfer form submitted successfully.')
-            return redirect('transferform')
+            return JsonResponse({'success': 'Transfer form submitted successfully.'})
         except Practitioner.DoesNotExist:
             return JsonResponse({'error': 'Member not found.'})
         except Exception as e:
             return JsonResponse({'error': str(e)})
         
     return JsonResponse({'error': 'Invalid request method.'})
+
+
+@login_required(login_url='executivelogin')
+def edit_statement(request, year):
+    finance = get_object_or_404(FinancialStatement, year=year)
+
+    if request.method == 'POST':
+        # Handle the form submission and update the financial statement
+        finance.year = request.POST.get('year')
+        finance.image = request.FILES.get('image')
+        finance.save()
+
+        # Redirect to the appropriate page after editing the financial statement
+        return redirect('finance')
+
+    context = {
+        'finance': finance
+    }
+    return render(request, 'base/finance.html', context)
+
+
+
 
 @login_required(login_url='executivelogin')
 def edit_member(request, member_cid):
@@ -720,6 +764,16 @@ def delete_activity(request, activity_id):
         return redirect(reverse('activity'))  # Redirect to the executives page after deletion
     else:
         return redirect(reverse('activity'))  # Redirect to the executives page if the request method is not POST
+
+def delete_statement(request, year):
+    finance = get_object_or_404(FinancialStatement, year=year)
+
+    if request.method == 'POST':
+        # Delete the activity
+        finance.delete()
+        return redirect(reverse('finance'))  # Redirect to the executives page after deletion
+    
+    return render(request, 'base/finance.html', {'finance': finance})
 
 @login_required(login_url='executivelogin') 
 def change_password(request):

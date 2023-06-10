@@ -62,6 +62,8 @@ urlpatterns = [
 
     path('semso/<int:semso_id>/delete/', views.delete_semso, name='delete_semso'),
 
+    path('transfer/<int:practitioner>/delete/', views.delete_transfer, name='delete_transfer'),
+
     path('add_activity/', views.add_activity, name='add_activity'),
 
     path('add_semso/', views.add_semso, name='add_semso'),
@@ -69,6 +71,12 @@ urlpatterns = [
     path('search-executive-member/', views.search_executive_member, name='search_executive_member'),
 
     path('submit_transfer_form/', views.submit_transfer_form, name='submit_transfer_form'),
+
+    path('edit_statement/<str:year>/', views.edit_statement, name='edit_statement'),
+
+    path('delete_statement/<int:year>/', views.delete_statement, name='delete_statement'),
+
+
 
     path('get-letter/', views.get_letter, name='get-letter'),
 

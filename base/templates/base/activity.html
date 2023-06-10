@@ -57,8 +57,8 @@
                                             <br>
                                             <label for="time">Time:</label>
                                             <input type="time" id="time" name="time" required style="width: 100%;">
-                                            <br>
-                                            <input type="submit" value="Add Activity">
+                                            <br><br>
+                                            <input type="submit" class="btn btn-primary" value="Add Activity">
                                         </form>
                                     </div>
                                 </div>
@@ -134,7 +134,7 @@
                                     <button type="button" class="btn btn-primary me-2" data-toggle="modal" data-target="#editActivityModal{{ activity.activity_id }}">Edit</button>
                                     <form method="post" action="{% url 'delete_activity' activity.activity_id %}">
                                         {% csrf_token %}
-                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                        <button type="button" class="btn btn-danger delete-button" data-activity-id="{{ activity.activity_id }}">Delete</button>
                                     </form>
                                 </div>
                             </td>

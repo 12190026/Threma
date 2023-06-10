@@ -112,8 +112,8 @@
                             <td>{{ semso.amount }}</td>
                             {% if user.role == "MANAGER" %}
                             <td>
-                                <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#editModal{{ semso.id }}">Edit</button>
-                                <button class="delete-button" style="color: white; background-color: red;" data-semso-id="{{ semso.semso_id }}">Delete</button>
+                                <button class="btn btn btn-primary" data-toggle="modal" data-target="#editModal{{ semso.id }}">Edit</button>
+                                <button class="btn btn-danger delete-button" data-semso-id="{{ semso.semso_id }}">Delete</button>
                             </td>
                             {% endif %}
                         </tr>
