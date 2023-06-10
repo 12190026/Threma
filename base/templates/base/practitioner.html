@@ -219,7 +219,7 @@
                                             <td>
                                                 <div class="d-flex">
                                                     <button type="button" class="btn btn-primary edit-button" data-member-cid="{{ member.cid }}" data-toggle="modal" data-target="#editMemberModal{{ member.cid }}">Edit</button>
-                                                    <button class="btn btn-primary edit-button delete-button" data-member-cid="{{ member.cid }}" style="color: white; background-color: red;">Delete</button>
+                                                    <button class="btn btn-primary edit-button delete-button" data-deletemember-cid="{{ member.cid }}" style="color: white; background-color: red;">Delete</button>
                                                 </div>
                                             </td>
                                             
@@ -406,7 +406,7 @@
 <script>
     document.querySelectorAll('.delete-button').forEach(function(button) {
       button.addEventListener('click', function(event) {
-        var memberCID = event.target.getAttribute('data-member-cid');
+        var memberCID = event.target.getAttribute('data-deletemember-cid');
         if (confirm("Are you sure you want to delete this member?")) {
           // Make an AJAX request to the delete_member URL
           fetch('/practitioner/' + memberCID + '/delete/', {
